@@ -1,0 +1,73 @@
+query AllLocations {
+  allLocations {
+    _id
+    location
+  }
+}
+
+query AllQualifications {
+  allQualifications {
+    _id
+    qualification
+  }
+}
+
+query AllIndustries {
+  allIndustries {
+    _id
+    industry
+  }
+}
+
+query AllDomains {
+  allDomains {
+    _id
+    domain
+  }
+}
+
+query AllSubDomains {
+  allSubDomains {
+    _id
+    subDomain
+    domain {
+      _id
+      domain
+    }
+  }
+}
+
+query AllSkills {
+  allSkills {
+    _id
+    skill
+  }
+}
+
+query AllSurveyQuestion($type: SurveyType) {
+  allSurveyQuestion(type: $type) {
+    _id
+    question
+    options
+    type
+    createdAt
+    updatedAt
+  }
+}
+
+query AllBenefits {
+  allBenefits {
+    _id
+    benefit
+  }
+}
+
+query AdminLogin($input: AdminLoginInput!) {
+  adminLogin(input: $input)
+}
+
+mutation AddLocation($input: LocationInput!) {
+  addLocation(input: $input) {
+    location
+  }
+}
