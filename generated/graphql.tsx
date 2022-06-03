@@ -683,6 +683,20 @@ export type AddQualificationMutationVariables = Exact<{
 
 export type AddQualificationMutation = { __typename?: 'Mutation', addQualification: { __typename?: 'Qualification', qualification: string } };
 
+export type AddIndustryMutationVariables = Exact<{
+  input: IndustryInput;
+}>;
+
+
+export type AddIndustryMutation = { __typename?: 'Mutation', addIndustry: { __typename?: 'Industry', industry: string } };
+
+export type AddDomainMutationVariables = Exact<{
+  input: DomainInput;
+}>;
+
+
+export type AddDomainMutation = { __typename?: 'Mutation', addDomain: { __typename?: 'Domain', domain: string } };
+
 
 export const AllLocationsDocument = gql`
     query AllLocations {
@@ -1072,3 +1086,69 @@ export function useAddQualificationMutation(baseOptions?: Apollo.MutationHookOpt
 export type AddQualificationMutationHookResult = ReturnType<typeof useAddQualificationMutation>;
 export type AddQualificationMutationResult = Apollo.MutationResult<AddQualificationMutation>;
 export type AddQualificationMutationOptions = Apollo.BaseMutationOptions<AddQualificationMutation, AddQualificationMutationVariables>;
+export const AddIndustryDocument = gql`
+    mutation AddIndustry($input: IndustryInput!) {
+  addIndustry(input: $input) {
+    industry
+  }
+}
+    `;
+export type AddIndustryMutationFn = Apollo.MutationFunction<AddIndustryMutation, AddIndustryMutationVariables>;
+
+/**
+ * __useAddIndustryMutation__
+ *
+ * To run a mutation, you first call `useAddIndustryMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddIndustryMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addIndustryMutation, { data, loading, error }] = useAddIndustryMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useAddIndustryMutation(baseOptions?: Apollo.MutationHookOptions<AddIndustryMutation, AddIndustryMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AddIndustryMutation, AddIndustryMutationVariables>(AddIndustryDocument, options);
+      }
+export type AddIndustryMutationHookResult = ReturnType<typeof useAddIndustryMutation>;
+export type AddIndustryMutationResult = Apollo.MutationResult<AddIndustryMutation>;
+export type AddIndustryMutationOptions = Apollo.BaseMutationOptions<AddIndustryMutation, AddIndustryMutationVariables>;
+export const AddDomainDocument = gql`
+    mutation AddDomain($input: DomainInput!) {
+  addDomain(input: $input) {
+    domain
+  }
+}
+    `;
+export type AddDomainMutationFn = Apollo.MutationFunction<AddDomainMutation, AddDomainMutationVariables>;
+
+/**
+ * __useAddDomainMutation__
+ *
+ * To run a mutation, you first call `useAddDomainMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddDomainMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addDomainMutation, { data, loading, error }] = useAddDomainMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useAddDomainMutation(baseOptions?: Apollo.MutationHookOptions<AddDomainMutation, AddDomainMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AddDomainMutation, AddDomainMutationVariables>(AddDomainDocument, options);
+      }
+export type AddDomainMutationHookResult = ReturnType<typeof useAddDomainMutation>;
+export type AddDomainMutationResult = Apollo.MutationResult<AddDomainMutation>;
+export type AddDomainMutationOptions = Apollo.BaseMutationOptions<AddDomainMutation, AddDomainMutationVariables>;

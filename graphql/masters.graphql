@@ -77,3 +77,21 @@ mutation AddQualification($input: QualificationInput!) {
     qualification
   }
 }
+
+mutation AddIndustry($input: IndustryInput!) {
+  addIndustry(input: $input) {
+    industry
+  }
+}
+
+mutation AddDomain($input: DomainInput!) {
+  addDomain(input: $input) {
+    domain
+  }
+}
+
+mutation AddIndustry($input: IndustryInput!) {
+  addIndustry(input: $input) {
+    industry
+  }
+}

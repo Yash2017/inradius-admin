@@ -26,7 +26,7 @@ import {
   Button,
 } from "@mui/material";
 import Collapse from "@mui/material/Collapse";
-import AddLocationIcon from "@mui/icons-material/AddLocation";
+import AddIcon from "@mui/icons-material/Add";
 
 import { useRouter } from "next/router";
 const drawerWidth = 240;
@@ -168,7 +168,7 @@ export default function Layout({ children }) {
                     onClick={() => router.push("/dashboard/add-location")}
                   >
                     <ListItemIcon>
-                      <AddLocationIcon />
+                      <AddIcon />
                     </ListItemIcon>
                     <ListItemText primary="Location" />
                   </ListItemButton>
@@ -177,9 +177,27 @@ export default function Layout({ children }) {
                     onClick={() => router.push("/dashboard/add-qualification")}
                   >
                     <ListItemIcon>
-                      <AddLocationIcon />
+                      <AddIcon />
                     </ListItemIcon>
                     <ListItemText primary="Qualification" />
+                  </ListItemButton>
+                  <ListItemButton
+                    sx={{ pl: 4 }}
+                    onClick={() => router.push("/dashboard/add-industry")}
+                  >
+                    <ListItemIcon>
+                      <AddIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Industry" />
+                  </ListItemButton>
+                  <ListItemButton
+                    sx={{ pl: 4 }}
+                    onClick={() => router.push("/dashboard/add-domain")}
+                  >
+                    <ListItemIcon>
+                      <AddIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Domain" />
                   </ListItemButton>
                 </List>
               </Collapse>
