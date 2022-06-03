@@ -199,6 +199,24 @@ export default function Layout({ children }) {
                     </ListItemIcon>
                     <ListItemText primary="Domain" />
                   </ListItemButton>
+                  <ListItemButton
+                    sx={{ pl: 4 }}
+                    onClick={() => router.push("/dashboard/add-skill")}
+                  >
+                    <ListItemIcon>
+                      <AddIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Skill" />
+                  </ListItemButton>
+                  <ListItemButton
+                    sx={{ pl: 4 }}
+                    onClick={() => router.push("/dashboard/add-benefit")}
+                  >
+                    <ListItemIcon>
+                      <AddIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Benefit" />
+                  </ListItemButton>
                 </List>
               </Collapse>
             </List>

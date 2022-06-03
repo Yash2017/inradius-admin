@@ -95,3 +95,15 @@ mutation AddIndustry($input: IndustryInput!) {
     industry
   }
 }
+
+mutation AddSkill($input: SkillInput!) {
+  addSkill(input: $input) {
+    skill
+  }
+}
+
+mutation AddBenefit($input: BenefitInput!) {
+  addBenefit(input: $input) {
+    benefit
+  }
+}

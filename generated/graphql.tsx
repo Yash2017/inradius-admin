@@ -697,6 +697,20 @@ export type AddDomainMutationVariables = Exact<{
 
 export type AddDomainMutation = { __typename?: 'Mutation', addDomain: { __typename?: 'Domain', domain: string } };
 
+export type AddSkillMutationVariables = Exact<{
+  input: SkillInput;
+}>;
+
+
+export type AddSkillMutation = { __typename?: 'Mutation', addSkill: { __typename?: 'Skill', skill: string } };
+
+export type AddBenefitMutationVariables = Exact<{
+  input: BenefitInput;
+}>;
+
+
+export type AddBenefitMutation = { __typename?: 'Mutation', addBenefit: { __typename?: 'Benefit', benefit: string } };
+
 
 export const AllLocationsDocument = gql`
     query AllLocations {
@@ -1152,3 +1166,69 @@ export function useAddDomainMutation(baseOptions?: Apollo.MutationHookOptions<Ad
 export type AddDomainMutationHookResult = ReturnType<typeof useAddDomainMutation>;
 export type AddDomainMutationResult = Apollo.MutationResult<AddDomainMutation>;
 export type AddDomainMutationOptions = Apollo.BaseMutationOptions<AddDomainMutation, AddDomainMutationVariables>;
+export const AddSkillDocument = gql`
+    mutation AddSkill($input: SkillInput!) {
+  addSkill(input: $input) {
+    skill
+  }
+}
+    `;
+export type AddSkillMutationFn = Apollo.MutationFunction<AddSkillMutation, AddSkillMutationVariables>;
+
+/**
+ * __useAddSkillMutation__
+ *
+ * To run a mutation, you first call `useAddSkillMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddSkillMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addSkillMutation, { data, loading, error }] = useAddSkillMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useAddSkillMutation(baseOptions?: Apollo.MutationHookOptions<AddSkillMutation, AddSkillMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AddSkillMutation, AddSkillMutationVariables>(AddSkillDocument, options);
+      }
+export type AddSkillMutationHookResult = ReturnType<typeof useAddSkillMutation>;
+export type AddSkillMutationResult = Apollo.MutationResult<AddSkillMutation>;
+export type AddSkillMutationOptions = Apollo.BaseMutationOptions<AddSkillMutation, AddSkillMutationVariables>;
+export const AddBenefitDocument = gql`
+    mutation AddBenefit($input: BenefitInput!) {
+  addBenefit(input: $input) {
+    benefit
+  }
+}
+    `;
+export type AddBenefitMutationFn = Apollo.MutationFunction<AddBenefitMutation, AddBenefitMutationVariables>;
+
+/**
+ * __useAddBenefitMutation__
+ *
+ * To run a mutation, you first call `useAddBenefitMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddBenefitMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addBenefitMutation, { data, loading, error }] = useAddBenefitMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useAddBenefitMutation(baseOptions?: Apollo.MutationHookOptions<AddBenefitMutation, AddBenefitMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AddBenefitMutation, AddBenefitMutationVariables>(AddBenefitDocument, options);
+      }
+export type AddBenefitMutationHookResult = ReturnType<typeof useAddBenefitMutation>;
+export type AddBenefitMutationResult = Apollo.MutationResult<AddBenefitMutation>;
+export type AddBenefitMutationOptions = Apollo.BaseMutationOptions<AddBenefitMutation, AddBenefitMutationVariables>;
