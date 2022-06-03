@@ -10,7 +10,7 @@ import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import { Alert, AlertTitle, Snackbar } from "@mui/material";
 import { useRouter } from "next/router";
-export default function addDomain() {
+export default function Index() {
   const router = useRouter();
   const style = {
     position: "absolute",
