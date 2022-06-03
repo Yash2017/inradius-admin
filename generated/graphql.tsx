@@ -61,12 +61,14 @@ export type BenefitInput = {
 export type DashboardEmployee = {
   __typename?: 'DashboardEmployee';
   domain: Scalars['String'];
+  employeeId: Scalars['ID'];
   firstName: Scalars['String'];
   image?: Maybe<Scalars['String']>;
   industry: Scalars['String'];
   lastName: Scalars['String'];
   location: Scalars['String'];
   score: Scalars['Float'];
+  userId: Scalars['ID'];
 };
 
 export type DashboardEmployer = {
@@ -74,12 +76,15 @@ export type DashboardEmployer = {
   companyImage: Scalars['String'];
   companyName: Scalars['String'];
   domain: Scalars['String'];
+  employerId: Scalars['ID'];
   industry: Scalars['String'];
   jobDesc: Scalars['String'];
+  jobId: Scalars['ID'];
   jobTitle: Scalars['String'];
   jobType: Scalars['String'];
   location: Scalars['String'];
   score: Scalars['Float'];
+  userId: Scalars['ID'];
 };
 
 /** Enum For Designation of Employee */
@@ -130,7 +135,7 @@ export type Employee = {
   relevantExp?: Maybe<UserExpInYearMonths>;
   resume?: Maybe<Scalars['String']>;
   skills: Array<Skill>;
-  subDomain?: Maybe<SubDomain>;
+  subDomain: Array<SubDomain>;
   totalExp?: Maybe<UserExpInYearMonths>;
   updatedAt: Scalars['DateTime'];
   user: User;
@@ -193,7 +198,7 @@ export type EmployerJob = {
   qualification?: Maybe<Qualification>;
   radius?: Maybe<Scalars['Float']>;
   skills: Array<Skill>;
-  subDomain?: Maybe<SubDomain>;
+  subDomain: Array<SubDomain>;
   updatedAt: Scalars['DateTime'];
   user: User;
 };
@@ -216,7 +221,7 @@ export type EmployerJobInput = {
   qualification?: InputMaybe<Scalars['ID']>;
   radius?: InputMaybe<Scalars['Float']>;
   skills?: InputMaybe<Array<Scalars['ID']>>;
-  subDomain?: InputMaybe<Scalars['ID']>;
+  subDomain?: InputMaybe<Array<Scalars['ID']>>;
 };
 
 /** Enum For status of job like open or closed */
@@ -371,6 +376,7 @@ export type QualificationInput = {
 export type Query = {
   __typename?: 'Query';
   adminLogin: Scalars['String'];
+  adminLogout: Scalars['Boolean'];
   allBenefits: Array<Benefit>;
   allDomains: Array<Domain>;
   allIndustries: Array<Industry>;
@@ -381,6 +387,8 @@ export type Query = {
   allSurveyQuestion: Array<Survey>;
   employeeExplore: Array<DashboardEmployer>;
   employerExplore: Array<DashboardEmployee>;
+  getAllEmployees: Array<Employee>;
+  getAllEmployers: Array<Employer>;
   getEmployee: Employee;
   getEmployer: Employer;
   getEmployerAllJobs: Array<EmployerJob>;
@@ -390,6 +398,7 @@ export type Query = {
   resendVerifyEmail: Scalars['Boolean'];
   updateProfileStatus: Scalars['Boolean'];
   updateSurveyStatus: Scalars['Boolean'];
+  updateUserImage: Scalars['Boolean'];
   user: User;
   verifyEmail: Scalars['Boolean'];
   verifyEmployer: Scalars['Boolean'];
@@ -423,6 +432,11 @@ export type QueryLoginArgs = {
 
 export type QueryResendVerifyEmailArgs = {
   input: EmailVerifyInput;
+};
+
+
+export type QueryUpdateUserImageArgs = {
+  image: Scalars['String'];
 };
 
 
@@ -512,7 +526,7 @@ export type UpdateEmployeeInput = {
   relevantExp?: InputMaybe<UserExpInYearMonthsInput>;
   resume?: InputMaybe<Scalars['String']>;
   skills?: InputMaybe<Array<Scalars['ID']>>;
-  subDomain?: InputMaybe<Scalars['ID']>;
+  subDomain?: InputMaybe<Array<Scalars['ID']>>;
   totalExp?: InputMaybe<UserExpInYearMonthsInput>;
   userSurvey?: InputMaybe<Array<UserSurveyInput>>;
   workExp?: InputMaybe<Array<UserWorkExpInput>>;
@@ -661,6 +675,13 @@ export type AddLocationMutationVariables = Exact<{
 
 
 export type AddLocationMutation = { __typename?: 'Mutation', addLocation: { __typename?: 'Location', location: string } };
+
+export type AddQualificationMutationVariables = Exact<{
+  input: QualificationInput;
+}>;
+
+
+export type AddQualificationMutation = { __typename?: 'Mutation', addQualification: { __typename?: 'Qualification', qualification: string } };
 
 
 export const AllLocationsDocument = gql`
@@ -1018,3 +1039,36 @@ export function useAddLocationMutation(baseOptions?: Apollo.MutationHookOptions<
 export type AddLocationMutationHookResult = ReturnType<typeof useAddLocationMutation>;
 export type AddLocationMutationResult = Apollo.MutationResult<AddLocationMutation>;
 export type AddLocationMutationOptions = Apollo.BaseMutationOptions<AddLocationMutation, AddLocationMutationVariables>;
+export const AddQualificationDocument = gql`
+    mutation AddQualification($input: QualificationInput!) {
+  addQualification(input: $input) {
+    qualification
+  }
+}
+    `;
+export type AddQualificationMutationFn = Apollo.MutationFunction<AddQualificationMutation, AddQualificationMutationVariables>;
+
+/**
+ * __useAddQualificationMutation__
+ *
+ * To run a mutation, you first call `useAddQualificationMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddQualificationMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addQualificationMutation, { data, loading, error }] = useAddQualificationMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useAddQualificationMutation(baseOptions?: Apollo.MutationHookOptions<AddQualificationMutation, AddQualificationMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AddQualificationMutation, AddQualificationMutationVariables>(AddQualificationDocument, options);
+      }
+export type AddQualificationMutationHookResult = ReturnType<typeof useAddQualificationMutation>;
+export type AddQualificationMutationResult = Apollo.MutationResult<AddQualificationMutation>;
+export type AddQualificationMutationOptions = Apollo.BaseMutationOptions<AddQualificationMutation, AddQualificationMutationVariables>;

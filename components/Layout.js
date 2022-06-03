@@ -172,6 +172,15 @@ export default function Layout({ children }) {
                     </ListItemIcon>
                     <ListItemText primary="Location" />
                   </ListItemButton>
+                  <ListItemButton
+                    sx={{ pl: 4 }}
+                    onClick={() => router.push("/dashboard/add-qualification")}
+                  >
+                    <ListItemIcon>
+                      <AddLocationIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Qualification" />
+                  </ListItemButton>
                 </List>
               </Collapse>
             </List>
