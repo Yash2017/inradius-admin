@@ -87,6 +87,7 @@ function Index() {
         color: "black",
         marginTop: "80px",
         paddingLeft: "24px",
+        paddingRight: "24px",
       }}
     >
       <Typography variant="h5">Available Benefits</Typography>
@@ -94,13 +95,34 @@ function Index() {
         location.map((single, i) => {
           return (
             <div key={i}>
-              <Typography variant="h6">{single}</Typography>
+              <TextField
+                variant="outlined"
+                id="component-outlined"
+                value={single}
+                //value={input}
+                fullWidth
+                style={{
+                  marginBottom: "12px",
+                  color: "black",
+                }}
+                margin="dense"
+                //onChange={(e) => setInput(e.target.value)}
+                onChange={(e) => {
+                  let copy = [...location];
+                  copy[i] = e.target.value;
+                  setLocation([...copy]);
+                }}
+                label="Benefit"
+              />
             </div>
           );
         })}
       <Button variant="contained" onClick={handleOpen}>
         Add Benefits
       </Button>
+      <LoadingButton variant="contained" style={{ marginLeft: "12px" }}>
+        Save
+      </LoadingButton>
       <Modal
         open={open}
         onClose={handleClose}

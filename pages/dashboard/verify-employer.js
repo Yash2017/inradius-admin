@@ -5,6 +5,8 @@ import {
   useGetAllEmployersLazyQuery,
   useVerifyEmployerLazyQuery,
 } from "../../generated/graphql";
+import { LoadingButton } from "@mui/lab";
+import { Alert, AlertTitle, Snackbar } from "@mui/material";
 
 const rows = [
   { id: 1, lastName: "Snow", firstName: "Jon", age: 35 },
@@ -21,7 +23,10 @@ const rows = [
 export default function DataTable() {
   const [data, setData] = React.useState(null);
   const [verifyEmployerQuery] = useVerifyEmployerLazyQuery();
+  const [loading, setLoading] = React.useState(false);
+  const [companyName, setCompanyName] = React.useState("");
   const handleClick = async (e, cell) => {
+    setLoading(true);
     const res = await verifyEmployerQuery({
       variables: {
         input: { _id: cell.id, employerVerified: true },
@@ -37,16 +42,18 @@ export default function DataTable() {
           companyName: obj.companyName,
           employerVerified: true,
         });
+        setCompanyName(obj.companyName);
       } else {
         newLocations.push({
-          id: obj._id,
+          id: obj.id,
           companyName: obj.companyName,
-          employerVerified: !obj.employerVerified,
+          employerVerified: obj.employerVerified,
         });
       }
     });
     console.log(newLocations);
     setData(newLocations);
+    setLoading(false);
   };
   const [getAllEmployersQuery] = useGetAllEmployersLazyQuery();
   const columns = [
@@ -57,13 +64,14 @@ export default function DataTable() {
       field: "Verify",
       renderCell: (cellValues) => {
         return (
-          <Button
+          <LoadingButton
             variant="contained"
             color="primary"
             onClick={(e) => handleClick(e, cellValues)}
+            loading={loading}
           >
             Verify
-          </Button>
+          </LoadingButton>
         );
       },
     },
@@ -103,6 +111,17 @@ export default function DataTable() {
           rowsPerPageOptions={[5]}
         />
       )}
+      {companyName !== "" ? (
+        <Snackbar
+          open={companyName !== "" ? true : false}
+          autoHideDuration={6000}
+          onClose={() => companyName("")}
+        >
+          <Alert onClose={() => companyName("")} severity="success">
+            {companyName} is verified!
+          </Alert>
+        </Snackbar>
+      ) : null}
     </div>
   );
 }

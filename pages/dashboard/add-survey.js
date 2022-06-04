@@ -68,6 +68,7 @@ function Index() {
         { question: input, options: dataOptions, type: surveyType },
       ]);
       setInput("");
+      setDataOptions([]);
       setAddOpen(false);
       console.log(response);
     }
