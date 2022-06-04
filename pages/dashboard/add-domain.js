@@ -69,7 +69,9 @@ export default function Index() {
       router.push("/login");
     }
     const func = async () => {
-      const response = await allDomainsQuery();
+      const response = await allDomainsQuery({
+        fetchPolicy: "network-only",
+      });
       const locations = response.data.allDomains;
       const newLocations = [];
       locations.forEach((obj, i) => newLocations.push(obj.domain));

@@ -69,7 +69,9 @@ function Index() {
       router.push("/login");
     }
     const func = async () => {
-      const response = await allLocationsQuery();
+      const response = await allLocationsQuery({
+        fetchPolicy: "network-only",
+      });
       const locations = response.data.allLocations;
       const newLocations = [];
       locations.forEach((obj, i) => newLocations.push(obj.location));

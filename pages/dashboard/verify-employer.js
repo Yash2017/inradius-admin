@@ -78,7 +78,9 @@ export default function DataTable() {
   ];
   React.useEffect(() => {
     const getData = async () => {
-      const response = await getAllEmployersQuery();
+      const response = await getAllEmployersQuery({
+        fetchPolicy: "network-only",
+      });
       const newLocations = [];
       response.data.getAllEmployers.forEach((obj, i) =>
         newLocations.push({

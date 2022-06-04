@@ -36,7 +36,11 @@ function Index() {
   const [addSurveyMutation] = useAddSurveyMutation();
   const [openSnackbar, setOpenSnackbar] = useState(true);
   const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const handleClose = () => {
+    setDataOptions(["", ""]);
+    setOpen(false);
+    console.log(dataOptions);
+  };
   const handleCloseSnackbar = (event, reason) => {
     setOpenSnackbar(false);
     setError("");
@@ -79,7 +83,9 @@ function Index() {
       router.push("/login");
     }
     const func = async () => {
-      const response = await allSurveyQuestionQuery();
+      const response = await allSurveyQuestionQuery({
+        fetchPolicy: "network-only",
+      });
       setLocation(response.data.allSurveyQuestion);
       console.log(response.data);
     };
@@ -119,7 +125,9 @@ function Index() {
       </Button>
       <Modal
         open={addOpen}
-        onClose={() => setAddOpen(false)}
+        onClose={() => {
+          setAddOpen(false);
+        }}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >

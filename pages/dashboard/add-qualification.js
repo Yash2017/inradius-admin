@@ -69,7 +69,9 @@ export default function AddQualification() {
       router.push("/login");
     }
     const func = async () => {
-      const response = await allQualificationsQuery();
+      const response = await allQualificationsQuery({
+        fetchPolicy: "network-only",
+      });
       const locations = response.data.allQualifications;
       const newLocations = [];
       locations.forEach((obj, i) => newLocations.push(obj.qualification));

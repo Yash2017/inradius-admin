@@ -69,7 +69,9 @@ export default function Index() {
       router.push("/login");
     }
     const func = async () => {
-      const response = await allIndustriesQuery();
+      const response = await allIndustriesQuery({
+        fetchPolicy: "network-only",
+      });
       const locations = response.data.allIndustries;
       const newLocations = [];
       locations.forEach((obj, i) => newLocations.push(obj.industry));
