@@ -18,6 +18,7 @@ import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import WorkIcon from "@mui/icons-material/Work";
 import ExpandLess from "@mui/icons-material/ExpandLess";
+import CheckIcon from "@mui/icons-material/Check";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import {
   ListItemButton,
@@ -158,7 +159,7 @@ export default function Layout({ children }) {
                 <ListItemIcon>
                   <WorkIcon />
                 </ListItemIcon>
-                <ListItemText primary={`Registeration Content`} />
+                <ListItemText primary={`Masters`} />
                 {openList ? <ExpandLess /> : <ExpandMore />}
               </ListItemButton>
               <Collapse in={openList} timeout="auto" unmountOnExit>
@@ -221,6 +222,9 @@ export default function Layout({ children }) {
                     sx={{ pl: 4 }}
                     onClick={() => router.push("/dashboard/verify-employer")}
                   >
+                    <ListItemIcon>
+                      <CheckIcon />
+                    </ListItemIcon>
                     <ListItemText primary="Verify Employer" />
                   </ListItemButton>
                 </List>
