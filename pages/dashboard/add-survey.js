@@ -99,15 +99,20 @@ function Index() {
         paddingLeft: "24px",
       }}
     >
-      <Typography variant="h5">Available Skills</Typography>
+      <Typography variant="h5">Survey Questions</Typography>
       {location !== [] &&
         location.map((ind, i) => (
           <Button
             variant="contained"
             onClick={(e) => handleQuestionClick(e, ind)}
+            style={{ margin: "12px" }}
           >{`Question ${i + 1}`}</Button>
         ))}
-      <Button variant="contained" onClick={() => setAddOpen(true)}>
+      <Button
+        variant="contained"
+        onClick={() => setAddOpen(true)}
+        style={{ margin: "12px" }}
+      >
         Add Survey
       </Button>
       <Modal
