@@ -12,6 +12,14 @@ query AllQualifications {
   }
 }
 
+query GetAllEmployers {
+  getAllEmployers {
+    _id
+    companyName
+    employerVerified
+  }
+}
+
 query AllIndustries {
   allIndustries {
     _id
@@ -64,6 +72,10 @@ query AllBenefits {
 
 query AdminLogin($input: AdminLoginInput!) {
   adminLogin(input: $input)
+}
+
+query VerifyEmployer($input: UpdateEmployerVerifyInput!) {
+  verifyEmployer(input: $input)
 }
 
 mutation AddLocation($input: LocationInput!) {

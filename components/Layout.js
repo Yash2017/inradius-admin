@@ -158,7 +158,7 @@ export default function Layout({ children }) {
                 <ListItemIcon>
                   <WorkIcon />
                 </ListItemIcon>
-                <ListItemText primary="Content" />
+                <ListItemText primary={`Registeration Content`} />
                 {openList ? <ExpandLess /> : <ExpandMore />}
               </ListItemButton>
               <Collapse in={openList} timeout="auto" unmountOnExit>
@@ -216,6 +216,12 @@ export default function Layout({ children }) {
                       <AddIcon />
                     </ListItemIcon>
                     <ListItemText primary="Benefit" />
+                  </ListItemButton>
+                  <ListItemButton
+                    sx={{ pl: 4 }}
+                    onClick={() => router.push("/dashboard/verify-employer")}
+                  >
+                    <ListItemText primary="Verify Employer" />
                   </ListItemButton>
                 </List>
               </Collapse>

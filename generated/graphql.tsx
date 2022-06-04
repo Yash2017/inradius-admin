@@ -630,6 +630,11 @@ export type AllQualificationsQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type AllQualificationsQuery = { __typename?: 'Query', allQualifications: Array<{ __typename?: 'Qualification', _id: string, qualification: string }> };
 
+export type GetAllEmployersQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetAllEmployersQuery = { __typename?: 'Query', getAllEmployers: Array<{ __typename?: 'Employer', _id: string, companyName?: string | null, employerVerified?: boolean | null }> };
+
 export type AllIndustriesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -668,6 +673,13 @@ export type AdminLoginQueryVariables = Exact<{
 
 
 export type AdminLoginQuery = { __typename?: 'Query', adminLogin: string };
+
+export type VerifyEmployerQueryVariables = Exact<{
+  input: UpdateEmployerVerifyInput;
+}>;
+
+
+export type VerifyEmployerQuery = { __typename?: 'Query', verifyEmployer: boolean };
 
 export type AddLocationMutationVariables = Exact<{
   input: LocationInput;
@@ -782,6 +794,42 @@ export function useAllQualificationsLazyQuery(baseOptions?: Apollo.LazyQueryHook
 export type AllQualificationsQueryHookResult = ReturnType<typeof useAllQualificationsQuery>;
 export type AllQualificationsLazyQueryHookResult = ReturnType<typeof useAllQualificationsLazyQuery>;
 export type AllQualificationsQueryResult = Apollo.QueryResult<AllQualificationsQuery, AllQualificationsQueryVariables>;
+export const GetAllEmployersDocument = gql`
+    query GetAllEmployers {
+  getAllEmployers {
+    _id
+    companyName
+    employerVerified
+  }
+}
+    `;
+
+/**
+ * __useGetAllEmployersQuery__
+ *
+ * To run a query within a React component, call `useGetAllEmployersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAllEmployersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAllEmployersQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetAllEmployersQuery(baseOptions?: Apollo.QueryHookOptions<GetAllEmployersQuery, GetAllEmployersQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetAllEmployersQuery, GetAllEmployersQueryVariables>(GetAllEmployersDocument, options);
+      }
+export function useGetAllEmployersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAllEmployersQuery, GetAllEmployersQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetAllEmployersQuery, GetAllEmployersQueryVariables>(GetAllEmployersDocument, options);
+        }
+export type GetAllEmployersQueryHookResult = ReturnType<typeof useGetAllEmployersQuery>;
+export type GetAllEmployersLazyQueryHookResult = ReturnType<typeof useGetAllEmployersLazyQuery>;
+export type GetAllEmployersQueryResult = Apollo.QueryResult<GetAllEmployersQuery, GetAllEmployersQueryVariables>;
 export const AllIndustriesDocument = gql`
     query AllIndustries {
   allIndustries {
@@ -1034,6 +1082,39 @@ export function useAdminLoginLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions
 export type AdminLoginQueryHookResult = ReturnType<typeof useAdminLoginQuery>;
 export type AdminLoginLazyQueryHookResult = ReturnType<typeof useAdminLoginLazyQuery>;
 export type AdminLoginQueryResult = Apollo.QueryResult<AdminLoginQuery, AdminLoginQueryVariables>;
+export const VerifyEmployerDocument = gql`
+    query VerifyEmployer($input: UpdateEmployerVerifyInput!) {
+  verifyEmployer(input: $input)
+}
+    `;
+
+/**
+ * __useVerifyEmployerQuery__
+ *
+ * To run a query within a React component, call `useVerifyEmployerQuery` and pass it any options that fit your needs.
+ * When your component renders, `useVerifyEmployerQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useVerifyEmployerQuery({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useVerifyEmployerQuery(baseOptions: Apollo.QueryHookOptions<VerifyEmployerQuery, VerifyEmployerQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<VerifyEmployerQuery, VerifyEmployerQueryVariables>(VerifyEmployerDocument, options);
+      }
+export function useVerifyEmployerLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<VerifyEmployerQuery, VerifyEmployerQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<VerifyEmployerQuery, VerifyEmployerQueryVariables>(VerifyEmployerDocument, options);
+        }
+export type VerifyEmployerQueryHookResult = ReturnType<typeof useVerifyEmployerQuery>;
+export type VerifyEmployerLazyQueryHookResult = ReturnType<typeof useVerifyEmployerLazyQuery>;
+export type VerifyEmployerQueryResult = Apollo.QueryResult<VerifyEmployerQuery, VerifyEmployerQueryVariables>;
 export const AddLocationDocument = gql`
     mutation AddLocation($input: LocationInput!) {
   addLocation(input: $input) {
