@@ -104,6 +104,7 @@ function Index() {
       {location !== [] &&
         location.map((ind, i) => (
           <Button
+            key={i}
             variant="contained"
             onClick={(e) => handleQuestionClick(e, ind)}
             style={{ margin: "12px" }}
@@ -164,6 +165,7 @@ function Index() {
           </Typography>
           {dataOptions.map((ind, i) => (
             <TextField
+              key={i}
               variant="outlined"
               id="component-outlined"
               value={ind}
@@ -235,6 +237,7 @@ function Index() {
             </Typography>
             {dataOptions.map((ind, i) => (
               <TextField
+                key={i}
                 variant="outlined"
                 id="component-outlined"
                 value={ind}
