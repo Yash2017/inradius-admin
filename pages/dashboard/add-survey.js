@@ -63,6 +63,10 @@ function Index() {
         },
       });
       setLoading(false);
+      setLocation([
+        ...location,
+        { question: input, options: dataOptions, type: surveyType },
+      ]);
       setInput("");
       setAddOpen(false);
       console.log(response);
