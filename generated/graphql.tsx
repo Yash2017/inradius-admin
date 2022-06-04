@@ -723,6 +723,13 @@ export type AddBenefitMutationVariables = Exact<{
 
 export type AddBenefitMutation = { __typename?: 'Mutation', addBenefit: { __typename?: 'Benefit', benefit: string } };
 
+export type AddSurveyMutationVariables = Exact<{
+  input: SurveyInput;
+}>;
+
+
+export type AddSurveyMutation = { __typename?: 'Mutation', addSurvey: { __typename?: 'Survey', question: string, options: Array<string> } };
+
 
 export const AllLocationsDocument = gql`
     query AllLocations {
@@ -1313,3 +1320,37 @@ export function useAddBenefitMutation(baseOptions?: Apollo.MutationHookOptions<A
 export type AddBenefitMutationHookResult = ReturnType<typeof useAddBenefitMutation>;
 export type AddBenefitMutationResult = Apollo.MutationResult<AddBenefitMutation>;
 export type AddBenefitMutationOptions = Apollo.BaseMutationOptions<AddBenefitMutation, AddBenefitMutationVariables>;
+export const AddSurveyDocument = gql`
+    mutation AddSurvey($input: SurveyInput!) {
+  addSurvey(input: $input) {
+    question
+    options
+  }
+}
+    `;
+export type AddSurveyMutationFn = Apollo.MutationFunction<AddSurveyMutation, AddSurveyMutationVariables>;
+
+/**
+ * __useAddSurveyMutation__
+ *
+ * To run a mutation, you first call `useAddSurveyMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddSurveyMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addSurveyMutation, { data, loading, error }] = useAddSurveyMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useAddSurveyMutation(baseOptions?: Apollo.MutationHookOptions<AddSurveyMutation, AddSurveyMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AddSurveyMutation, AddSurveyMutationVariables>(AddSurveyDocument, options);
+      }
+export type AddSurveyMutationHookResult = ReturnType<typeof useAddSurveyMutation>;
+export type AddSurveyMutationResult = Apollo.MutationResult<AddSurveyMutation>;
+export type AddSurveyMutationOptions = Apollo.BaseMutationOptions<AddSurveyMutation, AddSurveyMutationVariables>;

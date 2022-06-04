@@ -29,7 +29,7 @@ function Index() {
   const [error, setError] = useState("");
   const [openSnackbar, setOpenSnackbar] = useState(true);
   const handleOpen = () => setOpen(true);
-  const handleClose = () => setipen(false);
+  const handleClose = () => setOpen(false);
   const handleCloseSnackbar = (event, reason) => {
     if (reason === "clickaway") {
       return;

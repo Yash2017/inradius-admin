@@ -119,3 +119,10 @@ mutation AddBenefit($input: BenefitInput!) {
     benefit
   }
 }
+
+mutation AddSurvey($input: SurveyInput!) {
+  addSurvey(input: $input) {
+    question
+    options
+  }
+}

@@ -220,6 +220,15 @@ export default function Layout({ children }) {
                   </ListItemButton>
                   <ListItemButton
                     sx={{ pl: 4 }}
+                    onClick={() => router.push("/dashboard/add-survey")}
+                  >
+                    <ListItemIcon>
+                      <AddIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Survey" />
+                  </ListItemButton>
+                  <ListItemButton
+                    sx={{ pl: 4 }}
                     onClick={() => router.push("/dashboard/verify-employer")}
                   >
                     <ListItemIcon>
