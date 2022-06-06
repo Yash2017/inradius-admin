@@ -7,6 +7,7 @@ import { DataGrid, GridColDef, GridValueGetterParams } from "@mui/x-data-grid";
 import { Typography, Button, TextField } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
 import Box from "@mui/material/Box";
+import Switch from "@mui/material/Switch";
 import Modal from "@mui/material/Modal";
 import { Alert, AlertTitle, Snackbar } from "@mui/material";
 import { useRouter } from "next/router";
@@ -58,15 +59,16 @@ function Index() {
         );
       },
     },
-    { field: "active", headerName: "Active", width: 250 },
     {
-      field: "Toggle Active Status",
-      width: 450,
+      field: "active",
+      headerName: "Active Status",
+      width: 250,
       renderCell: (cellValues) => {
         return (
-          <LoadingButton variant="contained" color="primary">
-            Toggle Status
-          </LoadingButton>
+          <Switch
+            checked={cellValues.row.active}
+            inputProps={{ "aria-label": "controlled" }}
+          />
         );
       },
     },

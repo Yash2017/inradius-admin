@@ -10,6 +10,7 @@ import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import { Alert, Snackbar } from "@mui/material";
 import { useRouter } from "next/router";
+import Switch from "@mui/material/Switch";
 export default function AddQualification() {
   const [locationName, setLocationName] = useState([]);
   const columns = [
@@ -35,15 +36,13 @@ export default function AddQualification() {
         );
       },
     },
-    { field: "active", headerName: "Active", width: 250 },
     {
-      field: "Toggle Active Status",
-      width: 450,
+      field: "active",
+      headerName: "Active",
+      width: 250,
       renderCell: (cellValues) => {
         return (
-          <LoadingButton variant="contained" color="primary">
-            Toggle Status
-          </LoadingButton>
+          <Switch checked={true} inputProps={{ "aria-label": "controlled" }} />
         );
       },
     },
