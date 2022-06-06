@@ -11,6 +11,17 @@ a {
   text-decoration: none;
 }
 
+input{
+  width: "100%";
+  border: "0px";
+  height: "100%";
+  padding: "10px";
+}
+
+input:focus{
+  background: "#EEF4FC"
+}
+
 * {
   box-sizing: border-box;
 }

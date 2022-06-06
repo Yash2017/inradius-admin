@@ -2,6 +2,7 @@ query AllLocations {
   allLocations {
     _id
     location
+    active
   }
 }
 
@@ -9,6 +10,7 @@ query AllQualifications {
   allQualifications {
     _id
     qualification
+    active
   }
 }
 
@@ -24,6 +26,7 @@ query AllIndustries {
   allIndustries {
     _id
     industry
+    active
   }
 }
 
@@ -31,6 +34,7 @@ query AllDomains {
   allDomains {
     _id
     domain
+    active
   }
 }
 
@@ -49,6 +53,7 @@ query AllSkills {
   allSkills {
     _id
     skill
+    active
   }
 }
 
@@ -67,6 +72,7 @@ query AllBenefits {
   allBenefits {
     _id
     benefit
+    active
   }
 }
 
@@ -81,42 +87,49 @@ query VerifyEmployer($input: UpdateEmployerVerifyInput!) {
 mutation AddLocation($input: LocationInput!) {
   addLocation(input: $input) {
     location
+    _id
   }
 }
 
 mutation AddQualification($input: QualificationInput!) {
   addQualification(input: $input) {
     qualification
+    _id
   }
 }
 
 mutation AddIndustry($input: IndustryInput!) {
   addIndustry(input: $input) {
     industry
+    _id
   }
 }
 
 mutation AddDomain($input: DomainInput!) {
   addDomain(input: $input) {
     domain
+    _id
   }
 }
 
 mutation AddIndustry($input: IndustryInput!) {
   addIndustry(input: $input) {
     industry
+    _id
   }
 }
 
 mutation AddSkill($input: SkillInput!) {
   addSkill(input: $input) {
     skill
+    _id
   }
 }
 
 mutation AddBenefit($input: BenefitInput!) {
   addBenefit(input: $input) {
     benefit
+    _id
   }
 }
 

@@ -49,6 +49,7 @@ export enum AdminRole {
 export type Benefit = {
   __typename?: 'Benefit';
   _id: Scalars['ID'];
+  active: Scalars['Boolean'];
   benefit: Scalars['String'];
   createdAt: Scalars['DateTime'];
   updatedAt: Scalars['DateTime'];
@@ -60,31 +61,17 @@ export type BenefitInput = {
 
 export type DashboardEmployee = {
   __typename?: 'DashboardEmployee';
-  domain: Scalars['String'];
-  employeeId: Scalars['ID'];
-  firstName: Scalars['String'];
-  image?: Maybe<Scalars['String']>;
-  industry: Scalars['String'];
-  lastName: Scalars['String'];
-  location: Scalars['String'];
+  employeeId: Employee;
   score: Scalars['Float'];
-  userId: Scalars['ID'];
+  userId: User;
 };
 
 export type DashboardEmployer = {
   __typename?: 'DashboardEmployer';
-  companyImage: Scalars['String'];
-  companyName: Scalars['String'];
-  domain: Scalars['String'];
-  employerId: Scalars['ID'];
-  industry: Scalars['String'];
-  jobDesc: Scalars['String'];
-  jobId: Scalars['ID'];
-  jobTitle: Scalars['String'];
-  jobType: Scalars['String'];
-  location: Scalars['String'];
+  employerId: Employer;
+  jobId: EmployerJob;
   score: Scalars['Float'];
-  userId: Scalars['ID'];
+  userId: User;
 };
 
 /** Enum For Designation of Employee */
@@ -97,6 +84,7 @@ export enum DesignationEnum {
 export type Domain = {
   __typename?: 'Domain';
   _id: Scalars['ID'];
+  active: Scalars['Boolean'];
   createdAt: Scalars['DateTime'];
   domain: Scalars['String'];
   updatedAt: Scalars['DateTime'];
@@ -246,6 +234,7 @@ export enum EmployerVerifyStatusEnum {
 export type Industry = {
   __typename?: 'Industry';
   _id: Scalars['ID'];
+  active: Scalars['Boolean'];
   createdAt: Scalars['DateTime'];
   industry: Scalars['String'];
   updatedAt: Scalars['DateTime'];
@@ -258,12 +247,14 @@ export type IndustryInput = {
 export type Location = {
   __typename?: 'Location';
   _id: Scalars['ID'];
+  active: Scalars['Boolean'];
   createdAt: Scalars['DateTime'];
   location: Scalars['String'];
   updatedAt: Scalars['DateTime'];
 };
 
 export type LocationInput = {
+  active: Scalars['Boolean'];
   location: Scalars['String'];
 };
 
@@ -364,6 +355,7 @@ export type MutationUpdateEmployerJobArgs = {
 export type Qualification = {
   __typename?: 'Qualification';
   _id: Scalars['ID'];
+  active: Scalars['Boolean'];
   createdAt: Scalars['DateTime'];
   qualification: Scalars['String'];
   updatedAt: Scalars['DateTime'];
@@ -461,6 +453,7 @@ export type RegisterInput = {
 export type Skill = {
   __typename?: 'Skill';
   _id: Scalars['ID'];
+  active: Scalars['Boolean'];
   createdAt: Scalars['DateTime'];
   skill: Scalars['String'];
   updatedAt: Scalars['DateTime'];
@@ -473,6 +466,7 @@ export type SkillInput = {
 export type SubDomain = {
   __typename?: 'SubDomain';
   _id: Scalars['ID'];
+  active: Scalars['Boolean'];
   createdAt: Scalars['DateTime'];
   domain: Domain;
   subDomain: Scalars['String'];
@@ -623,12 +617,12 @@ export type UserWorkExpInput = {
 export type AllLocationsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type AllLocationsQuery = { __typename?: 'Query', allLocations: Array<{ __typename?: 'Location', _id: string, location: string }> };
+export type AllLocationsQuery = { __typename?: 'Query', allLocations: Array<{ __typename?: 'Location', _id: string, location: string, active: boolean }> };
 
 export type AllQualificationsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type AllQualificationsQuery = { __typename?: 'Query', allQualifications: Array<{ __typename?: 'Qualification', _id: string, qualification: string }> };
+export type AllQualificationsQuery = { __typename?: 'Query', allQualifications: Array<{ __typename?: 'Qualification', _id: string, qualification: string, active: boolean }> };
 
 export type GetAllEmployersQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -638,12 +632,12 @@ export type GetAllEmployersQuery = { __typename?: 'Query', getAllEmployers: Arra
 export type AllIndustriesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type AllIndustriesQuery = { __typename?: 'Query', allIndustries: Array<{ __typename?: 'Industry', _id: string, industry: string }> };
+export type AllIndustriesQuery = { __typename?: 'Query', allIndustries: Array<{ __typename?: 'Industry', _id: string, industry: string, active: boolean }> };
 
 export type AllDomainsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type AllDomainsQuery = { __typename?: 'Query', allDomains: Array<{ __typename?: 'Domain', _id: string, domain: string }> };
+export type AllDomainsQuery = { __typename?: 'Query', allDomains: Array<{ __typename?: 'Domain', _id: string, domain: string, active: boolean }> };
 
 export type AllSubDomainsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -653,7 +647,7 @@ export type AllSubDomainsQuery = { __typename?: 'Query', allSubDomains: Array<{ 
 export type AllSkillsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type AllSkillsQuery = { __typename?: 'Query', allSkills: Array<{ __typename?: 'Skill', _id: string, skill: string }> };
+export type AllSkillsQuery = { __typename?: 'Query', allSkills: Array<{ __typename?: 'Skill', _id: string, skill: string, active: boolean }> };
 
 export type AllSurveyQuestionQueryVariables = Exact<{
   type?: InputMaybe<SurveyType>;
@@ -665,7 +659,7 @@ export type AllSurveyQuestionQuery = { __typename?: 'Query', allSurveyQuestion: 
 export type AllBenefitsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type AllBenefitsQuery = { __typename?: 'Query', allBenefits: Array<{ __typename?: 'Benefit', _id: string, benefit: string }> };
+export type AllBenefitsQuery = { __typename?: 'Query', allBenefits: Array<{ __typename?: 'Benefit', _id: string, benefit: string, active: boolean }> };
 
 export type AdminLoginQueryVariables = Exact<{
   input: AdminLoginInput;
@@ -686,42 +680,42 @@ export type AddLocationMutationVariables = Exact<{
 }>;
 
 
-export type AddLocationMutation = { __typename?: 'Mutation', addLocation: { __typename?: 'Location', location: string } };
+export type AddLocationMutation = { __typename?: 'Mutation', addLocation: { __typename?: 'Location', location: string, _id: string } };
 
 export type AddQualificationMutationVariables = Exact<{
   input: QualificationInput;
 }>;
 
 
-export type AddQualificationMutation = { __typename?: 'Mutation', addQualification: { __typename?: 'Qualification', qualification: string } };
+export type AddQualificationMutation = { __typename?: 'Mutation', addQualification: { __typename?: 'Qualification', qualification: string, _id: string } };
 
 export type AddIndustryMutationVariables = Exact<{
   input: IndustryInput;
 }>;
 
 
-export type AddIndustryMutation = { __typename?: 'Mutation', addIndustry: { __typename?: 'Industry', industry: string } };
+export type AddIndustryMutation = { __typename?: 'Mutation', addIndustry: { __typename?: 'Industry', industry: string, _id: string } };
 
 export type AddDomainMutationVariables = Exact<{
   input: DomainInput;
 }>;
 
 
-export type AddDomainMutation = { __typename?: 'Mutation', addDomain: { __typename?: 'Domain', domain: string } };
+export type AddDomainMutation = { __typename?: 'Mutation', addDomain: { __typename?: 'Domain', domain: string, _id: string } };
 
 export type AddSkillMutationVariables = Exact<{
   input: SkillInput;
 }>;
 
 
-export type AddSkillMutation = { __typename?: 'Mutation', addSkill: { __typename?: 'Skill', skill: string } };
+export type AddSkillMutation = { __typename?: 'Mutation', addSkill: { __typename?: 'Skill', skill: string, _id: string } };
 
 export type AddBenefitMutationVariables = Exact<{
   input: BenefitInput;
 }>;
 
 
-export type AddBenefitMutation = { __typename?: 'Mutation', addBenefit: { __typename?: 'Benefit', benefit: string } };
+export type AddBenefitMutation = { __typename?: 'Mutation', addBenefit: { __typename?: 'Benefit', benefit: string, _id: string } };
 
 export type AddSurveyMutationVariables = Exact<{
   input: SurveyInput;
@@ -736,6 +730,7 @@ export const AllLocationsDocument = gql`
   allLocations {
     _id
     location
+    active
   }
 }
     `;
@@ -771,6 +766,7 @@ export const AllQualificationsDocument = gql`
   allQualifications {
     _id
     qualification
+    active
   }
 }
     `;
@@ -842,6 +838,7 @@ export const AllIndustriesDocument = gql`
   allIndustries {
     _id
     industry
+    active
   }
 }
     `;
@@ -877,6 +874,7 @@ export const AllDomainsDocument = gql`
   allDomains {
     _id
     domain
+    active
   }
 }
     `;
@@ -951,6 +949,7 @@ export const AllSkillsDocument = gql`
   allSkills {
     _id
     skill
+    active
   }
 }
     `;
@@ -1026,6 +1025,7 @@ export const AllBenefitsDocument = gql`
   allBenefits {
     _id
     benefit
+    active
   }
 }
     `;
@@ -1126,6 +1126,7 @@ export const AddLocationDocument = gql`
     mutation AddLocation($input: LocationInput!) {
   addLocation(input: $input) {
     location
+    _id
   }
 }
     `;
@@ -1159,6 +1160,7 @@ export const AddQualificationDocument = gql`
     mutation AddQualification($input: QualificationInput!) {
   addQualification(input: $input) {
     qualification
+    _id
   }
 }
     `;
@@ -1192,6 +1194,7 @@ export const AddIndustryDocument = gql`
     mutation AddIndustry($input: IndustryInput!) {
   addIndustry(input: $input) {
     industry
+    _id
   }
 }
     `;
@@ -1225,6 +1228,7 @@ export const AddDomainDocument = gql`
     mutation AddDomain($input: DomainInput!) {
   addDomain(input: $input) {
     domain
+    _id
   }
 }
     `;
@@ -1258,6 +1262,7 @@ export const AddSkillDocument = gql`
     mutation AddSkill($input: SkillInput!) {
   addSkill(input: $input) {
     skill
+    _id
   }
 }
     `;
@@ -1291,6 +1296,7 @@ export const AddBenefitDocument = gql`
     mutation AddBenefit($input: BenefitInput!) {
   addBenefit(input: $input) {
     benefit
+    _id
   }
 }
     `;

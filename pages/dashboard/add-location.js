@@ -3,9 +3,10 @@ import {
   useAllLocationsLazyQuery,
   useAddLocationMutation,
 } from "../../generated/graphql";
+import { DataGrid, GridColDef, GridValueGetterParams } from "@mui/x-data-grid";
 import { Typography, Button, TextField } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
-
+import styles from "../../styles/Location.module.css";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import { Alert, AlertTitle, Snackbar } from "@mui/material";
@@ -23,6 +24,7 @@ function Index() {
     p: 4,
   };
   const [location, setLocation] = useState([]);
+  const [locationName, setLocationName] = useState([]);
   const [input, setInput] = useState("");
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -31,11 +33,45 @@ function Index() {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const handleCloseSnackbar = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
     setOpenSnackbar(false);
+    setError("");
   };
+  const columns = [
+    {
+      field: "location",
+      headerName: "Location",
+      width: 400,
+      renderCell: (cellValues) => {
+        return (
+          <input
+            //value={input}
+            //color="white"
+            style={{
+              width: "100%",
+              border: "0px",
+              height: "100%",
+              padding: "10px",
+            }}
+            type={"text"}
+            value={cellValues.row.location}
+            onChange={(e) => console.log(cellValues, e)}
+          />
+        );
+      },
+    },
+    { field: "active", headerName: "Active", width: 250 },
+    {
+      field: "Toggle Active Status",
+      width: 450,
+      renderCell: (cellValues) => {
+        return (
+          <LoadingButton variant="contained" color="primary">
+            Toggle Status
+          </LoadingButton>
+        );
+      },
+    },
+  ];
   const [allLocationsQuery] = useAllLocationsLazyQuery();
   const [addLocaton] = useAddLocationMutation();
   const handleChange = async () => {
@@ -43,24 +79,28 @@ function Index() {
     if (input === "") {
       setError("Input Field Cannot Be Empty");
       setLoading(false);
-    } else if (location.includes(input)) {
+    } else if (locationName.includes(input)) {
       setError("Location already present");
       setLoading(false);
     } else {
-      console.log(location.includes(input));
       setError("");
       const response = await addLocaton({
         variables: {
           input: {
             location: input,
+            active: true,
           },
         },
       });
       setLoading(false);
-      setInput("");
-      setLocation((prev) => [...prev, input]);
+      setLocation([
+        ...location,
+        { id: response.data.addLocation._id, location: input, active: true },
+      ]);
+      setLocationName((prev) => [...prev, input]);
       setOpen(false);
-      console.log(location);
+      console.log(response);
+      setInput("");
     }
   };
   useEffect(() => {
@@ -74,9 +114,18 @@ function Index() {
       });
       const locations = response.data.allLocations;
       const newLocations = [];
-      locations.forEach((obj, i) => newLocations.push(obj.location));
+      locations.forEach((obj, i) =>
+        newLocations.push({
+          id: obj._id,
+          location: obj.location,
+          active: obj.active,
+        })
+      );
+      const nLocations = [];
+      locations.forEach((obj, i) => nLocations.push(obj.location));
       setLocation(newLocations);
-      console.log(newLocations);
+      setLocationName(nLocations);
+      console.log(response);
     };
     func();
   }, []);
@@ -85,46 +134,32 @@ function Index() {
     <div
       style={{
         width: "100vw",
-        height: "40vh",
+        height: "60vh",
         color: "black",
         marginTop: "80px",
         paddingLeft: "24px",
         paddingRight: "24px",
       }}
     >
-      <Typography variant="h5">Available Locations</Typography>
-      {location !== [] &&
-        location.map((single, i) => {
-          return (
-            <div key={i}>
-              <TextField
-                variant="outlined"
-                id="component-outlined"
-                value={single}
-                //value={input}
-                fullWidth
-                style={{
-                  marginBottom: "12px",
-                  color: "black",
-                }}
-                margin="dense"
-                //onChange={(e) => setInput(e.target.value)}
-                onChange={(e) => {
-                  let copy = [...location];
-                  copy[i] = e.target.value;
-                  setLocation([...copy]);
-                }}
-                label="Location"
-              />
-            </div>
-          );
-        })}
-      <Button variant="contained" onClick={handleOpen}>
-        Add Location
-      </Button>
-      <LoadingButton variant="contained" style={{ marginLeft: "12px" }}>
-        Save
-      </LoadingButton>
+      <Typography variant="h5" style={{ marginBottom: "12px" }}>
+        Locations
+      </Typography>
+      {location !== [] && (
+        <DataGrid
+          rows={location}
+          columns={columns}
+          pageSize={10}
+          rowsPerPageOptions={[5]}
+        />
+      )}
+      <div style={{ marginTop: "12px" }}>
+        <Button variant="contained" onClick={handleOpen}>
+          Add Location
+        </Button>
+        <LoadingButton variant="contained" style={{ marginLeft: "12px" }}>
+          Save
+        </LoadingButton>
+      </div>
       <Modal
         open={open}
         onClose={handleClose}
@@ -161,7 +196,7 @@ function Index() {
       </Modal>
       {error !== "" ? (
         <Snackbar
-          open={openSnackbar}
+          open={error === "" ? false : true}
           autoHideDuration={6000}
           onClose={handleCloseSnackbar}
         >

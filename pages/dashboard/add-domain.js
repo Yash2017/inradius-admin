@@ -5,12 +5,49 @@ import {
 } from "../../generated/graphql";
 import { Typography, Button, TextField } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
-
+import { DataGrid, GridColDef, GridValueGetterParams } from "@mui/x-data-grid";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import { Alert, AlertTitle, Snackbar } from "@mui/material";
 import { useRouter } from "next/router";
 export default function Index() {
+  const [locationName, setLocationName] = useState([]);
+  const columns = [
+    {
+      field: "domain",
+      headerName: "Domain",
+      width: 400,
+      renderCell: (cellValues) => {
+        return (
+          <input
+            //value={input}
+            //color="white"
+            style={{
+              width: "100%",
+              border: "0px",
+              height: "100%",
+              padding: "10px",
+            }}
+            type={"text"}
+            value={cellValues.row.domain}
+            onChange={(e) => console.log(cellValues, e)}
+          />
+        );
+      },
+    },
+    { field: "active", headerName: "Active", width: 250 },
+    {
+      field: "Toggle Active Status",
+      width: 450,
+      renderCell: (cellValues) => {
+        return (
+          <LoadingButton variant="contained" color="primary">
+            Toggle Status
+          </LoadingButton>
+        );
+      },
+    },
+  ];
   const router = useRouter();
   const style = {
     position: "absolute",
@@ -35,6 +72,7 @@ export default function Index() {
       return;
     }
     setOpenSnackbar(false);
+    setError("");
   };
   const [allDomainsQuery] = useAllDomainsLazyQuery();
   const [addDomain] = useAddDomainMutation();
@@ -43,22 +81,31 @@ export default function Index() {
     if (input === "") {
       setError("Input Field Cannot Be Empty");
       setLoading(false);
-    } else if (location.includes(input)) {
+    } else if (locationName.includes(input)) {
       setError("Domain already present");
       setLoading(false);
     } else {
-      console.log(location.includes(input));
+      console.log(locationName.includes(input));
       setError("");
       const response = await addDomain({
         variables: {
           input: {
             domain: input,
+            active: true,
           },
         },
       });
       setLoading(false);
+      setLocation([
+        ...location,
+        {
+          id: response.data.addDomain._id,
+          domain: input,
+          active: true,
+        },
+      ]);
+      setLocationName((prev) => [...prev, input]);
       setInput("");
-      setLocation((prev) => [...prev, input]);
       setOpen(false);
       console.log(location);
     }
@@ -74,8 +121,17 @@ export default function Index() {
       });
       const locations = response.data.allDomains;
       const newLocations = [];
-      locations.forEach((obj, i) => newLocations.push(obj.domain));
+      locations.forEach((obj, i) =>
+        newLocations.push({
+          id: obj._id,
+          domain: obj.domain,
+          active: obj.active,
+        })
+      );
+      const nLocations = [];
+      locations.forEach((obj, i) => nLocations.push(obj.domain));
       setLocation(newLocations);
+      setLocationName(nLocations);
       console.log(newLocations);
     };
     func();
@@ -85,46 +141,32 @@ export default function Index() {
     <div
       style={{
         width: "100vw",
-        height: "40vh",
+        height: "60vh",
         color: "black",
         marginTop: "80px",
         paddingLeft: "24px",
         paddingRight: "24px",
       }}
     >
-      <Typography variant="h5">Available Domains</Typography>
-      {location !== [] &&
-        location.map((single, i) => {
-          return (
-            <div key={i}>
-              <TextField
-                variant="outlined"
-                id="component-outlined"
-                value={single}
-                //value={input}
-                fullWidth
-                style={{
-                  marginBottom: "12px",
-                  color: "black",
-                }}
-                margin="dense"
-                //onChange={(e) => setInput(e.target.value)}
-                onChange={(e) => {
-                  let copy = [...location];
-                  copy[i] = e.target.value;
-                  setLocation([...copy]);
-                }}
-                label="Domain"
-              />
-            </div>
-          );
-        })}
-      <Button variant="contained" onClick={handleOpen}>
-        Add Domain
-      </Button>
-      <LoadingButton variant="contained" style={{ marginLeft: "12px" }}>
-        Save
-      </LoadingButton>
+      <Typography variant="h5" style={{ marginBottom: "12px" }}>
+        Available Domains
+      </Typography>
+      {location !== [] && (
+        <DataGrid
+          rows={location}
+          columns={columns}
+          pageSize={10}
+          rowsPerPageOptions={[5]}
+        />
+      )}
+      <div style={{ marginTop: "12px" }}>
+        <Button variant="contained" onClick={handleOpen}>
+          Add Domain
+        </Button>
+        <LoadingButton variant="contained" style={{ marginLeft: "12px" }}>
+          Save
+        </LoadingButton>
+      </div>
       <Modal
         open={open}
         onClose={handleClose}
@@ -161,7 +203,7 @@ export default function Index() {
       </Modal>
       {error !== "" ? (
         <Snackbar
-          open={openSnackbar}
+          open={error === "" ? false : true}
           autoHideDuration={6000}
           onClose={handleCloseSnackbar}
         >
