@@ -20,6 +20,7 @@ import WorkIcon from "@mui/icons-material/Work";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import CheckIcon from "@mui/icons-material/Check";
 import ExpandMore from "@mui/icons-material/ExpandMore";
+import BadgeIcon from "@mui/icons-material/Badge";
 import {
   ListItemButton,
   ListItemText,
@@ -81,6 +82,7 @@ const mdTheme = createTheme();
 export default function Layout({ children }) {
   const [open, setOpen] = React.useState(true);
   const [openList, setListOpen] = React.useState(true);
+  const [openSurveyList, setSurveyListOpen] = React.useState(true);
   React.useEffect(() => {
     const loggedIn = localStorage.getItem("loggedIn");
     if (loggedIn === undefined || loggedIn === "false" || loggedIn === null) {
@@ -156,13 +158,36 @@ export default function Layout({ children }) {
             <Divider />
             <List component="nav">
               <ListItemButton
-                onClick={() => router.push("/dashboard/add-survey")}
+                onClick={() => setSurveyListOpen(!openSurveyList)}
               >
                 <ListItemIcon>
                   <AddIcon />
                 </ListItemIcon>
                 <ListItemText primary="Survey" />
+                {openSurveyList ? <ExpandLess /> : <ExpandMore />}
               </ListItemButton>
+              <Collapse in={openSurveyList} timeout="auto" unmountOnExit>
+                <List component="div" disablePadding>
+                  <ListItemButton
+                    sx={{ pl: 4 }}
+                    onClick={() => router.push("/survey/employee")}
+                  >
+                    <ListItemIcon>
+                      <BadgeIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Employee" />
+                  </ListItemButton>
+                  <ListItemButton
+                    sx={{ pl: 4 }}
+                    onClick={() => router.push("/survey/employer")}
+                  >
+                    <ListItemIcon>
+                      <BadgeIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Employer" />
+                  </ListItemButton>
+                </List>
+              </Collapse>
               <ListItemButton
                 onClick={() => router.push("/dashboard/verify-employer")}
               >

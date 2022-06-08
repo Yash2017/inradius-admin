@@ -800,7 +800,7 @@ export type AddSurveyMutationVariables = Exact<{
 }>;
 
 
-export type AddSurveyMutation = { __typename?: 'Mutation', addSurvey: { __typename?: 'Survey', question: string, options: Array<string> } };
+export type AddSurveyMutation = { __typename?: 'Mutation', addSurvey: { __typename?: 'Survey', question: string, options: Array<string>, _id: string } };
 
 export type UpdateLocationMutationVariables = Exact<{
   input: UpdateLocationInput;
@@ -1451,6 +1451,7 @@ export const AddSurveyDocument = gql`
   addSurvey(input: $input) {
     question
     options
+    _id
   }
 }
     `;

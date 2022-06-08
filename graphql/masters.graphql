@@ -137,6 +137,7 @@ mutation AddSurvey($input: SurveyInput!) {
   addSurvey(input: $input) {
     question
     options
+    _id
   }
 }
 
