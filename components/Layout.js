@@ -155,6 +155,22 @@ export default function Layout({ children }) {
             </Toolbar>
             <Divider />
             <List component="nav">
+              <ListItemButton
+                onClick={() => router.push("/dashboard/add-survey")}
+              >
+                <ListItemIcon>
+                  <AddIcon />
+                </ListItemIcon>
+                <ListItemText primary="Survey" />
+              </ListItemButton>
+              <ListItemButton
+                onClick={() => router.push("/dashboard/verify-employer")}
+              >
+                <ListItemIcon>
+                  <CheckIcon />
+                </ListItemIcon>
+                <ListItemText primary="Verify Employer" />
+              </ListItemButton>
               <ListItemButton onClick={handleClick}>
                 <ListItemIcon>
                   <WorkIcon />
@@ -217,24 +233,6 @@ export default function Layout({ children }) {
                       <AddIcon />
                     </ListItemIcon>
                     <ListItemText primary="Benefit" />
-                  </ListItemButton>
-                  <ListItemButton
-                    sx={{ pl: 4 }}
-                    onClick={() => router.push("/dashboard/add-survey")}
-                  >
-                    <ListItemIcon>
-                      <AddIcon />
-                    </ListItemIcon>
-                    <ListItemText primary="Survey" />
-                  </ListItemButton>
-                  <ListItemButton
-                    sx={{ pl: 4 }}
-                    onClick={() => router.push("/dashboard/verify-employer")}
-                  >
-                    <ListItemIcon>
-                      <CheckIcon />
-                    </ListItemIcon>
-                    <ListItemText primary="Verify Employer" />
                   </ListItemButton>
                 </List>
               </Collapse>

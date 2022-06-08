@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import {
   useAllQualificationsLazyQuery,
   useAddQualificationMutation,
+  useUpdateQualificationMutation,
 } from "../../generated/graphql";
 import { Typography, Button, TextField } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
@@ -13,6 +14,11 @@ import { useRouter } from "next/router";
 import Switch from "@mui/material/Switch";
 export default function AddQualification() {
   const [locationName, setLocationName] = useState([]);
+  const [success, setSuccess] = useState(false);
+  const [edited, setEdited] = useState([]);
+  const [editedId, setEditedId] = useState([]);
+  const [saveLoading, setSaveLoading] = useState(false);
+  const [updateQualification] = useUpdateQualificationMutation();
   const columns = [
     {
       field: "qualification",
@@ -21,8 +27,6 @@ export default function AddQualification() {
       renderCell: (cellValues) => {
         return (
           <input
-            //value={input}
-            //color="white"
             style={{
               width: "100%",
               border: "0px",
@@ -31,7 +35,32 @@ export default function AddQualification() {
             }}
             type={"text"}
             value={cellValues.row.qualification}
-            onChange={(e) => console.log(cellValues, e)}
+            onChange={(e) => {
+              const newL = [...location];
+              newL.forEach((ind) => {
+                if (ind.id === cellValues.row.id) {
+                  const old = ind.qualification;
+                  ind.qualification = String(e.target.value);
+                  if (edited.length !== 0) {
+                    const ret = edited.indexOf(old);
+                    console.log(editedId);
+                    console.log(edited);
+                    if (ret === -1) {
+                      setEdited([...edited, ind.qualification]);
+                      setEditedId([...editedId, ind.id]);
+                    } else {
+                      const newEdited = [...edited];
+                      newEdited[ret] = ind.qualification;
+                      setEdited(newEdited);
+                    }
+                  } else {
+                    setEdited([ind.qualification]);
+                    setEditedId([ind.id]);
+                  }
+                }
+              });
+              setLocation(newL);
+            }}
           />
         );
       },
@@ -132,7 +161,28 @@ export default function AddQualification() {
     };
     func();
   }, []);
-
+  const handleSaveClick = () => {
+    if (edited.length !== 0 && editedId.length !== 0) {
+      setSaveLoading(true);
+      edited.forEach(async (each, id) => {
+        const response = await updateQualification({
+          variables: {
+            input: {
+              id: editedId[id],
+              qualification: each,
+            },
+          },
+        });
+        console.log(response);
+      });
+      setEdited([]);
+      setEditedId([]);
+      setSaveLoading(false);
+      setSuccess("Changes Saved!");
+    } else {
+      setError("No changes made!");
+    }
+  };
   return (
     <div
       style={{
@@ -159,7 +209,12 @@ export default function AddQualification() {
         <Button variant="contained" onClick={handleOpen}>
           Add Qualification
         </Button>
-        <LoadingButton variant="contained" style={{ marginLeft: "12px" }}>
+        <LoadingButton
+          loading={saveLoading}
+          onClick={handleSaveClick}
+          variant="contained"
+          style={{ marginLeft: "12px" }}
+        >
           Save
         </LoadingButton>
       </div>
@@ -205,6 +260,17 @@ export default function AddQualification() {
         >
           <Alert onClose={handleCloseSnackbar} severity="error">
             {error}
+          </Alert>
+        </Snackbar>
+      ) : null}
+      {success !== "" ? (
+        <Snackbar
+          open={success === "" ? false : true}
+          autoHideDuration={6000}
+          onClose={() => setSuccess("")}
+        >
+          <Alert onClose={() => setSuccess("")} severity="success">
+            {success}
           </Alert>
         </Snackbar>
       ) : null}

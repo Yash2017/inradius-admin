@@ -139,3 +139,45 @@ mutation AddSurvey($input: SurveyInput!) {
     options
   }
 }
+
+mutation UpdateLocation($input: UpdateLocationInput!) {
+  updateLocation(input: $input) {
+    location
+    active
+  }
+}
+
+mutation UpdateQualification($input: UpdateQualificationInput!) {
+  updateQualification(input: $input) {
+    qualification
+    active
+  }
+}
+
+mutation UpdateIndustry($input: UpdateIndustryInput!) {
+  updateIndustry(input: $input) {
+    industry
+    active
+  }
+}
+
+mutation UpdateSkill($input: UpdateSkillInput!) {
+  updateSkill(input: $input) {
+    skill
+    active
+  }
+}
+
+mutation UpdateDomain($input: UpdateDomainInput!) {
+  updateDomain(input: $input) {
+    domain
+    active
+  }
+}
+
+mutation UpdateBenefit($input: UpdateBenefitInput!) {
+  updateBenefit(input: $input) {
+    benefit
+    active
+  }
+}

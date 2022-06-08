@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import {
   useAllLocationsLazyQuery,
   useAddLocationMutation,
+  useUpdateLocationMutation,
 } from "../../generated/graphql";
 import { DataGrid, GridColDef, GridValueGetterParams } from "@mui/x-data-grid";
 import { Typography, Button, TextField } from "@mui/material";
@@ -28,10 +29,15 @@ function Index() {
   const [input, setInput] = useState("");
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [saveLoading, setSaveLoading] = useState(false);
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
   const [openSnackbar, setOpenSnackbar] = useState(true);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  const [edited, setEdited] = useState([]);
+  const [editedId, setEditedId] = useState([]);
+  const [updateLocation] = useUpdateLocationMutation();
   const handleCloseSnackbar = (event, reason) => {
     setOpenSnackbar(false);
     setError("");
@@ -44,8 +50,6 @@ function Index() {
       renderCell: (cellValues) => {
         return (
           <input
-            //value={input}
-            //color="white"
             style={{
               width: "100%",
               border: "0px",
@@ -53,8 +57,33 @@ function Index() {
               padding: "10px",
             }}
             type={"text"}
-            value={cellValues.row.location}
-            onChange={(e) => console.log(cellValues, e)}
+            value={cellValues.value}
+            onChange={(e) => {
+              const newL = [...location];
+              newL.forEach((ind) => {
+                if (ind.id === cellValues.row.id) {
+                  const old = ind.location;
+                  ind.location = String(e.target.value);
+                  if (edited.length !== 0) {
+                    const ret = edited.indexOf(old);
+                    console.log(editedId);
+                    console.log(edited);
+                    if (ret === -1) {
+                      setEdited([...edited, ind.location]);
+                      setEditedId([...editedId, ind.id]);
+                    } else {
+                      const newEdited = [...edited];
+                      newEdited[ret] = ind.location;
+                      setEdited(newEdited);
+                    }
+                  } else {
+                    setEdited([ind.location]);
+                    setEditedId([ind.id]);
+                  }
+                }
+              });
+              setLocation(newL);
+            }}
           />
         );
       },
@@ -131,6 +160,28 @@ function Index() {
     func();
   }, []);
 
+  const handleSaveClick = () => {
+    if (edited.length !== 0 && editedId.length !== 0) {
+      setSaveLoading(true);
+      edited.forEach(async (each, id) => {
+        const response = await updateLocation({
+          variables: {
+            input: {
+              id: editedId[id],
+              location: each,
+            },
+          },
+        });
+        console.log(response);
+      });
+      setEdited([]);
+      setEditedId([]);
+      setSaveLoading(false);
+      setSuccess("Changes Saved!");
+    } else {
+      setError("No changes made!");
+    }
+  };
   return (
     <div
       style={{
@@ -157,7 +208,12 @@ function Index() {
         <Button variant="contained" onClick={handleOpen}>
           Add Location
         </Button>
-        <LoadingButton variant="contained" style={{ marginLeft: "12px" }}>
+        <LoadingButton
+          onClick={() => handleSaveClick()}
+          loading={saveLoading}
+          variant="contained"
+          style={{ marginLeft: "12px" }}
+        >
           Save
         </LoadingButton>
       </div>
@@ -203,6 +259,17 @@ function Index() {
         >
           <Alert onClose={handleCloseSnackbar} severity="error">
             {error}
+          </Alert>
+        </Snackbar>
+      ) : null}
+      {success !== "" ? (
+        <Snackbar
+          open={success === "" ? false : true}
+          autoHideDuration={6000}
+          onClose={() => setSuccess("")}
+        >
+          <Alert onClose={() => setSuccess("")} severity="success">
+            {success}
           </Alert>
         </Snackbar>
       ) : null}

@@ -56,6 +56,7 @@ export type Benefit = {
 };
 
 export type BenefitInput = {
+  active: Scalars['Boolean'];
   benefit: Scalars['String'];
 };
 
@@ -91,6 +92,7 @@ export type Domain = {
 };
 
 export type DomainInput = {
+  active: Scalars['Boolean'];
   domain: Scalars['String'];
 };
 
@@ -241,6 +243,7 @@ export type Industry = {
 };
 
 export type IndustryInput = {
+  active: Scalars['Boolean'];
   industry: Scalars['String'];
 };
 
@@ -277,9 +280,15 @@ export type Mutation = {
   addSurvey: Survey;
   adminRegister: Admin;
   register: User;
+  updateBenefit: Benefit;
+  updateDomain: Domain;
   updateEmployee: Employee;
   updateEmployer: Employer;
   updateEmployerJob: EmployerJob;
+  updateIndustry: Industry;
+  updateLocation: Location;
+  updateQualification: Qualification;
+  updateSkill: Skill;
 };
 
 
@@ -338,6 +347,16 @@ export type MutationRegisterArgs = {
 };
 
 
+export type MutationUpdateBenefitArgs = {
+  input: UpdateBenefitInput;
+};
+
+
+export type MutationUpdateDomainArgs = {
+  input: UpdateDomainInput;
+};
+
+
 export type MutationUpdateEmployeeArgs = {
   input: UpdateEmployeeInput;
 };
@@ -352,6 +371,26 @@ export type MutationUpdateEmployerJobArgs = {
   input: EmployerJobInput;
 };
 
+
+export type MutationUpdateIndustryArgs = {
+  input: UpdateIndustryInput;
+};
+
+
+export type MutationUpdateLocationArgs = {
+  input: UpdateLocationInput;
+};
+
+
+export type MutationUpdateQualificationArgs = {
+  input: UpdateQualificationInput;
+};
+
+
+export type MutationUpdateSkillArgs = {
+  input: UpdateSkillInput;
+};
+
 export type Qualification = {
   __typename?: 'Qualification';
   _id: Scalars['ID'];
@@ -362,6 +401,7 @@ export type Qualification = {
 };
 
 export type QualificationInput = {
+  active: Scalars['Boolean'];
   qualification: Scalars['String'];
 };
 
@@ -460,6 +500,7 @@ export type Skill = {
 };
 
 export type SkillInput = {
+  active: Scalars['Boolean'];
   skill: Scalars['String'];
 };
 
@@ -474,6 +515,7 @@ export type SubDomain = {
 };
 
 export type SubDomainInput = {
+  active: Scalars['Boolean'];
   domain: Scalars['String'];
   subDomain: Scalars['String'];
 };
@@ -499,6 +541,18 @@ export enum SurveyType {
   Employee = 'employee',
   Employer = 'employer'
 }
+
+export type UpdateBenefitInput = {
+  active?: InputMaybe<Scalars['Boolean']>;
+  benefit?: InputMaybe<Scalars['String']>;
+  id: Scalars['ID'];
+};
+
+export type UpdateDomainInput = {
+  active?: InputMaybe<Scalars['Boolean']>;
+  domain?: InputMaybe<Scalars['String']>;
+  id: Scalars['ID'];
+};
 
 export type UpdateEmployeeInput = {
   aadharCard?: InputMaybe<Scalars['String']>;
@@ -549,6 +603,30 @@ export type UpdateEmployerInput = {
 export type UpdateEmployerVerifyInput = {
   _id: Scalars['ID'];
   employerVerified: Scalars['Boolean'];
+};
+
+export type UpdateIndustryInput = {
+  active?: InputMaybe<Scalars['Boolean']>;
+  id: Scalars['ID'];
+  industry?: InputMaybe<Scalars['String']>;
+};
+
+export type UpdateLocationInput = {
+  active?: InputMaybe<Scalars['Boolean']>;
+  id: Scalars['ID'];
+  location?: InputMaybe<Scalars['String']>;
+};
+
+export type UpdateQualificationInput = {
+  active?: InputMaybe<Scalars['Boolean']>;
+  id: Scalars['ID'];
+  qualification?: InputMaybe<Scalars['String']>;
+};
+
+export type UpdateSkillInput = {
+  active?: InputMaybe<Scalars['Boolean']>;
+  id: Scalars['ID'];
+  skill?: InputMaybe<Scalars['String']>;
 };
 
 export type User = {
@@ -723,6 +801,48 @@ export type AddSurveyMutationVariables = Exact<{
 
 
 export type AddSurveyMutation = { __typename?: 'Mutation', addSurvey: { __typename?: 'Survey', question: string, options: Array<string> } };
+
+export type UpdateLocationMutationVariables = Exact<{
+  input: UpdateLocationInput;
+}>;
+
+
+export type UpdateLocationMutation = { __typename?: 'Mutation', updateLocation: { __typename?: 'Location', location: string, active: boolean } };
+
+export type UpdateQualificationMutationVariables = Exact<{
+  input: UpdateQualificationInput;
+}>;
+
+
+export type UpdateQualificationMutation = { __typename?: 'Mutation', updateQualification: { __typename?: 'Qualification', qualification: string, active: boolean } };
+
+export type UpdateIndustryMutationVariables = Exact<{
+  input: UpdateIndustryInput;
+}>;
+
+
+export type UpdateIndustryMutation = { __typename?: 'Mutation', updateIndustry: { __typename?: 'Industry', industry: string, active: boolean } };
+
+export type UpdateSkillMutationVariables = Exact<{
+  input: UpdateSkillInput;
+}>;
+
+
+export type UpdateSkillMutation = { __typename?: 'Mutation', updateSkill: { __typename?: 'Skill', skill: string, active: boolean } };
+
+export type UpdateDomainMutationVariables = Exact<{
+  input: UpdateDomainInput;
+}>;
+
+
+export type UpdateDomainMutation = { __typename?: 'Mutation', updateDomain: { __typename?: 'Domain', domain: string, active: boolean } };
+
+export type UpdateBenefitMutationVariables = Exact<{
+  input: UpdateBenefitInput;
+}>;
+
+
+export type UpdateBenefitMutation = { __typename?: 'Mutation', updateBenefit: { __typename?: 'Benefit', benefit: string, active: boolean } };
 
 
 export const AllLocationsDocument = gql`
@@ -1360,3 +1480,207 @@ export function useAddSurveyMutation(baseOptions?: Apollo.MutationHookOptions<Ad
 export type AddSurveyMutationHookResult = ReturnType<typeof useAddSurveyMutation>;
 export type AddSurveyMutationResult = Apollo.MutationResult<AddSurveyMutation>;
 export type AddSurveyMutationOptions = Apollo.BaseMutationOptions<AddSurveyMutation, AddSurveyMutationVariables>;
+export const UpdateLocationDocument = gql`
+    mutation UpdateLocation($input: UpdateLocationInput!) {
+  updateLocation(input: $input) {
+    location
+    active
+  }
+}
+    `;
+export type UpdateLocationMutationFn = Apollo.MutationFunction<UpdateLocationMutation, UpdateLocationMutationVariables>;
+
+/**
+ * __useUpdateLocationMutation__
+ *
+ * To run a mutation, you first call `useUpdateLocationMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateLocationMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateLocationMutation, { data, loading, error }] = useUpdateLocationMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateLocationMutation(baseOptions?: Apollo.MutationHookOptions<UpdateLocationMutation, UpdateLocationMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateLocationMutation, UpdateLocationMutationVariables>(UpdateLocationDocument, options);
+      }
+export type UpdateLocationMutationHookResult = ReturnType<typeof useUpdateLocationMutation>;
+export type UpdateLocationMutationResult = Apollo.MutationResult<UpdateLocationMutation>;
+export type UpdateLocationMutationOptions = Apollo.BaseMutationOptions<UpdateLocationMutation, UpdateLocationMutationVariables>;
+export const UpdateQualificationDocument = gql`
+    mutation UpdateQualification($input: UpdateQualificationInput!) {
+  updateQualification(input: $input) {
+    qualification
+    active
+  }
+}
+    `;
+export type UpdateQualificationMutationFn = Apollo.MutationFunction<UpdateQualificationMutation, UpdateQualificationMutationVariables>;
+
+/**
+ * __useUpdateQualificationMutation__
+ *
+ * To run a mutation, you first call `useUpdateQualificationMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateQualificationMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateQualificationMutation, { data, loading, error }] = useUpdateQualificationMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateQualificationMutation(baseOptions?: Apollo.MutationHookOptions<UpdateQualificationMutation, UpdateQualificationMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateQualificationMutation, UpdateQualificationMutationVariables>(UpdateQualificationDocument, options);
+      }
+export type UpdateQualificationMutationHookResult = ReturnType<typeof useUpdateQualificationMutation>;
+export type UpdateQualificationMutationResult = Apollo.MutationResult<UpdateQualificationMutation>;
+export type UpdateQualificationMutationOptions = Apollo.BaseMutationOptions<UpdateQualificationMutation, UpdateQualificationMutationVariables>;
+export const UpdateIndustryDocument = gql`
+    mutation UpdateIndustry($input: UpdateIndustryInput!) {
+  updateIndustry(input: $input) {
+    industry
+    active
+  }
+}
+    `;
+export type UpdateIndustryMutationFn = Apollo.MutationFunction<UpdateIndustryMutation, UpdateIndustryMutationVariables>;
+
+/**
+ * __useUpdateIndustryMutation__
+ *
+ * To run a mutation, you first call `useUpdateIndustryMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateIndustryMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateIndustryMutation, { data, loading, error }] = useUpdateIndustryMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateIndustryMutation(baseOptions?: Apollo.MutationHookOptions<UpdateIndustryMutation, UpdateIndustryMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateIndustryMutation, UpdateIndustryMutationVariables>(UpdateIndustryDocument, options);
+      }
+export type UpdateIndustryMutationHookResult = ReturnType<typeof useUpdateIndustryMutation>;
+export type UpdateIndustryMutationResult = Apollo.MutationResult<UpdateIndustryMutation>;
+export type UpdateIndustryMutationOptions = Apollo.BaseMutationOptions<UpdateIndustryMutation, UpdateIndustryMutationVariables>;
+export const UpdateSkillDocument = gql`
+    mutation UpdateSkill($input: UpdateSkillInput!) {
+  updateSkill(input: $input) {
+    skill
+    active
+  }
+}
+    `;
+export type UpdateSkillMutationFn = Apollo.MutationFunction<UpdateSkillMutation, UpdateSkillMutationVariables>;
+
+/**
+ * __useUpdateSkillMutation__
+ *
+ * To run a mutation, you first call `useUpdateSkillMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateSkillMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateSkillMutation, { data, loading, error }] = useUpdateSkillMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateSkillMutation(baseOptions?: Apollo.MutationHookOptions<UpdateSkillMutation, UpdateSkillMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateSkillMutation, UpdateSkillMutationVariables>(UpdateSkillDocument, options);
+      }
+export type UpdateSkillMutationHookResult = ReturnType<typeof useUpdateSkillMutation>;
+export type UpdateSkillMutationResult = Apollo.MutationResult<UpdateSkillMutation>;
+export type UpdateSkillMutationOptions = Apollo.BaseMutationOptions<UpdateSkillMutation, UpdateSkillMutationVariables>;
+export const UpdateDomainDocument = gql`
+    mutation UpdateDomain($input: UpdateDomainInput!) {
+  updateDomain(input: $input) {
+    domain
+    active
+  }
+}
+    `;
+export type UpdateDomainMutationFn = Apollo.MutationFunction<UpdateDomainMutation, UpdateDomainMutationVariables>;
+
+/**
+ * __useUpdateDomainMutation__
+ *
+ * To run a mutation, you first call `useUpdateDomainMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateDomainMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateDomainMutation, { data, loading, error }] = useUpdateDomainMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateDomainMutation(baseOptions?: Apollo.MutationHookOptions<UpdateDomainMutation, UpdateDomainMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateDomainMutation, UpdateDomainMutationVariables>(UpdateDomainDocument, options);
+      }
+export type UpdateDomainMutationHookResult = ReturnType<typeof useUpdateDomainMutation>;
+export type UpdateDomainMutationResult = Apollo.MutationResult<UpdateDomainMutation>;
+export type UpdateDomainMutationOptions = Apollo.BaseMutationOptions<UpdateDomainMutation, UpdateDomainMutationVariables>;
+export const UpdateBenefitDocument = gql`
+    mutation UpdateBenefit($input: UpdateBenefitInput!) {
+  updateBenefit(input: $input) {
+    benefit
+    active
+  }
+}
+    `;
+export type UpdateBenefitMutationFn = Apollo.MutationFunction<UpdateBenefitMutation, UpdateBenefitMutationVariables>;
+
+/**
+ * __useUpdateBenefitMutation__
+ *
+ * To run a mutation, you first call `useUpdateBenefitMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateBenefitMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateBenefitMutation, { data, loading, error }] = useUpdateBenefitMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateBenefitMutation(baseOptions?: Apollo.MutationHookOptions<UpdateBenefitMutation, UpdateBenefitMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateBenefitMutation, UpdateBenefitMutationVariables>(UpdateBenefitDocument, options);
+      }
+export type UpdateBenefitMutationHookResult = ReturnType<typeof useUpdateBenefitMutation>;
+export type UpdateBenefitMutationResult = Apollo.MutationResult<UpdateBenefitMutation>;
+export type UpdateBenefitMutationOptions = Apollo.BaseMutationOptions<UpdateBenefitMutation, UpdateBenefitMutationVariables>;

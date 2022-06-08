@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import {
   useAllDomainsLazyQuery,
   useAddDomainMutation,
+  useUpdateDomainMutation,
 } from "../../generated/graphql";
 import { Typography, Button, TextField } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
@@ -13,6 +14,11 @@ import { useRouter } from "next/router";
 import Switch from "@mui/material/Switch";
 export default function Index() {
   const [locationName, setLocationName] = useState([]);
+  const [edited, setEdited] = useState([]);
+  const [success, setSuccess] = useState("");
+  const [saveLoading, setSaveLoading] = useState(false);
+  const [editedId, setEditedId] = useState([]);
+  const [updateDomain] = useUpdateDomainMutation();
   const columns = [
     {
       field: "domain",
@@ -31,7 +37,32 @@ export default function Index() {
             }}
             type={"text"}
             value={cellValues.row.domain}
-            onChange={(e) => console.log(cellValues, e)}
+            onChange={(e) => {
+              const newL = [...location];
+              newL.forEach((ind) => {
+                if (ind.id === cellValues.row.id) {
+                  const old = ind.domain;
+                  ind.domain = String(e.target.value);
+                  if (edited.length !== 0) {
+                    const ret = edited.indexOf(old);
+                    console.log(editedId);
+                    console.log(edited);
+                    if (ret === -1) {
+                      setEdited([...edited, ind.domain]);
+                      setEditedId([...editedId, ind.id]);
+                    } else {
+                      const newEdited = [...edited];
+                      newEdited[ret] = ind.domain;
+                      setEdited(newEdited);
+                    }
+                  } else {
+                    setEdited([ind.domain]);
+                    setEditedId([ind.id]);
+                  }
+                }
+              });
+              setLocation(newL);
+            }}
           />
         );
       },
@@ -135,7 +166,28 @@ export default function Index() {
     };
     func();
   }, []);
-
+  const handleSaveClick = () => {
+    if (edited.length !== 0 && editedId.length !== 0) {
+      setSaveLoading(true);
+      edited.forEach(async (each, id) => {
+        const response = await updateDomain({
+          variables: {
+            input: {
+              id: editedId[id],
+              domain: each,
+            },
+          },
+        });
+        console.log(response);
+      });
+      setEdited([]);
+      setEditedId([]);
+      setSaveLoading(false);
+      setSuccess("Changes Saved!");
+    } else {
+      setError("No changes made!");
+    }
+  };
   return (
     <div
       style={{
@@ -162,7 +214,12 @@ export default function Index() {
         <Button variant="contained" onClick={handleOpen}>
           Add Domain
         </Button>
-        <LoadingButton variant="contained" style={{ marginLeft: "12px" }}>
+        <LoadingButton
+          loading={saveLoading}
+          onClick={handleSaveClick}
+          variant="contained"
+          style={{ marginLeft: "12px" }}
+        >
           Save
         </LoadingButton>
       </div>
@@ -208,6 +265,17 @@ export default function Index() {
         >
           <Alert onClose={handleCloseSnackbar} severity="error">
             {error}
+          </Alert>
+        </Snackbar>
+      ) : null}
+      {success !== "" ? (
+        <Snackbar
+          open={success === "" ? false : true}
+          autoHideDuration={6000}
+          onClose={() => setSuccess("")}
+        >
+          <Alert onClose={() => setSuccess("")} severity="success">
+            {success}
           </Alert>
         </Snackbar>
       ) : null}

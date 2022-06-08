@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import {
   useAllBenefitsLazyQuery,
   useAddBenefitMutation,
+  useUpdateBenefitMutation,
 } from "../../generated/graphql";
 import { Typography, Button, TextField } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
@@ -31,7 +32,32 @@ function Index() {
             }}
             type={"text"}
             value={cellValues.row.benefit}
-            onChange={(e) => console.log(cellValues, e)}
+            onChange={(e) => {
+              const newL = [...location];
+              newL.forEach((ind) => {
+                if (ind.id === cellValues.row.id) {
+                  const old = ind.benefit;
+                  ind.benefit = String(e.target.value);
+                  if (edited.length !== 0) {
+                    const ret = edited.indexOf(old);
+                    console.log(editedId);
+                    console.log(edited);
+                    if (ret === -1) {
+                      setEdited([...edited, ind.benefit]);
+                      setEditedId([...editedId, ind.id]);
+                    } else {
+                      const newEdited = [...edited];
+                      newEdited[ret] = ind.benefit;
+                      setEdited(newEdited);
+                    }
+                  } else {
+                    setEdited([ind.benefit]);
+                    setEditedId([ind.id]);
+                  }
+                }
+              });
+              setLocation(newL);
+            }}
           />
         );
       },
@@ -61,6 +87,11 @@ function Index() {
   const [location, setLocation] = useState([]);
   const [input, setInput] = useState("");
   const [open, setOpen] = useState(false);
+  const [edited, setEdited] = useState([]);
+  const [success, setSuccess] = useState("");
+  const [saveLoading, setSaveLoading] = useState(false);
+  const [editedId, setEditedId] = useState([]);
+  const [updateBenefit] = useUpdateBenefitMutation();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [openSnackbar, setOpenSnackbar] = useState(true);
@@ -135,7 +166,28 @@ function Index() {
     };
     func();
   }, []);
-
+  const handleSaveClick = () => {
+    if (edited.length !== 0 && editedId.length !== 0) {
+      setSaveLoading(true);
+      edited.forEach(async (each, id) => {
+        const response = await updateBenefit({
+          variables: {
+            input: {
+              id: editedId[id],
+              benefit: each,
+            },
+          },
+        });
+        console.log(response);
+      });
+      setEdited([]);
+      setEditedId([]);
+      setSaveLoading(false);
+      setSuccess("Changes Saved!");
+    } else {
+      setError("No changes made!");
+    }
+  };
   return (
     <div
       style={{
@@ -162,7 +214,12 @@ function Index() {
         <Button variant="contained" onClick={handleOpen}>
           Add Benefits
         </Button>
-        <LoadingButton variant="contained" style={{ marginLeft: "12px" }}>
+        <LoadingButton
+          loading={saveLoading}
+          onClick={handleSaveClick}
+          variant="contained"
+          style={{ marginLeft: "12px" }}
+        >
           Save
         </LoadingButton>
       </div>
@@ -208,6 +265,17 @@ function Index() {
         >
           <Alert onClose={handleCloseSnackbar} severity="error">
             {error}
+          </Alert>
+        </Snackbar>
+      ) : null}
+      {success !== "" ? (
+        <Snackbar
+          open={success === "" ? false : true}
+          autoHideDuration={6000}
+          onClose={() => setSuccess("")}
+        >
+          <Alert onClose={() => setSuccess("")} severity="success">
+            {success}
           </Alert>
         </Snackbar>
       ) : null}
