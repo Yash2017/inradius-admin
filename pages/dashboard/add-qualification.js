@@ -14,7 +14,7 @@ import { useRouter } from "next/router";
 import Switch from "@mui/material/Switch";
 export default function AddQualification() {
   const [locationName, setLocationName] = useState([]);
-  const [success, setSuccess] = useState(false);
+  const [success, setSuccess] = useState("");
   const [edited, setEdited] = useState([]);
   const [editedId, setEditedId] = useState([]);
   const [saveLoading, setSaveLoading] = useState(false);
@@ -96,6 +96,9 @@ export default function AddQualification() {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const handleCloseSnackbar = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
     setError("");
     setOpenSnackbar(false);
   };

@@ -114,7 +114,6 @@ export type Employee = {
   fresher?: Maybe<Scalars['Boolean']>;
   gender?: Maybe<EmployeeGenderEnum>;
   industry?: Maybe<Industry>;
-  interests: Array<User>;
   latitude?: Maybe<Scalars['Float']>;
   linkedIn?: Maybe<Scalars['String']>;
   location?: Maybe<Location>;
@@ -124,6 +123,7 @@ export type Employee = {
   radius?: Maybe<Scalars['Float']>;
   relevantExp?: Maybe<UserExpInYearMonths>;
   resume?: Maybe<Scalars['String']>;
+  shortDescription?: Maybe<Scalars['String']>;
   skills: Array<Skill>;
   subDomain: Array<SubDomain>;
   totalExp?: Maybe<UserExpInYearMonths>;
@@ -153,7 +153,6 @@ export type Employer = {
   employerVerified?: Maybe<Scalars['Boolean']>;
   employerVerifyStatus?: Maybe<EmployerVerifyStatusEnum>;
   gstNo?: Maybe<Scalars['String']>;
-  interests: Array<User>;
   jobs?: Maybe<Array<EmployerJob>>;
   landline?: Maybe<Scalars['Float']>;
   lastTurnover?: Maybe<Scalars['Float']>;
@@ -247,6 +246,18 @@ export type IndustryInput = {
   industry: Scalars['String'];
 };
 
+export type Interests = {
+  __typename?: 'Interests';
+  _id: Scalars['ID'];
+  createdAt: Scalars['DateTime'];
+  employee?: Maybe<Scalars['Boolean']>;
+  employeeId: Employee;
+  employer?: Maybe<Scalars['Boolean']>;
+  employerId: Employer;
+  jobId: EmployerJob;
+  updatedAt: Scalars['DateTime'];
+};
+
 export type Location = {
   __typename?: 'Location';
   _id: Scalars['ID'];
@@ -279,6 +290,7 @@ export type Mutation = {
   addSubDomain: SubDomain;
   addSurvey: Survey;
   adminRegister: Admin;
+  markInterest: Scalars['Boolean'];
   register: User;
   updateBenefit: Benefit;
   updateDomain: Domain;
@@ -289,6 +301,7 @@ export type Mutation = {
   updateLocation: Location;
   updateQualification: Qualification;
   updateSkill: Skill;
+  updateSurveyQuestion: Survey;
 };
 
 
@@ -342,6 +355,14 @@ export type MutationAdminRegisterArgs = {
 };
 
 
+export type MutationMarkInterestArgs = {
+  employeeId?: InputMaybe<Scalars['String']>;
+  employerId?: InputMaybe<Scalars['String']>;
+  interest: Scalars['Boolean'];
+  jobId?: InputMaybe<Scalars['String']>;
+};
+
+
 export type MutationRegisterArgs = {
   input: RegisterInput;
 };
@@ -391,6 +412,11 @@ export type MutationUpdateSkillArgs = {
   input: UpdateSkillInput;
 };
 
+
+export type MutationUpdateSurveyQuestionArgs = {
+  input: UpdateSurveyInput;
+};
+
 export type Qualification = {
   __typename?: 'Qualification';
   _id: Scalars['ID'];
@@ -425,6 +451,9 @@ export type Query = {
   getEmployer: Employer;
   getEmployerAllJobs: Array<EmployerJob>;
   getJobDetails: EmployerJob;
+  getMatched: Array<Interests>;
+  getMyInterests: Array<Interests>;
+  getShownInterests: Array<Interests>;
   login: Scalars['Boolean'];
   logout: Scalars['Boolean'];
   resendVerifyEmail: Scalars['Boolean'];
@@ -454,6 +483,21 @@ export type QueryEmployerExploreArgs = {
 
 export type QueryGetJobDetailsArgs = {
   jobId: Scalars['String'];
+};
+
+
+export type QueryGetMatchedArgs = {
+  jobId?: InputMaybe<Scalars['String']>;
+};
+
+
+export type QueryGetMyInterestsArgs = {
+  jobId?: InputMaybe<Scalars['String']>;
+};
+
+
+export type QueryGetShownInterestsArgs = {
+  jobId?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -523,6 +567,7 @@ export type SubDomainInput = {
 export type Survey = {
   __typename?: 'Survey';
   _id: Scalars['ID'];
+  active: Scalars['Boolean'];
   createdAt: Scalars['DateTime'];
   options: Array<Scalars['String']>;
   question: Scalars['String'];
@@ -531,6 +576,7 @@ export type Survey = {
 };
 
 export type SurveyInput = {
+  active?: InputMaybe<Scalars['Boolean']>;
   options: Array<Scalars['String']>;
   question: Scalars['String'];
   type: SurveyType;
@@ -573,6 +619,7 @@ export type UpdateEmployeeInput = {
   radius?: InputMaybe<Scalars['Float']>;
   relevantExp?: InputMaybe<UserExpInYearMonthsInput>;
   resume?: InputMaybe<Scalars['String']>;
+  shortDescription?: InputMaybe<Scalars['String']>;
   skills?: InputMaybe<Array<Scalars['ID']>>;
   subDomain?: InputMaybe<Array<Scalars['ID']>>;
   totalExp?: InputMaybe<UserExpInYearMonthsInput>;
@@ -629,6 +676,13 @@ export type UpdateSkillInput = {
   skill?: InputMaybe<Scalars['String']>;
 };
 
+export type UpdateSurveyInput = {
+  active?: InputMaybe<Scalars['Boolean']>;
+  id: Scalars['ID'];
+  options?: InputMaybe<Array<Scalars['String']>>;
+  question?: InputMaybe<Scalars['String']>;
+};
+
 export type User = {
   __typename?: 'User';
   _id: Scalars['ID'];
@@ -680,6 +734,9 @@ export type UserWorkExp = {
   desc: Scalars['String'];
   designation: DesignationEnum;
   end?: Maybe<Scalars['DateTime']>;
+  expectedJoinigDate?: Maybe<Scalars['DateTime']>;
+  lastDateAtCurrentEmployer?: Maybe<Scalars['DateTime']>;
+  onNotice: Scalars['Boolean'];
   start: Scalars['DateTime'];
 };
 
@@ -689,6 +746,9 @@ export type UserWorkExpInput = {
   desc: Scalars['String'];
   designation: DesignationEnum;
   end?: InputMaybe<Scalars['DateTime']>;
+  expectedJoinigDate?: InputMaybe<Scalars['DateTime']>;
+  lastDateAtCurrentEmployer?: InputMaybe<Scalars['DateTime']>;
+  onNotice: Scalars['Boolean'];
   start: Scalars['DateTime'];
 };
 
@@ -732,7 +792,7 @@ export type AllSurveyQuestionQueryVariables = Exact<{
 }>;
 
 
-export type AllSurveyQuestionQuery = { __typename?: 'Query', allSurveyQuestion: Array<{ __typename?: 'Survey', _id: string, question: string, options: Array<string>, type: SurveyType, createdAt: any, updatedAt: any }> };
+export type AllSurveyQuestionQuery = { __typename?: 'Query', allSurveyQuestion: Array<{ __typename?: 'Survey', _id: string, question: string, options: Array<string>, type: SurveyType, createdAt: any, updatedAt: any, active: boolean }> };
 
 export type AllBenefitsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -843,6 +903,13 @@ export type UpdateBenefitMutationVariables = Exact<{
 
 
 export type UpdateBenefitMutation = { __typename?: 'Mutation', updateBenefit: { __typename?: 'Benefit', benefit: string, active: boolean } };
+
+export type UpdateSurveyMutationVariables = Exact<{
+  input: UpdateSurveyInput;
+}>;
+
+
+export type UpdateSurveyMutation = { __typename?: 'Mutation', updateSurveyQuestion: { __typename?: 'Survey', options: Array<string>, question: string, _id: string, active: boolean } };
 
 
 export const AllLocationsDocument = gql`
@@ -1109,6 +1176,7 @@ export const AllSurveyQuestionDocument = gql`
     type
     createdAt
     updatedAt
+    active
   }
 }
     `;
@@ -1685,3 +1753,39 @@ export function useUpdateBenefitMutation(baseOptions?: Apollo.MutationHookOption
 export type UpdateBenefitMutationHookResult = ReturnType<typeof useUpdateBenefitMutation>;
 export type UpdateBenefitMutationResult = Apollo.MutationResult<UpdateBenefitMutation>;
 export type UpdateBenefitMutationOptions = Apollo.BaseMutationOptions<UpdateBenefitMutation, UpdateBenefitMutationVariables>;
+export const UpdateSurveyDocument = gql`
+    mutation UpdateSurvey($input: UpdateSurveyInput!) {
+  updateSurveyQuestion(input: $input) {
+    options
+    question
+    _id
+    active
+  }
+}
+    `;
+export type UpdateSurveyMutationFn = Apollo.MutationFunction<UpdateSurveyMutation, UpdateSurveyMutationVariables>;
+
+/**
+ * __useUpdateSurveyMutation__
+ *
+ * To run a mutation, you first call `useUpdateSurveyMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateSurveyMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateSurveyMutation, { data, loading, error }] = useUpdateSurveyMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateSurveyMutation(baseOptions?: Apollo.MutationHookOptions<UpdateSurveyMutation, UpdateSurveyMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateSurveyMutation, UpdateSurveyMutationVariables>(UpdateSurveyDocument, options);
+      }
+export type UpdateSurveyMutationHookResult = ReturnType<typeof useUpdateSurveyMutation>;
+export type UpdateSurveyMutationResult = Apollo.MutationResult<UpdateSurveyMutation>;
+export type UpdateSurveyMutationOptions = Apollo.BaseMutationOptions<UpdateSurveyMutation, UpdateSurveyMutationVariables>;

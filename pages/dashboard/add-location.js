@@ -39,6 +39,9 @@ function Index() {
   const [editedId, setEditedId] = useState([]);
   const [updateLocation] = useUpdateLocationMutation();
   const handleCloseSnackbar = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
     setOpenSnackbar(false);
     setError("");
   };

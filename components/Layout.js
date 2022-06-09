@@ -31,7 +31,7 @@ import Collapse from "@mui/material/Collapse";
 import AddIcon from "@mui/icons-material/Add";
 
 import { useRouter } from "next/router";
-const drawerWidth = 240;
+const drawerWidth = 300;
 
 const AppBar = styled(MuiAppBar, {
   shouldForwardProp: (prop) => prop !== "open",
@@ -196,11 +196,19 @@ export default function Layout({ children }) {
                 </ListItemIcon>
                 <ListItemText primary="Verify Employer" />
               </ListItemButton>
+              <ListItemButton
+                onClick={() => router.push("/dashboard/rule-engine")}
+              >
+                <ListItemIcon>
+                  <CheckIcon />
+                </ListItemIcon>
+                <ListItemText primary="Rule Engine" />
+              </ListItemButton>
               <ListItemButton onClick={handleClick}>
                 <ListItemIcon>
                   <WorkIcon />
                 </ListItemIcon>
-                <ListItemText primary={`Masters`} />
+                <ListItemText primary={`On-boarding Process`} />
                 {openList ? <ExpandLess /> : <ExpandMore />}
               </ListItemButton>
               <Collapse in={openList} timeout="auto" unmountOnExit>
