@@ -259,7 +259,7 @@ function Index() {
           }}
         >
           <Typography variant="h5" style={{ marginBottom: "12px" }}>
-            Available Benefits
+            Benefits
           </Typography>
           <DataGrid
             rows={location}

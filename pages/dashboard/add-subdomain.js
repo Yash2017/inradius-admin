@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import {
-  useAllIndustriesLazyQuery,
-  useAddIndustryMutation,
-  useUpdateIndustryMutation,
+  useAllSubDomainsLazyQuery,
+  useAllDomainsLazyQuery,
+  useAddSubDomainMutation,
+  useUpdateSubDomainMutation,
 } from "../../generated/graphql";
-import { Typography, Button, TextField } from "@mui/material";
-import CircularProgress from "@mui/material/CircularProgress";
+import { Typography, Button, TextField, Select, MenuItem } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { DataGrid, GridColDef, GridValueGetterParams } from "@mui/x-data-grid";
 import Box from "@mui/material/Box";
@@ -13,16 +13,21 @@ import Modal from "@mui/material/Modal";
 import { Alert, AlertTitle, Snackbar } from "@mui/material";
 import { useRouter } from "next/router";
 import Switch from "@mui/material/Switch";
-export default function Index() {
+import CircularProgress from "@mui/material/CircularProgress";
+function Index() {
   const [locationName, setLocationName] = useState([]);
-  const [edited, setEdited] = useState([]);
-  const [success, setSuccess] = useState("");
-  const [saveLoading, setSaveLoading] = useState(false);
-  const [editedId, setEditedId] = useState([]);
+  const [inputDomain, setInputDomain] = useState("");
+  const [addSubDomain] = useAddSubDomainMutation();
+  const [updateSubDomain] = useUpdateSubDomainMutation();
   const columns = [
     {
-      field: "industry",
-      headerName: "Industry",
+      field: "domain",
+      headerName: "Domain",
+      width: 400,
+    },
+    {
+      field: "subDomain",
+      headerName: "SubDomain",
       width: 400,
       renderCell: (cellValues) => {
         return (
@@ -36,13 +41,13 @@ export default function Index() {
               padding: "10px",
             }}
             type={"text"}
-            value={cellValues.row.industry}
+            value={cellValues.row.subDomain}
             onChange={(e) => {
               const newL = [...location];
               newL.forEach((ind) => {
                 if (ind.id === cellValues.row.id) {
-                  const old = ind.industry;
-                  ind.industry = String(e.target.value);
+                  const old = ind.subDomain;
+                  ind.subDomain = String(e.target.value);
                   if (edited.length !== 0) {
                     const ret = edited.findIndex((indx) => indx.id === ind.id);
                     console.log(editedId);
@@ -51,20 +56,20 @@ export default function Index() {
                       setEdited([
                         ...edited,
                         {
-                          industry: ind.industry,
+                          subDomain: ind.subDomain,
                           id: ind.id,
                         },
                       ]);
                       setEditedId([...editedId, ind.id]);
                     } else {
                       const newEdited = [...edited];
-                      newEdited[ret]["industry"] = ind.industry;
+                      newEdited[ret]["subDomain"] = ind.subDomain;
                       setEdited(newEdited);
                     }
                   } else {
                     setEdited([
                       {
-                        industry: ind.industry,
+                        subDomain: ind.subDomain,
                         id: ind.id,
                       },
                     ]);
@@ -86,7 +91,6 @@ export default function Index() {
         return (
           <Switch
             checked={cellValues.row.active}
-            inputProps={{ "aria-label": "controlled" }}
             onChange={() => {
               const newL = [...location];
               newL.forEach((ind) => {
@@ -123,6 +127,7 @@ export default function Index() {
               });
               setLocation(newL);
             }}
+            inputProps={{ "aria-label": "controlled" }}
           />
         );
       },
@@ -140,24 +145,28 @@ export default function Index() {
     p: 4,
   };
   const [location, setLocation] = useState([]);
+  const [domain, setDomain] = useState([]);
   const [input, setInput] = useState("");
   const [open, setOpen] = useState(false);
+  const [edited, setEdited] = useState([]);
+  const [success, setSuccess] = useState("");
+  const [saveLoading, setSaveLoading] = useState(false);
+  const [editedId, setEditedId] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [openSnackbar, setOpenSnackbar] = useState(true);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  const [updateIndustry] = useUpdateIndustryMutation();
   const handleCloseSnackbar = (event, reason) => {
     if (reason === "clickaway") {
       return;
     }
-    setOpenSnackbar(false);
     setSuccess("");
+    setOpenSnackbar(false);
     setError("");
   };
-  const [allIndustriesQuery] = useAllIndustriesLazyQuery();
-  const [addIndustry] = useAddIndustryMutation();
+  const [allSubDomainsQuery] = useAllSubDomainsLazyQuery();
+  const [allDomainsQuery] = useAllDomainsLazyQuery();
   const handleChange = async () => {
     setLoading(true);
     setSuccess("");
@@ -165,15 +174,16 @@ export default function Index() {
       setError("Input Field Cannot Be Empty");
       setLoading(false);
     } else if (locationName.includes(input)) {
-      setError("Industry already present");
+      setError("SubDomain already present");
       setLoading(false);
     } else {
       console.log(locationName.includes(input));
       setError("");
-      const response = await addIndustry({
+      const response = await addSubDomain({
         variables: {
           input: {
-            industry: input,
+            domain: inputDomain.id,
+            subDomain: input,
             active: true,
           },
         },
@@ -182,15 +192,17 @@ export default function Index() {
       setLocation([
         ...location,
         {
-          id: response.data.addIndustry._id,
-          industry: input,
+          id: response.data.addSubDomain._id,
+          domain: inputDomain.domain,
+          domainId: inputDomain.id,
+          subDomain: input,
           active: true,
         },
       ]);
       setLocationName((prev) => [...prev, input]);
       setOpen(false);
-      setSuccess("Industry added successfully!");
       setInput("");
+      setSuccess("SubDomain added successfully!");
       console.log(location);
     }
   };
@@ -200,23 +212,37 @@ export default function Index() {
       router.push("/login");
     }
     const func = async () => {
-      const response = await allIndustriesQuery({
+      const response = await allSubDomainsQuery({
         fetchPolicy: "network-only",
       });
-      const locations = response.data.allIndustries;
+      const responseForDomain = await allDomainsQuery({
+        fetchPolicy: "network-only",
+      });
+      const locations = response.data.allSubDomains;
       const newLocations = [];
+      const newDomain = [];
+      responseForDomain.data.allDomains.forEach((obj, i) =>
+        newDomain.push({
+          id: obj._id,
+          domain: obj.domain,
+        })
+      );
+      setInputDomain({ domain: newDomain[0].domain, id: newDomain[0].id });
       locations.forEach((obj, i) =>
         newLocations.push({
           id: obj._id,
-          industry: obj.industry,
+          subDomain: obj.subDomain,
+          domain: obj.domain.domain,
           active: obj.active,
+          domainId: obj.domain._id,
         })
       );
       const nLocations = [];
-      locations.forEach((obj, i) => nLocations.push(obj.industry));
+      locations.forEach((obj, i) => nLocations.push(obj.subDomain));
       setLocation(newLocations);
       setLocationName(nLocations);
-      console.log(newLocations);
+      setDomain(newDomain);
+      console.log(response);
     };
     func();
   }, []);
@@ -224,11 +250,11 @@ export default function Index() {
     if (edited.length !== 0 && editedId.length !== 0) {
       setSaveLoading(true);
       edited.forEach(async (each, id) => {
-        const response = await updateIndustry({
+        const response = await updateSubDomain({
           variables: {
             input: {
               id: each.id,
-              industry: each.industry,
+              subDomain: each.subDomain,
               active: each.active,
             },
           },
@@ -259,7 +285,7 @@ export default function Index() {
           }}
         >
           <Typography variant="h5" style={{ marginBottom: "12px" }}>
-            Industries
+            SubDomains
           </Typography>
           <DataGrid
             rows={location}
@@ -269,7 +295,7 @@ export default function Index() {
           />
           <div style={{ marginTop: "12px" }}>
             <Button variant="contained" onClick={handleOpen}>
-              Add Industry
+              Add SubDomain
             </Button>
             <LoadingButton
               loading={saveLoading}
@@ -308,8 +334,29 @@ export default function Index() {
             component="h2"
             style={{ marginBottom: "7px", color: "black" }}
           >
-            Enter The Industry
+            Enter The SubDomain
           </Typography>
+          <Select
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
+            displayEmpty
+            style={{ marginBottom: "12px", color: "black" }}
+            value={inputDomain.domain}
+            fullWidth
+          >
+            {domain.length !== 0 &&
+              domain.map((ind, i) => (
+                <MenuItem
+                  key={i}
+                  onClick={() =>
+                    setInputDomain({ domain: ind.domain, id: ind.id })
+                  }
+                  value={ind.domain}
+                >
+                  {ind.domain}
+                </MenuItem>
+              ))}
+          </Select>
           <TextField
             variant="outlined"
             id="component-outlined"
@@ -317,7 +364,7 @@ export default function Index() {
             fullWidth
             margin="dense"
             onChange={(e) => setInput(e.target.value)}
-            label="Industry"
+            label="SubDomain"
           />
           <LoadingButton
             variant="contained"
@@ -356,3 +403,5 @@ export default function Index() {
     </>
   );
 }
+
+export default Index;

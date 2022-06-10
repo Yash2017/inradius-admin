@@ -185,6 +185,7 @@ query AllSubDomains {
   allSubDomains {
     _id
     subDomain
+    active
     domain {
       _id
       domain
@@ -285,9 +286,27 @@ mutation AddSurvey($input: SurveyInput!) {
   }
 }
 
+mutation AddSubDomain($input: SubDomainInput!) {
+  addSubDomain(input: $input) {
+    subDomain
+    domain {
+      domain
+    }
+    active
+    _id
+  }
+}
+
 mutation UpdateLocation($input: UpdateLocationInput!) {
   updateLocation(input: $input) {
     location
+    active
+  }
+}
+
+mutation UpdateSubDomain($input: UpdateSubDomainInput!) {
+  updateSubDomain(input: $input) {
+    subDomain
     active
   }
 }

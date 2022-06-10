@@ -259,7 +259,7 @@ export default function Index() {
           }}
         >
           <Typography variant="h5" style={{ marginBottom: "12px" }}>
-            Available Domains
+            Domains
           </Typography>
           <DataGrid
             rows={location}

@@ -301,6 +301,7 @@ export type Mutation = {
   updateLocation: Location;
   updateQualification: Qualification;
   updateSkill: Skill;
+  updateSubDomain: SubDomain;
   updateSurveyQuestion: Survey;
 };
 
@@ -410,6 +411,11 @@ export type MutationUpdateQualificationArgs = {
 
 export type MutationUpdateSkillArgs = {
   input: UpdateSkillInput;
+};
+
+
+export type MutationUpdateSubDomainArgs = {
+  input: UpdateSubDomainInput;
 };
 
 
@@ -676,6 +682,12 @@ export type UpdateSkillInput = {
   skill?: InputMaybe<Scalars['String']>;
 };
 
+export type UpdateSubDomainInput = {
+  active?: InputMaybe<Scalars['Boolean']>;
+  id: Scalars['ID'];
+  subDomain?: InputMaybe<Scalars['String']>;
+};
+
 export type UpdateSurveyInput = {
   active?: InputMaybe<Scalars['Boolean']>;
   id: Scalars['ID'];
@@ -790,7 +802,7 @@ export type AllDomainsQuery = { __typename?: 'Query', allDomains: Array<{ __type
 export type AllSubDomainsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type AllSubDomainsQuery = { __typename?: 'Query', allSubDomains: Array<{ __typename?: 'SubDomain', _id: string, subDomain: string, domain: { __typename?: 'Domain', _id: string, domain: string } }> };
+export type AllSubDomainsQuery = { __typename?: 'Query', allSubDomains: Array<{ __typename?: 'SubDomain', _id: string, subDomain: string, active: boolean, domain: { __typename?: 'Domain', _id: string, domain: string } }> };
 
 export type AllSkillsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -872,12 +884,26 @@ export type AddSurveyMutationVariables = Exact<{
 
 export type AddSurveyMutation = { __typename?: 'Mutation', addSurvey: { __typename?: 'Survey', question: string, options: Array<string>, _id: string } };
 
+export type AddSubDomainMutationVariables = Exact<{
+  input: SubDomainInput;
+}>;
+
+
+export type AddSubDomainMutation = { __typename?: 'Mutation', addSubDomain: { __typename?: 'SubDomain', subDomain: string, active: boolean, _id: string, domain: { __typename?: 'Domain', domain: string } } };
+
 export type UpdateLocationMutationVariables = Exact<{
   input: UpdateLocationInput;
 }>;
 
 
 export type UpdateLocationMutation = { __typename?: 'Mutation', updateLocation: { __typename?: 'Location', location: string, active: boolean } };
+
+export type UpdateSubDomainMutationVariables = Exact<{
+  input: UpdateSubDomainInput;
+}>;
+
+
+export type UpdateSubDomainMutation = { __typename?: 'Mutation', updateSubDomain: { __typename?: 'SubDomain', subDomain: string, active: boolean } };
 
 export type UpdateQualificationMutationVariables = Exact<{
   input: UpdateQualificationInput;
@@ -1306,6 +1332,7 @@ export const AllSubDomainsDocument = gql`
   allSubDomains {
     _id
     subDomain
+    active
     domain {
       _id
       domain
@@ -1758,6 +1785,44 @@ export function useAddSurveyMutation(baseOptions?: Apollo.MutationHookOptions<Ad
 export type AddSurveyMutationHookResult = ReturnType<typeof useAddSurveyMutation>;
 export type AddSurveyMutationResult = Apollo.MutationResult<AddSurveyMutation>;
 export type AddSurveyMutationOptions = Apollo.BaseMutationOptions<AddSurveyMutation, AddSurveyMutationVariables>;
+export const AddSubDomainDocument = gql`
+    mutation AddSubDomain($input: SubDomainInput!) {
+  addSubDomain(input: $input) {
+    subDomain
+    domain {
+      domain
+    }
+    active
+    _id
+  }
+}
+    `;
+export type AddSubDomainMutationFn = Apollo.MutationFunction<AddSubDomainMutation, AddSubDomainMutationVariables>;
+
+/**
+ * __useAddSubDomainMutation__
+ *
+ * To run a mutation, you first call `useAddSubDomainMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddSubDomainMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addSubDomainMutation, { data, loading, error }] = useAddSubDomainMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useAddSubDomainMutation(baseOptions?: Apollo.MutationHookOptions<AddSubDomainMutation, AddSubDomainMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AddSubDomainMutation, AddSubDomainMutationVariables>(AddSubDomainDocument, options);
+      }
+export type AddSubDomainMutationHookResult = ReturnType<typeof useAddSubDomainMutation>;
+export type AddSubDomainMutationResult = Apollo.MutationResult<AddSubDomainMutation>;
+export type AddSubDomainMutationOptions = Apollo.BaseMutationOptions<AddSubDomainMutation, AddSubDomainMutationVariables>;
 export const UpdateLocationDocument = gql`
     mutation UpdateLocation($input: UpdateLocationInput!) {
   updateLocation(input: $input) {
@@ -1792,6 +1857,40 @@ export function useUpdateLocationMutation(baseOptions?: Apollo.MutationHookOptio
 export type UpdateLocationMutationHookResult = ReturnType<typeof useUpdateLocationMutation>;
 export type UpdateLocationMutationResult = Apollo.MutationResult<UpdateLocationMutation>;
 export type UpdateLocationMutationOptions = Apollo.BaseMutationOptions<UpdateLocationMutation, UpdateLocationMutationVariables>;
+export const UpdateSubDomainDocument = gql`
+    mutation UpdateSubDomain($input: UpdateSubDomainInput!) {
+  updateSubDomain(input: $input) {
+    subDomain
+    active
+  }
+}
+    `;
+export type UpdateSubDomainMutationFn = Apollo.MutationFunction<UpdateSubDomainMutation, UpdateSubDomainMutationVariables>;
+
+/**
+ * __useUpdateSubDomainMutation__
+ *
+ * To run a mutation, you first call `useUpdateSubDomainMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateSubDomainMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateSubDomainMutation, { data, loading, error }] = useUpdateSubDomainMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateSubDomainMutation(baseOptions?: Apollo.MutationHookOptions<UpdateSubDomainMutation, UpdateSubDomainMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateSubDomainMutation, UpdateSubDomainMutationVariables>(UpdateSubDomainDocument, options);
+      }
+export type UpdateSubDomainMutationHookResult = ReturnType<typeof useUpdateSubDomainMutation>;
+export type UpdateSubDomainMutationResult = Apollo.MutationResult<UpdateSubDomainMutation>;
+export type UpdateSubDomainMutationOptions = Apollo.BaseMutationOptions<UpdateSubDomainMutation, UpdateSubDomainMutationVariables>;
 export const UpdateQualificationDocument = gql`
     mutation UpdateQualification($input: UpdateQualificationInput!) {
   updateQualification(input: $input) {

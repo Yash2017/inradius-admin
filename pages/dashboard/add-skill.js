@@ -258,7 +258,7 @@ function Index() {
           }}
         >
           <Typography variant="h5" style={{ marginBottom: "12px" }}>
-            Available Skills
+            Skills
           </Typography>
           <DataGrid
             rows={location}

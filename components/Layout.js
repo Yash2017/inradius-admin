@@ -285,6 +285,15 @@ export default function Layout({ children }) {
                   </ListItemButton>
                   <ListItemButton
                     sx={{ pl: 4 }}
+                    onClick={() => router.push("/dashboard/add-subdomain")}
+                  >
+                    <ListItemIcon>
+                      <AddIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="SubDomain" />
+                  </ListItemButton>
+                  <ListItemButton
+                    sx={{ pl: 4 }}
                     onClick={() => router.push("/dashboard/add-skill")}
                   >
                     <ListItemIcon>
