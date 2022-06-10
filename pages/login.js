@@ -1,11 +1,11 @@
 import {
   Box,
-  Button,
   Container,
   CssBaseline,
   TextField,
   Typography,
 } from "@mui/material";
+import { LoadingButton } from "@mui/lab";
 import React, { useState, useEffect } from "react";
 import { useAdminLoginLazyQuery } from "../generated/graphql";
 import { Alert, AlertTitle, Snackbar } from "@mui/material";
@@ -21,7 +21,9 @@ function Login() {
   const [adminQuery] = useAdminLoginLazyQuery();
   const [open, setOpen] = useState(true);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const handleSubmit = async (event) => {
+    setLoading(true);
     event.preventDefault();
     const Formdata = new FormData(event.currentTarget);
     const response = await adminQuery({
@@ -33,9 +35,11 @@ function Login() {
       },
     });
     if (response.error) {
+      setLoading(false);
       setOpen(true);
       setError("Invalid Email or Password");
     } else {
+      setLoading(false);
       localStorage.setItem("loggedIn", "true");
       router.replace("/dashboard/add-location");
     }
@@ -94,14 +98,15 @@ function Login() {
               id="password"
               autoComplete="current-password"
             />
-            <Button
+            <LoadingButton
               type="submit"
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
+              loading={loading}
             >
               Sign In
-            </Button>
+            </LoadingButton>
             {error !== "" ? (
               <Snackbar
                 open={open}
