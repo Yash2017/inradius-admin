@@ -765,7 +765,7 @@ export type AllQualificationsQuery = { __typename?: 'Query', allQualifications: 
 export type GetAllEmployersQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetAllEmployersQuery = { __typename?: 'Query', getAllEmployers: Array<{ __typename?: 'Employer', _id: string, companyName?: string | null, employerVerified?: boolean | null }> };
+export type GetAllEmployersQuery = { __typename?: 'Query', getAllEmployers: Array<{ __typename?: 'Employer', _id: string, companyName?: string | null, employerVerified?: boolean | null, companyLetterHead?: string | null }> };
 
 export type AllIndustriesQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -990,6 +990,7 @@ export const GetAllEmployersDocument = gql`
     _id
     companyName
     employerVerified
+    companyLetterHead
   }
 }
     `;

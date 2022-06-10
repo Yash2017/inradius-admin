@@ -39,19 +39,30 @@ function Index() {
                   const old = ind.benefit;
                   ind.benefit = String(e.target.value);
                   if (edited.length !== 0) {
-                    const ret = edited.indexOf(old);
+                    const ret = edited.findIndex((indx) => indx.id === ind.id);
                     console.log(editedId);
                     console.log(edited);
                     if (ret === -1) {
-                      setEdited([...edited, ind.benefit]);
+                      setEdited([
+                        ...edited,
+                        {
+                          benefit: ind.benefit,
+                          id: ind.id,
+                        },
+                      ]);
                       setEditedId([...editedId, ind.id]);
                     } else {
                       const newEdited = [...edited];
-                      newEdited[ret] = ind.benefit;
+                      newEdited[ret]["benefit"] = ind.benefit;
                       setEdited(newEdited);
                     }
                   } else {
-                    setEdited([ind.benefit]);
+                    setEdited([
+                      {
+                        benefit: ind.benefit,
+                        id: ind.id,
+                      },
+                    ]);
                     setEditedId([ind.id]);
                   }
                 }
@@ -68,7 +79,46 @@ function Index() {
       width: 250,
       renderCell: (cellValues) => {
         return (
-          <Switch checked={true} inputProps={{ "aria-label": "controlled" }} />
+          <Switch
+            checked={cellValues.row.active}
+            onChange={() => {
+              const newL = [...location];
+              newL.forEach((ind) => {
+                if (ind.id === cellValues.row.id) {
+                  ind.active = !ind.active;
+                  if (edited.length !== 0) {
+                    const ret = edited.findIndex((indx) => indx.id === ind.id);
+                    console.log(editedId);
+                    console.log(edited);
+                    if (ret === -1) {
+                      setEdited([
+                        ...edited,
+                        {
+                          active: ind.active,
+                          id: ind.id,
+                        },
+                      ]);
+                      setEditedId([...editedId, ind.id]);
+                    } else {
+                      const newEdited = [...edited];
+                      newEdited[ret]["active"] = ind.active;
+                      setEdited(newEdited);
+                    }
+                  } else {
+                    setEdited([
+                      {
+                        active: ind.active,
+                        id: ind.id,
+                      },
+                    ]);
+                    setEditedId([ind.id]);
+                  }
+                }
+              });
+              setLocation(newL);
+            }}
+            inputProps={{ "aria-label": "controlled" }}
+          />
         );
       },
     },
@@ -173,8 +223,9 @@ function Index() {
         const response = await updateBenefit({
           variables: {
             input: {
-              id: editedId[id],
-              benefit: each,
+              id: each.id,
+              benefit: each.benefit,
+              active: each.active,
             },
           },
         });

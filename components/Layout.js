@@ -7,6 +7,7 @@ import MuiAppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import List from "@mui/material/List";
 import Typography from "@mui/material/Typography";
+import RuleIcon from "@mui/icons-material/Rule";
 import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
 import Badge from "@mui/material/Badge";
@@ -21,6 +22,7 @@ import ExpandLess from "@mui/icons-material/ExpandLess";
 import CheckIcon from "@mui/icons-material/Check";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import BadgeIcon from "@mui/icons-material/Badge";
+import StorageIcon from "@mui/icons-material/Storage";
 import {
   ListItemButton,
   ListItemText,
@@ -81,8 +83,9 @@ const mdTheme = createTheme();
 
 export default function Layout({ children }) {
   const [open, setOpen] = React.useState(true);
-  const [openList, setListOpen] = React.useState(true);
-  const [openSurveyList, setSurveyListOpen] = React.useState(true);
+  const [openList, setListOpen] = React.useState(false);
+  const [openSurveyList, setSurveyListOpen] = React.useState(false);
+  const [openDatabaseList, setDatabaseList] = React.useState(false);
   React.useEffect(() => {
     const loggedIn = localStorage.getItem("loggedIn");
     if (loggedIn === undefined || loggedIn === "false" || loggedIn === null) {
@@ -158,6 +161,22 @@ export default function Layout({ children }) {
             <Divider />
             <List component="nav">
               <ListItemButton
+                onClick={() => router.push("/dashboard/verify-employer")}
+              >
+                <ListItemIcon>
+                  <CheckIcon />
+                </ListItemIcon>
+                <ListItemText primary="Verify Employer" />
+              </ListItemButton>
+              <ListItemButton
+                onClick={() => router.push("/dashboard/rule-engine")}
+              >
+                <ListItemIcon>
+                  <RuleIcon />
+                </ListItemIcon>
+                <ListItemText primary="Rule Engine" />
+              </ListItemButton>
+              <ListItemButton
                 onClick={() => setSurveyListOpen(!openSurveyList)}
               >
                 <ListItemIcon>
@@ -189,21 +208,36 @@ export default function Layout({ children }) {
                 </List>
               </Collapse>
               <ListItemButton
-                onClick={() => router.push("/dashboard/verify-employer")}
+                onClick={() => setDatabaseList(!openDatabaseList)}
               >
                 <ListItemIcon>
-                  <CheckIcon />
+                  <StorageIcon />
                 </ListItemIcon>
-                <ListItemText primary="Verify Employer" />
+                <ListItemText primary="Database" />
+                {openDatabaseList ? <ExpandLess /> : <ExpandMore />}
               </ListItemButton>
-              <ListItemButton
-                onClick={() => router.push("/dashboard/rule-engine")}
-              >
-                <ListItemIcon>
-                  <CheckIcon />
-                </ListItemIcon>
-                <ListItemText primary="Rule Engine" />
-              </ListItemButton>
+              <Collapse in={openDatabaseList} timeout="auto" unmountOnExit>
+                <List component="div" disablePadding>
+                  <ListItemButton
+                    sx={{ pl: 4 }}
+                    onClick={() => router.push("/database/employee")}
+                  >
+                    <ListItemIcon>
+                      <BadgeIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Employee" />
+                  </ListItemButton>
+                  <ListItemButton
+                    sx={{ pl: 4 }}
+                    onClick={() => router.push("/database/employer")}
+                  >
+                    <ListItemIcon>
+                      <BadgeIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Employer" />
+                  </ListItemButton>
+                </List>
+              </Collapse>
               <ListItemButton onClick={handleClick}>
                 <ListItemIcon>
                   <WorkIcon />

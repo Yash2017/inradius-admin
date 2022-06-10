@@ -1,16 +1,31 @@
 import * as React from "react";
 import { DataGrid, GridColDef, GridValueGetterParams } from "@mui/x-data-grid";
-import { Button } from "@mui/material";
 import {
   useGetAllEmployersLazyQuery,
   useVerifyEmployerLazyQuery,
 } from "../../generated/graphql";
+import Modal from "@mui/material/Modal";
+import Box from "@mui/material/Box";
 import { LoadingButton } from "@mui/lab";
 import { Alert, Snackbar } from "@mui/material";
+import Image from "next/image";
+import { Typography, Button, TextField } from "@mui/material";
 
 export default function DataTable() {
+  const style = {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: 1200,
+    bgcolor: "background.paper",
+    boxShadow: 24,
+    p: 4,
+  };
   const [data, setData] = React.useState(null);
   const [verifyEmployerQuery] = useVerifyEmployerLazyQuery();
+  const [openModal, setOpenModal] = React.useState(false);
+  const [letterHead, setLetterHead] = React.useState("");
   const [loading, setLoading] = React.useState(false);
   const [companyName, setCompanyName] = React.useState("");
   const handleClick = async (e, cell) => {
@@ -55,10 +70,31 @@ export default function DataTable() {
           <LoadingButton
             variant="contained"
             color="primary"
-            onClick={(e) => handleClick(e, cellValues)}
             loading={loading}
+            onClick={(e) => handleClick(e, cellValues)}
           >
             Verify
+          </LoadingButton>
+        );
+      },
+    },
+    {
+      field: "companyLetterHead",
+      headerName: "Company Letter Head",
+      width: 200,
+      renderCell: (cellValues) => {
+        return (
+          <LoadingButton
+            variant="contained"
+            color="primary"
+            onClick={() => {
+              setOpenModal(true);
+              console.log(cellValues);
+              setLetterHead(cellValues.formattedValue);
+            }}
+            loading={loading}
+          >
+            View
           </LoadingButton>
         );
       },
@@ -75,6 +111,7 @@ export default function DataTable() {
           id: obj._id,
           companyName: obj.companyName,
           employerVerified: obj.employerVerified,
+          companyLetterHead: obj.companyLetterHead,
         })
       );
       setData(newLocations);
@@ -105,13 +142,36 @@ export default function DataTable() {
         <Snackbar
           open={companyName !== "" ? true : false}
           autoHideDuration={6000}
-          onClose={() => companyName("")}
+          onClose={() => setCompanyName("")}
         >
-          <Alert onClose={() => companyName("")} severity="success">
+          <Alert onClose={() => setCompanyName("")} severity="success">
             {companyName} is verified!
           </Alert>
         </Snackbar>
       ) : null}
+      {letterHead !== "" && (
+        <Modal
+          open={openModal}
+          onClose={() => {
+            setOpenModal(false);
+            setLetterHead("");
+          }}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <Box sx={style}>
+            <Typography
+              id="modal-modal-title"
+              variant="h6"
+              component="h2"
+              style={{ marginBottom: "7px", color: "black" }}
+            >
+              Company Letterhead
+            </Typography>
+            <Image src={letterHead} width={"1200px"} height={"600px"} />
+          </Box>
+        </Modal>
+      )}
     </div>
   );
 }

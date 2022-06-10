@@ -68,19 +68,30 @@ function Index() {
                   const old = ind.location;
                   ind.location = String(e.target.value);
                   if (edited.length !== 0) {
-                    const ret = edited.indexOf(old);
+                    const ret = edited.findIndex((indx) => indx.id === ind.id);
                     console.log(editedId);
                     console.log(edited);
                     if (ret === -1) {
-                      setEdited([...edited, ind.location]);
+                      setEdited([
+                        ...edited,
+                        {
+                          location: ind.location,
+                          id: ind.id,
+                        },
+                      ]);
                       setEditedId([...editedId, ind.id]);
                     } else {
                       const newEdited = [...edited];
-                      newEdited[ret] = ind.location;
+                      newEdited[ret]["location"] = ind.location;
                       setEdited(newEdited);
                     }
                   } else {
-                    setEdited([ind.location]);
+                    setEdited([
+                      {
+                        location: ind.location,
+                        id: ind.id,
+                      },
+                    ]);
                     setEditedId([ind.id]);
                   }
                 }
@@ -100,6 +111,42 @@ function Index() {
           <Switch
             checked={cellValues.row.active}
             inputProps={{ "aria-label": "controlled" }}
+            onChange={() => {
+              const newL = [...location];
+              newL.forEach((ind) => {
+                if (ind.id === cellValues.row.id) {
+                  ind.active = !ind.active;
+                  if (edited.length !== 0) {
+                    const ret = edited.findIndex((indx) => indx.id === ind.id);
+                    console.log(editedId);
+                    console.log(edited);
+                    if (ret === -1) {
+                      setEdited([
+                        ...edited,
+                        {
+                          active: ind.active,
+                          id: ind.id,
+                        },
+                      ]);
+                      setEditedId([...editedId, ind.id]);
+                    } else {
+                      const newEdited = [...edited];
+                      newEdited[ret]["active"] = ind.active;
+                      setEdited(newEdited);
+                    }
+                  } else {
+                    setEdited([
+                      {
+                        active: ind.active,
+                        id: ind.id,
+                      },
+                    ]);
+                    setEditedId([ind.id]);
+                  }
+                }
+              });
+              setLocation(newL);
+            }}
           />
         );
       },
@@ -164,14 +211,15 @@ function Index() {
   }, []);
 
   const handleSaveClick = () => {
-    if (edited.length !== 0 && editedId.length !== 0) {
+    if (edited.length !== 0) {
       setSaveLoading(true);
       edited.forEach(async (each, id) => {
         const response = await updateLocation({
           variables: {
             input: {
-              id: editedId[id],
-              location: each,
+              id: each.id,
+              location: each.location,
+              active: each.active,
             },
           },
         });
