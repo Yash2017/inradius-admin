@@ -98,6 +98,56 @@ function Index() {
   };
   const columns = [
     {
+      field: "active",
+      headerName: "Active Status",
+      width: 120,
+      renderCell: (cellValues) => {
+        return (
+          <Switch
+            checked={cellValues.row.active}
+            inputProps={{ "aria-label": "controlled" }}
+            onChange={(e) => {
+              const newL = [...location];
+              console.log(newL);
+              newL.forEach((ind) => {
+                if (ind.id === cellValues.row.id) {
+                  ind.active = !ind.active;
+                  if (edited.length !== 0) {
+                    const ret = edited.findIndex((indx) => indx.id === ind.id);
+                    console.log(ret);
+                    console.log(edited);
+                    if (ret === -1) {
+                      setEdited([
+                        ...edited,
+                        {
+                          active: ind.active,
+                          id: ind.id,
+                        },
+                      ]);
+                      console.log(edited);
+                    } else {
+                      const newEdited = [...edited];
+                      newEdited[ret]["active"] = ind.active;
+                      setEdited(newEdited);
+                    }
+                  } else {
+                    setEdited([
+                      {
+                        active: ind.active,
+                        id: ind.id,
+                      },
+                    ]);
+                    console.log("First");
+                  }
+                }
+              });
+              setLocation(newL);
+            }}
+          />
+        );
+      },
+    },
+    {
       field: "question",
       headerName: "Question",
       width: 400,
@@ -431,56 +481,6 @@ function Index() {
                           ind.option3,
                           ind.option4,
                         ],
-                        id: ind.id,
-                      },
-                    ]);
-                    console.log("First");
-                  }
-                }
-              });
-              setLocation(newL);
-            }}
-          />
-        );
-      },
-    },
-    {
-      field: "active",
-      headerName: "Active Status",
-      width: 250,
-      renderCell: (cellValues) => {
-        return (
-          <Switch
-            checked={cellValues.row.active}
-            inputProps={{ "aria-label": "controlled" }}
-            onChange={(e) => {
-              const newL = [...location];
-              console.log(newL);
-              newL.forEach((ind) => {
-                if (ind.id === cellValues.row.id) {
-                  ind.active = !ind.active;
-                  if (edited.length !== 0) {
-                    const ret = edited.findIndex((indx) => indx.id === ind.id);
-                    console.log(ret);
-                    console.log(edited);
-                    if (ret === -1) {
-                      setEdited([
-                        ...edited,
-                        {
-                          active: ind.active,
-                          id: ind.id,
-                        },
-                      ]);
-                      console.log(edited);
-                    } else {
-                      const newEdited = [...edited];
-                      newEdited[ret]["active"] = ind.active;
-                      setEdited(newEdited);
-                    }
-                  } else {
-                    setEdited([
-                      {
-                        active: ind.active,
                         id: ind.id,
                       },
                     ]);
