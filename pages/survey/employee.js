@@ -571,6 +571,9 @@ function Index() {
       //   setSuccess("Changes Saved!");
       // } else {
       //   setError("No changes made!");
+    } else {
+      setSaveLoading(false);
+      setError("No data changed to save!");
     }
   };
   return (

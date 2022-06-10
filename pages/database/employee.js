@@ -26,7 +26,6 @@ export default function DataTable() {
     if (reason === "clickaway") {
       return;
     }
-    setOpenSnackbar(false);
     setError("");
   };
   const [error, setError] = React.useState("");
@@ -219,7 +218,7 @@ export default function DataTable() {
           <Button
             variant="contained"
             onClick={() =>
-              setError("The user has not uploaded a linkedin link yet!")
+              setError("The user has not added a linkedin link yet!")
             }
           >
             Click Here{" "}
@@ -246,60 +245,74 @@ export default function DataTable() {
         fetchPolicy: "network-only",
       });
       const newLocations = [];
-      response.data.getAllEmployees.forEach((obj, i) =>
-        newLocations.push({
-          id: obj._id,
-          firstName: obj.user.firstName,
-          lastName: obj.user.lastName,
-          email: obj.user.email,
-          number: obj.user.number,
-          gender: obj.gender,
-          isAccountVerified: obj.user.isAccountVerified,
-          isProfileCompleted: obj.user.isProfileCompleted,
-          isSurveyCompleted: obj.user.isSurveyCompleted,
-          shortDescription: obj.shortDescription,
-          radius: obj.radius,
-          latitude: obj.latitude,
-          longitude: obj.longitude,
-          location: obj.location.location,
-          qualification: obj.qualification.qualification,
-          industry: obj.industry.industry,
-          domain: obj.domain.domain,
-          skill1: obj.skills[0].skill,
-          skill2: obj.skills[1].skill,
-          skill3: obj.skills[2].skill,
-          skill4: obj.skills[3].skill,
-          subDomain1: obj.subDomain[0].subDomain,
-          subDomain2: obj.subDomain.length > 1 && obj.subDomain[1].subDomain,
-          subDomain3: obj.subDomain.length > 2 && obj.subDomain[2].subDomain,
-          fresher: obj.fresher,
-          totalExp:
-            obj.totalExp !== null
-              ? Number(obj.totalExp.years) * 10 + Number(obj.totalExp.months)
-              : 0,
-          relevantExp:
-            obj.relevantExp !== null
-              ? Number(obj.relevantExp.years) * 10 +
-                Number(obj.relevantExp.months)
-              : 0,
-          currentPay: obj.currentPay,
-          expectedPay: obj.expectedPay,
-          linkedIn: obj.linkedIn,
-          resume: obj.resume,
-          currentAddress: obj.currentAddress,
-          dob: String(obj.dob).substring(0, String(obj.dob).indexOf("T")),
-          createdAt: String(obj.createdAt).substring(
-            0,
-            String(obj.createdAt).indexOf("T")
-          ),
-          updatedAt: String(obj.updatedAt).substring(
-            0,
-            String(obj.updatedAt).indexOf("T")
-          ),
-        })
-      );
-      setData(newLocations);
-      console.log(newLocations);
+      console.log(response.data);
+      if (response.data.getAllEmployees !== []) {
+        response.data.getAllEmployees.forEach((obj, i) =>
+          newLocations.push({
+            id: obj._id,
+            firstName: obj.user.firstName,
+            lastName: obj.user.lastName,
+            email: obj.user.email,
+            number: obj.user.number,
+            gender: obj.gender !== null ? obj.gender : "",
+            isAccountVerified: obj.user.isAccountVerified,
+            isProfileCompleted: obj.user.isProfileCompleted,
+            isSurveyCompleted: obj.user.isSurveyCompleted,
+            shortDescription:
+              obj.shortDescription !== null ? obj.shortDescription : "",
+            radius: obj.radius !== null ? obj.radius : "",
+            latitude: obj.latitude !== null ? obj.latitude : "",
+            longitude: obj.longitude,
+            location: obj.location !== null ? obj.location : "",
+            qualification:
+              obj.qualification !== null ? obj.qualification.qualification : "",
+            industry: obj.industry !== null ? obj.industry.industry : "",
+            domain: obj.domain !== null ? obj.domain.domain : "",
+            skill1: obj.skills.length !== 0 ? obj.skills[0].skill : "",
+            skill3: obj.skills.length !== 0 ? obj.skills[2].skill : "",
+            skill2: obj.skills.length !== 0 ? obj.skills[1].skill : "",
+            skill4: obj.skills.length !== 0 ? obj.skills[3].skill : "",
+            subDomain1:
+              obj.subDomain.length !== 0 ? obj.subDomain[0].subDomain : "",
+            subDomain2:
+              obj.subDomain.length > 1 ? obj.subDomain[1].subDomain : "",
+            subDomain3:
+              obj.subDomain.length > 2 ? obj.subDomain[2].subDomain : "",
+            fresher: obj.fresher !== undefined ? obj.fresher : false,
+            totalExp:
+              obj.totalExp !== null
+                ? Number(obj.totalExp.years) * 10 + Number(obj.totalExp.months)
+                : 0,
+            relevantExp:
+              obj.relevantExp !== null
+                ? Number(obj.relevantExp.years) * 10 +
+                  Number(obj.relevantExp.months)
+                : 0,
+            currentPay: obj.currentPay !== null ? obj.currentPay : "",
+            expectedPay: obj.expectedPay !== null ? obj.expectedPay : "",
+            linkedIn: obj.linkedIn !== null ? obj.linkedIn : null,
+            resume: obj.resume !== null ? obj.resume : null,
+            currentAddress:
+              obj.currentAddress !== null ? obj.currentAddress : "",
+            dob:
+              obj.dob !== null
+                ? String(obj.dob).substring(0, String(obj.dob).indexOf("T"))
+                : "",
+            createdAt: String(obj.createdAt).substring(
+              0,
+              String(obj.createdAt).indexOf("T")
+            ),
+            updatedAt: String(obj.updatedAt).substring(
+              0,
+              String(obj.updatedAt).indexOf("T")
+            ),
+          })
+        );
+        setData(newLocations);
+        console.log(newLocations);
+      } else {
+        setData([]);
+      }
     };
     getData();
     setLoading(false);

@@ -26,7 +26,6 @@ export default function DataTable() {
     if (reason === "clickaway") {
       return;
     }
-    setOpenSnackbar(false);
     setError("");
   };
   const [data, setData] = React.useState(null);
@@ -202,13 +201,17 @@ export default function DataTable() {
           (temp["companyName"] = obj.companyName),
           (temp["employerVerified"] = obj.employerVerified),
           (temp["employerVerifyStatus"] = obj.employerVerifyStatus),
-          (temp["noOfHiring"] = obj.noOfHiring),
-          (temp["noOfLocations"] = obj.noOfLocations),
-          (temp["noOfLocations"] = obj.noOfLocations),
-          (temp["noOfEmployees"] = obj.noOfEmployees),
-          (temp["attritionRate"] = obj.attritionRate),
-          (temp["lastTurnover"] = obj.lastTurnover),
-          (temp["currentAddress"] = obj.currentAddress),
+          (temp["noOfHiring"] = obj.noOfHiring !== null ? obj.noOfHiring : ""),
+          (temp["noOfLocations"] =
+            obj.noOfLocations !== null ? obj.noOfLocations : ""),
+          (temp["noOfEmployees"] =
+            obj.noOfEmployees !== null ? obj.noOfEmployees : ""),
+          (temp["attritionRate"] =
+            obj.attritionRate !== null ? obj.attritionRate : ""),
+          (temp["lastTurnover"] =
+            obj.lastTurnover !== null ? obj.lastTurnover : ""),
+          (temp["currentAddress"] =
+            obj.currentAddress !== null ? obj.currentAddress : ""),
           (temp["benefit"] = obj.benefits),
           (temp["noOfJobs"] = obj.jobs.length),
           (temp["createdAt"] = String(obj.createdAt).substring(
