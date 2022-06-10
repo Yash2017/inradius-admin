@@ -46,6 +46,7 @@ function Index() {
     }
     setOpenSnackbar(false);
     setError("");
+    setSuccess("");
   };
   const columns = [
     {
@@ -158,6 +159,7 @@ function Index() {
   const [addLocaton] = useAddLocationMutation();
   const handleChange = async () => {
     setLoading(true);
+    setSuccess("");
     if (input === "") {
       setError("Input Field Cannot Be Empty");
       setLoading(false);
@@ -182,6 +184,7 @@ function Index() {
       setLocationName((prev) => [...prev, input]);
       setOpen(false);
       console.log(response);
+      setSuccess("Location added successfully!");
       setInput("");
     }
   };
@@ -231,8 +234,11 @@ function Index() {
       setEdited([]);
       setEditedId([]);
       setSaveLoading(false);
+      handleClose();
+      setError("");
       setSuccess("Changes Saved!");
     } else {
+      setSuccess("");
       setError("No changes made!");
     }
   };
@@ -336,9 +342,9 @@ function Index() {
           anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
           open={success === "" ? false : true}
           autoHideDuration={6000}
-          onClose={() => setSuccess("")}
+          onClose={handleCloseSnackbar}
         >
-          <Alert onClose={() => setSuccess("")} severity="success">
+          <Alert onClose={handleCloseSnackbar} severity="success">
             {success}
           </Alert>
         </Snackbar>

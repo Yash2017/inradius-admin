@@ -150,6 +150,7 @@ export default function AddQualification() {
     if (reason === "clickaway") {
       return;
     }
+    setSuccess("");
     setError("");
     setOpenSnackbar(false);
   };
@@ -157,6 +158,7 @@ export default function AddQualification() {
   const [addQualification] = useAddQualificationMutation();
   const handleChange = async () => {
     setLoading(true);
+    setSuccess("");
     if (input === "") {
       setError("Input Field Cannot Be Empty");
       setLoading(false);
@@ -186,6 +188,7 @@ export default function AddQualification() {
       setLocationName((prev) => [...prev, input]);
       setOpen(false);
       setInput("");
+      setSuccess("Qualification added successfully!");
       console.log(location);
     }
   };
@@ -233,8 +236,10 @@ export default function AddQualification() {
       setEdited([]);
       setEditedId([]);
       setSaveLoading(false);
+      setError("");
       setSuccess("Changes Saved!");
     } else {
+      setSuccess("");
       setError("No changes made!");
     }
   };
@@ -338,9 +343,9 @@ export default function AddQualification() {
           anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
           open={success === "" ? false : true}
           autoHideDuration={6000}
-          onClose={() => setSuccess("")}
+          onClose={handleCloseSnackbar}
         >
-          <Alert onClose={() => setSuccess("")} severity="success">
+          <Alert onClose={handleCloseSnackbar} severity="success">
             {success}
           </Alert>
         </Snackbar>

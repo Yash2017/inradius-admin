@@ -153,12 +153,14 @@ export default function Index() {
       return;
     }
     setOpenSnackbar(false);
+    setSuccess("");
     setError("");
   };
   const [allIndustriesQuery] = useAllIndustriesLazyQuery();
   const [addIndustry] = useAddIndustryMutation();
   const handleChange = async () => {
     setLoading(true);
+    setSuccess("");
     if (input === "") {
       setError("Input Field Cannot Be Empty");
       setLoading(false);
@@ -187,6 +189,7 @@ export default function Index() {
       ]);
       setLocationName((prev) => [...prev, input]);
       setOpen(false);
+      setSuccess("Industry added successfully!");
       setInput("");
       console.log(location);
     }
@@ -235,8 +238,10 @@ export default function Index() {
       setEdited([]);
       setEditedId([]);
       setSaveLoading(false);
+      setError("");
       setSuccess("Changes Saved!");
     } else {
+      setSuccess("");
       setError("No changes made!");
     }
   };
@@ -341,9 +346,9 @@ export default function Index() {
           anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
           open={success === "" ? false : true}
           autoHideDuration={6000}
-          onClose={() => setSuccess("")}
+          onClose={handleCloseSnackbar}
         >
-          <Alert onClose={() => setSuccess("")} severity="success">
+          <Alert onClose={handleCloseSnackbar} severity="success">
             {success}
           </Alert>
         </Snackbar>

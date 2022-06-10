@@ -151,6 +151,7 @@ function Index() {
     if (reason === "clickaway") {
       return;
     }
+    setSuccess("");
     setOpenSnackbar(false);
     setError("");
   };
@@ -158,6 +159,7 @@ function Index() {
   const [addSkill] = useAddSkillMutation();
   const handleChange = async () => {
     setLoading(true);
+    setSuccess("");
     if (input === "") {
       setError("Input Field Cannot Be Empty");
       setLoading(false);
@@ -187,6 +189,7 @@ function Index() {
       setLocationName((prev) => [...prev, input]);
       setOpen(false);
       setInput("");
+      setSuccess("Skill added successfully!");
       console.log(location);
     }
   };
@@ -234,8 +237,10 @@ function Index() {
       setEdited([]);
       setEditedId([]);
       setSaveLoading(false);
+      setError("");
       setSuccess("Changes Saved!");
     } else {
+      setSuccess("");
       setError("No changes made!");
     }
   };
@@ -340,9 +345,9 @@ function Index() {
           open={success === "" ? false : true}
           anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
           autoHideDuration={6000}
-          onClose={() => setSuccess("")}
+          onClose={handleCloseSnackbar}
         >
-          <Alert onClose={() => setSuccess("")} severity="success">
+          <Alert onClose={handleCloseSnackbar} severity="success">
             {success}
           </Alert>
         </Snackbar>

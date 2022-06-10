@@ -152,6 +152,7 @@ function Index() {
     if (reason === "clickaway") {
       return;
     }
+    setSuccess("");
     setOpenSnackbar(false);
     setError("");
   };
@@ -159,6 +160,7 @@ function Index() {
   const [addBenefit] = useAddBenefitMutation();
   const handleChange = async () => {
     setLoading(true);
+    setSuccess("");
     if (input === "") {
       setError("Input Field Cannot Be Empty");
       setLoading(false);
@@ -188,6 +190,7 @@ function Index() {
       setLocationName((prev) => [...prev, input]);
       setOpen(false);
       setInput("");
+      setSuccess("Benefit added successfully!");
       console.log(location);
     }
   };
@@ -235,8 +238,10 @@ function Index() {
       setEdited([]);
       setEditedId([]);
       setSaveLoading(false);
+      setError("");
       setSuccess("Changes Saved!");
     } else {
+      setSuccess("");
       setError("No changes made!");
     }
   };
@@ -341,9 +346,9 @@ function Index() {
           anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
           open={success === "" ? false : true}
           autoHideDuration={6000}
-          onClose={() => setSuccess("")}
+          onClose={handleCloseSnackbar}
         >
-          <Alert onClose={() => setSuccess("")} severity="success">
+          <Alert onClose={handleCloseSnackbar} severity="success">
             {success}
           </Alert>
         </Snackbar>
