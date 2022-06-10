@@ -387,6 +387,7 @@ export default function DataTable() {
       )}
       {error !== "" ? (
         <Snackbar
+          anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
           open={error === "" ? false : true}
           autoHideDuration={6000}
           onClose={handleCloseSnackbar}

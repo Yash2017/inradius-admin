@@ -166,6 +166,7 @@ export default function DataTable() {
       )}
       {companyName !== "" ? (
         <Snackbar
+          anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
           open={companyName !== "" ? true : false}
           autoHideDuration={6000}
           onClose={() => setCompanyName("")}

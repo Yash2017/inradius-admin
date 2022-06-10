@@ -689,6 +689,7 @@ function Index() {
       {error !== "" ? (
         <Snackbar
           open={error !== "" ? true : false}
+          anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
           autoHideDuration={6000}
           onClose={handleCloseSnackbar}
         >
@@ -699,6 +700,7 @@ function Index() {
       ) : null}
       {success !== "" ? (
         <Snackbar
+          anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
           open={success === "" ? false : true}
           autoHideDuration={6000}
           onClose={() => setSuccess("")}
