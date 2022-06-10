@@ -4,10 +4,11 @@ import { useGetInfoEmployersLazyQuery } from "../../generated/graphql";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import { LoadingButton } from "@mui/lab";
-import { Alert, Snackbar } from "@mui/material";
+import CircularProgress from "@mui/material/CircularProgress";
 import Image from "next/image";
 import { Typography, Button, TextField } from "@mui/material";
 import { useRouter } from "next/router";
+import { Alert, AlertTitle, Snackbar } from "@mui/material";
 import Link from "next/link";
 
 export default function DataTable() {
@@ -21,10 +22,19 @@ export default function DataTable() {
     boxShadow: 24,
     p: 4,
   };
+  const handleCloseSnackbar = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpenSnackbar(false);
+    setError("");
+  };
   const [data, setData] = React.useState(null);
+  const [error, setError] = React.useState("");
   const router = useRouter();
   const [openModal, setOpenModal] = React.useState(false);
   const [letterHead, setLetterHead] = React.useState("");
+  const [type, setType] = React.useState("");
   const [loading, setLoading] = React.useState(false);
   const [getInfoEmployersQuery] = useGetInfoEmployersLazyQuery();
   const columns = [
@@ -39,11 +49,6 @@ export default function DataTable() {
     {
       field: "number",
       headerName: "Number",
-      width: 250,
-    },
-    {
-      field: "gender",
-      headerName: "Gender",
       width: 250,
     },
     {
@@ -67,6 +72,47 @@ export default function DataTable() {
       width: 250,
     },
     {
+      field: "employerVerified",
+      headerName: "Employer Verified",
+      width: 250,
+    },
+    {
+      field: "employerVerifyStatus",
+      headerName: "Employer Verified Status",
+      width: 250,
+    },
+    {
+      field: "noOfJobs",
+      headerName: "Number of Jobs",
+      width: 250,
+    },
+    {
+      field: "noOfHiring",
+      headerName: "Number of Hiring",
+      width: 250,
+    },
+    {
+      field: "noOfEmployees",
+      headerName: "Number of Employees",
+      width: 250,
+    },
+    {
+      field: "noOfLocations",
+      headerName: "Number of Locations",
+      width: 250,
+    },
+    {
+      field: "attritionRate",
+      headerName: "Attrition Rate",
+      width: 250,
+    },
+    {
+      field: "lastTurnover",
+      headerName: "Last Turnover",
+      width: 250,
+    },
+
+    {
       field: "companyLetterHead",
       headerName: "Company Letter Head",
       width: 200,
@@ -78,9 +124,13 @@ export default function DataTable() {
             onClick={() => {
               setOpenModal(true);
               console.log(cellValues);
-              setLetterHead(cellValues.formattedValue);
+              if (cellValues.formattedValue === null) {
+                setError("The user has not uploaded a letter head yet!");
+              } else {
+                setLetterHead(cellValues.formattedValue);
+                setType("Company Letter Head");
+              }
             }}
-            loading={loading}
           >
             View
           </LoadingButton>
@@ -92,7 +142,7 @@ export default function DataTable() {
       headerName: "Company Image",
       width: 200,
       renderCell: (cellValues) => {
-        return (
+        return cellValues.formattedValue !== null ? (
           <LoadingButton
             variant="contained"
             color="primary"
@@ -100,134 +150,21 @@ export default function DataTable() {
               setOpenModal(true);
               console.log(cellValues);
               setLetterHead(cellValues.formattedValue);
+              setType("Company Image");
             }}
-            loading={loading}
           >
             View
           </LoadingButton>
-        );
-      },
-    },
-    {
-      field: "radius",
-      headerName: "Radius",
-      width: 250,
-    },
-    {
-      field: "latitude",
-      headerName: "Latitude",
-      width: 250,
-    },
-    {
-      field: "longitude",
-      headerName: "Longitude",
-      width: 250,
-    },
-    {
-      field: "qualification",
-      headerName: "Qualification",
-      width: 250,
-    },
-    {
-      field: "industry",
-      headerName: "Industry",
-      width: 250,
-    },
-    {
-      field: "domain",
-      headerName: "Domain",
-      width: 250,
-    },
-    {
-      field: "skill1",
-      headerName: "Skill1",
-      width: 250,
-    },
-    {
-      field: "skill2",
-      headerName: "Skill2",
-      width: 250,
-    },
-    {
-      field: "skill3",
-      headerName: "Skill3",
-      width: 250,
-    },
-    {
-      field: "skill4",
-      headerName: "Skill4",
-      width: 250,
-    },
-    {
-      field: "subDomain1",
-      headerName: "Sub-Domain 1",
-      width: 250,
-    },
-    {
-      field: "subDomain2",
-      headerName: "Sub-Domain 2",
-      width: 250,
-    },
-    {
-      field: "subDomain3",
-      headerName: "Sub-Domain 3",
-      width: 250,
-    },
-    {
-      field: "subDomain4",
-      headerName: "Sub-Domain 4",
-      width: 250,
-    },
-    {
-      field: "fresher",
-      headerName: "Fresher",
-      width: 250,
-    },
-    {
-      field: "totalExp",
-      headerName: "Total Experience",
-      width: 250,
-    },
-    {
-      field: "relevantExp",
-      headerName: "Relevant Experience",
-      width: 250,
-    },
-    {
-      field: "currentPay",
-      headerName: "Current Pay",
-      width: 250,
-    },
-    {
-      field: "expectedPay",
-      headerName: "Expected Pay",
-      width: 250,
-    },
-    {
-      field: "resume",
-      headerName: "Resume",
-      width: 200,
-      renderCell: (cellValues) => {
-        return (
-          <Link href={cellValues.formattedValue} passHref>
-            <a target="_blank" rel="noopener noreferrer">
-              <Button variant="contained">Click Here </Button>
-            </a>
-          </Link>
-        );
-      },
-    },
-    {
-      field: "linkedIn",
-      headerName: "LinkedIn",
-      width: 250,
-      renderCell: (cellValues) => {
-        return (
-          <Link href={cellValues.formattedValue} passHref>
-            <a target="_blank" rel="noopener noreferrer">
-              <Button variant="contained">Click Here </Button>
-            </a>
-          </Link>
+        ) : (
+          <LoadingButton
+            variant="contained"
+            color="primary"
+            onClick={() => {
+              setError("The user has not uploaded a company image yet!");
+            }}
+          >
+            View
+          </LoadingButton>
         );
       },
     },
@@ -243,79 +180,66 @@ export default function DataTable() {
     },
   ];
   React.useEffect(() => {
+    setLoading(true);
     const getData = async () => {
+      setLoading(true);
       const response = await getInfoEmployersQuery({
         fetchPolicy: "network-only",
       });
       const newLocations = [];
-      const jobs = [];
       response.data.getAllEmployers.forEach((obj, i) => {
-        obj.jobs.forEach((ind, i) =>
-          jobs.push({
-            [`${i}jobTitle`]: ind.jobTitle,
-            jobDesc: ind.jobDesc,
-            jobStatus: ind.jobStatus,
-            jobType: ind.jobType,
-            listingComplete: ind.listingComplete,
-            latitude: ind.latitude,
-            longitude: ind.longitude,
-            location: ind.location.location,
-            qualification: ind.qualification.qualification,
-            industry: ind.industry.industry,
-            domain: ind.domain.domain,
-            skill1: ind.skills[0].skill,
-            skill2: ind.skills[1].skill,
-            skill3: ind.skills[2].skill,
-            skill4: ind.skills[3].skill,
-            subDomain1: ind.subDomain[0].subDomain,
-            // subDomain2: ind.subDomain[1].subDomain,
-            // subDomain3: ind.subDomain[2].subDomain,
-            minPay: ind.minPay,
-            maxPay: ind.maxPay,
-            minRequiredExp:
-              Number(ind.minRequiredExp.years) * 10 +
-              Number(ind.minRequiredExp.months),
-          })
-        );
-        newLocations.push({
-          id: obj._id,
-          firstName: obj.user.firstName,
-          lastName: obj.user.lastName,
-          email: obj.user.email,
-          number: obj.user.number,
-          gender: obj.gender,
-          isAccountVerified: obj.user.isAccountVerified,
-          isProfileCompleted: obj.user.isProfileCompleted,
-          isSurveyCompleted: obj.user.isSurveyCompleted,
-          companyImage: obj.companyImage,
-          companyLetterHead: obj.companyLetterHead,
-          companyName: obj.companyName,
-          employerVerified: obj.employerVerified,
-          employerVerifiedStatus: obj.employerVerifiedStatus,
-          noOfHiring: obj.noOfHiring,
-          noOfLocations: obj.noOfLocations,
-          noOfLocations: obj.noOfLocations,
-          noOfEmployees: obj.noOfEmployees,
-          attritionRate: obj.attritionRate,
-          lastTurnover: obj.lastTurnover,
-          currentAddress: obj.currentAddress,
-          benefit: obj.benefits,
-          createdAt: String(obj.createdAt).substring(
+        let temp = {};
+        (temp["id"] = obj._id),
+          (temp["firstName"] = obj.user.firstName),
+          (temp["lastName"] = obj.user.lastName),
+          (temp["email"] = obj.user.email),
+          (temp["number"] = obj.user.number),
+          (temp["isAccountVerified"] = obj.user.isAccountVerified),
+          (temp["isProfileCompleted"] = obj.user.isProfileCompleted),
+          (temp["isSurveyCompleted"] = obj.user.isSurveyCompleted),
+          (temp["companyImage"] = obj.companyImage),
+          (temp["companyLetterHead"] = obj.companyLetterHead),
+          (temp["companyName"] = obj.companyName),
+          (temp["employerVerified"] = obj.employerVerified),
+          (temp["employerVerifyStatus"] = obj.employerVerifyStatus),
+          (temp["noOfHiring"] = obj.noOfHiring),
+          (temp["noOfLocations"] = obj.noOfLocations),
+          (temp["noOfLocations"] = obj.noOfLocations),
+          (temp["noOfEmployees"] = obj.noOfEmployees),
+          (temp["attritionRate"] = obj.attritionRate),
+          (temp["lastTurnover"] = obj.lastTurnover),
+          (temp["currentAddress"] = obj.currentAddress),
+          (temp["benefit"] = obj.benefits),
+          (temp["noOfJobs"] = obj.jobs.length),
+          (temp["createdAt"] = String(obj.createdAt).substring(
             0,
             String(obj.createdAt).indexOf("T")
-          ),
-          updatedAt: String(obj.updatedAt).substring(
+          )),
+          (temp["updatedAt"] = String(obj.updatedAt).substring(
             0,
             String(obj.updatedAt).indexOf("T")
-          ),
-        });
+          )),
+          newLocations.push(temp);
       });
       setData(newLocations);
       console.log(newLocations);
     };
     getData();
+    setLoading(false);
   }, []);
-  return (
+  return loading === true ? (
+    <div
+      style={{
+        marginTop: "80px",
+        width: "100vw",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      <CircularProgress />
+    </div>
+  ) : (
     <div
       style={{
         width: "100vw",
@@ -351,12 +275,23 @@ export default function DataTable() {
               component="h2"
               style={{ marginBottom: "7px", color: "black" }}
             >
-              Resume
+              {type}
             </Typography>
             <Image src={letterHead} width={"1200px"} height={"600px"} />
           </Box>
         </Modal>
       )}
+      {error !== "" ? (
+        <Snackbar
+          open={error === "" ? false : true}
+          autoHideDuration={6000}
+          onClose={handleCloseSnackbar}
+        >
+          <Alert onClose={handleCloseSnackbar} severity="error">
+            {error}
+          </Alert>
+        </Snackbar>
+      ) : null}
     </div>
   );
 }

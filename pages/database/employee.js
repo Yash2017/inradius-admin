@@ -4,10 +4,11 @@ import { useGetInfoEmployeesLazyQuery } from "../../generated/graphql";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import { LoadingButton } from "@mui/lab";
-import { Alert, Snackbar } from "@mui/material";
+import CircularProgress from "@mui/material/CircularProgress";
 import Image from "next/image";
 import { Typography, Button, TextField } from "@mui/material";
 import { useRouter } from "next/router";
+import { Alert, AlertTitle, Snackbar } from "@mui/material";
 import Link from "next/link";
 
 export default function DataTable() {
@@ -21,6 +22,14 @@ export default function DataTable() {
     boxShadow: 24,
     p: 4,
   };
+  const handleCloseSnackbar = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpenSnackbar(false);
+    setError("");
+  };
+  const [error, setError] = React.useState("");
   const [data, setData] = React.useState(null);
   const router = useRouter();
   const [openModal, setOpenModal] = React.useState(false);
@@ -175,12 +184,23 @@ export default function DataTable() {
       headerName: "Resume",
       width: 200,
       renderCell: (cellValues) => {
-        return (
+        return cellValues.formattedValue !== null ? (
           <Link href={cellValues.formattedValue} passHref>
             <a target="_blank" rel="noopener noreferrer">
               <Button variant="contained">Click Here </Button>
             </a>
           </Link>
+        ) : (
+          <Button
+            variant="contained"
+            onClick={() => {
+              cellValues.formattedValue === null
+                ? setError("The user has not uploaded a resume yet!")
+                : null;
+            }}
+          >
+            Click Here{" "}
+          </Button>
         );
       },
     },
@@ -189,12 +209,21 @@ export default function DataTable() {
       headerName: "LinkedIn",
       width: 250,
       renderCell: (cellValues) => {
-        return (
+        return cellValues.formattedValue !== null ? (
           <Link href={cellValues.formattedValue} passHref>
             <a target="_blank" rel="noopener noreferrer">
               <Button variant="contained">Click Here </Button>
             </a>
           </Link>
+        ) : (
+          <Button
+            variant="contained"
+            onClick={() =>
+              setError("The user has not uploaded a linkedin link yet!")
+            }
+          >
+            Click Here{" "}
+          </Button>
         );
       },
     },
@@ -210,7 +239,9 @@ export default function DataTable() {
     },
   ];
   React.useEffect(() => {
+    setLoading(true);
     const getData = async () => {
+      setLoading(true);
       const response = await getInfoEmployeesQuery({
         fetchPolicy: "network-only",
       });
@@ -239,8 +270,8 @@ export default function DataTable() {
           skill3: obj.skills[2].skill,
           skill4: obj.skills[3].skill,
           subDomain1: obj.subDomain[0].subDomain,
-          subDomain2: obj.subDomain[1].subDomain,
-          subDomain3: obj.subDomain[2].subDomain,
+          subDomain2: obj.subDomain.length > 1 && obj.subDomain[1].subDomain,
+          subDomain3: obj.subDomain.length > 2 && obj.subDomain[2].subDomain,
           fresher: obj.fresher,
           totalExp:
             obj.totalExp !== null
@@ -271,8 +302,21 @@ export default function DataTable() {
       console.log(newLocations);
     };
     getData();
+    setLoading(false);
   }, []);
-  return (
+  return loading === true ? (
+    <div
+      style={{
+        marginTop: "80px",
+        width: "100vw",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      <CircularProgress />
+    </div>
+  ) : (
     <div
       style={{
         width: "100vw",
@@ -314,6 +358,17 @@ export default function DataTable() {
           </Box>
         </Modal>
       )}
+      {error !== "" ? (
+        <Snackbar
+          open={error === "" ? false : true}
+          autoHideDuration={6000}
+          onClose={handleCloseSnackbar}
+        >
+          <Alert onClose={handleCloseSnackbar} severity="error">
+            {error}
+          </Alert>
+        </Snackbar>
+      ) : null}
     </div>
   );
 }
