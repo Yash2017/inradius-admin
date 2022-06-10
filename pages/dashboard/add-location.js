@@ -12,6 +12,7 @@ import Switch from "@mui/material/Switch";
 import Modal from "@mui/material/Modal";
 import { Alert, AlertTitle, Snackbar } from "@mui/material";
 import { useRouter } from "next/router";
+import CircularProgress from "@mui/material/CircularProgress";
 function Index() {
   const router = useRouter();
   const style = {
@@ -29,6 +30,7 @@ function Index() {
   const [input, setInput] = useState("");
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [firstLoading, setFirstLoading] = useState(true);
   const [saveLoading, setSaveLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
@@ -208,6 +210,7 @@ function Index() {
       console.log(response);
     };
     func();
+    setFirstLoading(false);
   }, []);
 
   const handleSaveClick = () => {
@@ -233,41 +236,55 @@ function Index() {
       setError("No changes made!");
     }
   };
-  return (
-    <div
-      style={{
-        width: "100vw",
-        height: "60vh",
-        color: "black",
-        marginTop: "80px",
-        paddingLeft: "24px",
-        paddingRight: "24px",
-      }}
-    >
-      <Typography variant="h5" style={{ marginBottom: "12px" }}>
-        Locations
-      </Typography>
-      {location !== [] && (
-        <DataGrid
-          rows={location}
-          columns={columns}
-          pageSize={10}
-          rowsPerPageOptions={[5]}
-        />
-      )}
-      <div style={{ marginTop: "12px" }}>
-        <Button variant="contained" onClick={handleOpen}>
-          Add Location
-        </Button>
-        <LoadingButton
-          onClick={() => handleSaveClick()}
-          loading={saveLoading}
-          variant="contained"
-          style={{ marginLeft: "12px" }}
+  return firstLoading === false ? (
+    <>
+      {location.length !== 0 ? (
+        <div
+          style={{
+            width: "100vw",
+            height: "60vh",
+            color: "black",
+            marginTop: "80px",
+            paddingLeft: "24px",
+            paddingRight: "24px",
+          }}
         >
-          Save
-        </LoadingButton>
-      </div>
+          <Typography variant="h5" style={{ marginBottom: "12px" }}>
+            Locations
+          </Typography>
+          <DataGrid
+            rows={location}
+            columns={columns}
+            pageSize={10}
+            rowsPerPageOptions={[5]}
+          />
+          <div style={{ marginTop: "12px" }}>
+            <Button variant="contained" onClick={handleOpen}>
+              Add Location
+            </Button>
+            <LoadingButton
+              onClick={() => handleSaveClick()}
+              loading={saveLoading}
+              variant="contained"
+              style={{ marginLeft: "12px" }}
+            >
+              Save
+            </LoadingButton>
+          </div>
+        </div>
+      ) : (
+        <div
+          style={{
+            marginTop: "0px",
+            width: "100vw",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <CircularProgress />
+        </div>
+      )}
       <Modal
         open={open}
         onClose={handleClose}
@@ -324,6 +341,18 @@ function Index() {
           </Alert>
         </Snackbar>
       ) : null}
+    </>
+  ) : (
+    <div
+      style={{
+        marginTop: "0px",
+        width: "100vw",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      <CircularProgress />
     </div>
   );
 }

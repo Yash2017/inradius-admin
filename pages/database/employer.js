@@ -56,6 +56,11 @@ export default function DataTable() {
       width: 250,
     },
     {
+      field: "registeredAddress",
+      headerName: "Registered Address",
+      width: 250,
+    },
+    {
       field: "isAccountVerified",
       headerName: "Account Verified",
       width: 250,
@@ -82,7 +87,7 @@ export default function DataTable() {
     },
     {
       field: "noOfJobs",
-      headerName: "Number of Jobs",
+      headerName: "Number of Jobs Posted",
       width: 250,
     },
     {
@@ -110,29 +115,60 @@ export default function DataTable() {
       headerName: "Last Turnover",
       width: 250,
     },
-
+    {
+      field: "landline",
+      headerName: "Landline Number",
+      width: 250,
+    },
     {
       field: "companyLetterHead",
       headerName: "Company Letter Head",
       width: 200,
       renderCell: (cellValues) => {
-        return (
-          <LoadingButton
+        return cellValues.formattedValue !== undefined ? (
+          <Link href={cellValues.formattedValue} passHref>
+            <a target="_blank" rel="noopener noreferrer">
+              <Button variant="contained">Click Here </Button>
+            </a>
+          </Link>
+        ) : (
+          <Button
             variant="contained"
-            color="primary"
             onClick={() => {
-              setOpenModal(true);
-              console.log(cellValues);
-              if (cellValues.formattedValue === null) {
-                setError("The user has not uploaded a letter head yet!");
-              } else {
-                setLetterHead(cellValues.formattedValue);
-                setType("Company Letter Head");
-              }
+              cellValues.formattedValue === null
+                ? setError(
+                    "The user has not uploaded a company letter head yet!"
+                  )
+                : null;
             }}
           >
-            View
-          </LoadingButton>
+            Click Here{" "}
+          </Button>
+        );
+      },
+    },
+    {
+      field: "linkedIn",
+      headerName: "LinkedIn",
+      width: 200,
+      renderCell: (cellValues) => {
+        return cellValues.formattedValue !== null ? (
+          <Link href={cellValues.formattedValue} passHref>
+            <a target="_blank" rel="noopener noreferrer">
+              <Button variant="contained">Click Here </Button>
+            </a>
+          </Link>
+        ) : (
+          <Button
+            variant="contained"
+            onClick={() => {
+              cellValues.formattedValue === null
+                ? setError("The user has not added a linkedIn link yet!")
+                : null;
+            }}
+          >
+            Click Here{" "}
+          </Button>
         );
       },
     },
@@ -197,7 +233,8 @@ export default function DataTable() {
           (temp["isProfileCompleted"] = obj.user.isProfileCompleted),
           (temp["isSurveyCompleted"] = obj.user.isSurveyCompleted),
           (temp["companyImage"] = obj.companyImage),
-          (temp["companyLetterHead"] = obj.companyLetterHead),
+          (temp["companyLetterHead"] =
+            obj.companyLetterHead !== null ? obj.companyLetterHead : null),
           (temp["companyName"] = obj.companyName),
           (temp["employerVerified"] = obj.employerVerified),
           (temp["employerVerifyStatus"] = obj.employerVerifyStatus),
@@ -212,6 +249,10 @@ export default function DataTable() {
             obj.lastTurnover !== null ? obj.lastTurnover : ""),
           (temp["currentAddress"] =
             obj.currentAddress !== null ? obj.currentAddress : ""),
+          (temp["registeredAddress"] =
+            obj.registeredAddress !== null ? obj.registeredAddress : ""),
+          (temp["linkedIn"] = obj.linkedIn !== null ? obj.linkedIn : null),
+          (temp["landline"] = obj.landline !== null ? obj.landline : null),
           (temp["benefit"] = obj.benefits),
           (temp["noOfJobs"] = obj.jobs.length),
           (temp["createdAt"] = String(obj.createdAt).substring(

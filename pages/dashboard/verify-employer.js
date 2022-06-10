@@ -11,6 +11,7 @@ import { LoadingButton } from "@mui/lab";
 import { Alert, Snackbar } from "@mui/material";
 import Image from "next/image";
 import { Typography, Button, TextField } from "@mui/material";
+import Link from "next/link";
 
 export default function DataTable() {
   const style = {
@@ -85,18 +86,25 @@ export default function DataTable() {
       headerName: "Company Letter Head",
       width: 200,
       renderCell: (cellValues) => {
-        return (
-          <LoadingButton
+        return cellValues.formattedValue !== undefined ? (
+          <Link href={cellValues.formattedValue} passHref>
+            <a target="_blank" rel="noopener noreferrer">
+              <Button variant="contained">Click Here </Button>
+            </a>
+          </Link>
+        ) : (
+          <Button
             variant="contained"
-            color="primary"
             onClick={() => {
-              setOpenModal(true);
-              console.log(cellValues);
-              setLetterHead(cellValues.formattedValue);
+              cellValues.formattedValue === null
+                ? setError(
+                    "The user has not uploaded a company letter head yet!"
+                  )
+                : null;
             }}
           >
-            View
-          </LoadingButton>
+            Click Here{" "}
+          </Button>
         );
       },
     },
@@ -113,7 +121,8 @@ export default function DataTable() {
           id: obj._id,
           companyName: obj.companyName,
           employerVerified: obj.employerVerified,
-          companyLetterHead: obj.companyLetterHead,
+          companyLetterHead:
+            obj.companyLetterHead !== null ? obj.companyLetterHead : null,
         })
       );
       setData(newLocations);

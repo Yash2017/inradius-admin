@@ -13,6 +13,7 @@ import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import { Alert, AlertTitle, Snackbar } from "@mui/material";
 import { useRouter } from "next/router";
+import CircularProgress from "@mui/material/CircularProgress";
 import MenuItem from "@mui/material/MenuItem";
 
 function Index() {
@@ -576,7 +577,7 @@ function Index() {
       setError("No data changed to save!");
     }
   };
-  return (
+  return location.length !== 0 ? (
     <div
       style={{
         width: "100vw",
@@ -707,6 +708,18 @@ function Index() {
           </Alert>
         </Snackbar>
       ) : null}
+    </div>
+  ) : (
+    <div
+      style={{
+        marginTop: "0px",
+        width: "100vw",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      <CircularProgress />
     </div>
   );
 }

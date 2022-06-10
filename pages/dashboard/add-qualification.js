@@ -12,6 +12,7 @@ import Modal from "@mui/material/Modal";
 import { Alert, Snackbar } from "@mui/material";
 import { useRouter } from "next/router";
 import Switch from "@mui/material/Switch";
+import CircularProgress from "@mui/material/CircularProgress";
 export default function AddQualification() {
   const [locationName, setLocationName] = useState([]);
   const [success, setSuccess] = useState("");
@@ -238,40 +239,54 @@ export default function AddQualification() {
     }
   };
   return (
-    <div
-      style={{
-        width: "100vw",
-        height: "60vh",
-        color: "black",
-        marginTop: "80px",
-        paddingLeft: "24px",
-        paddingRight: "24px",
-      }}
-    >
-      <Typography variant="h5" style={{ marginBottom: "12px" }}>
-        Qualifications
-      </Typography>
-      {location !== [] && (
-        <DataGrid
-          rows={location}
-          columns={columns}
-          pageSize={10}
-          rowsPerPageOptions={[5]}
-        />
-      )}
-      <div style={{ marginTop: "12px" }}>
-        <Button variant="contained" onClick={handleOpen}>
-          Add Qualification
-        </Button>
-        <LoadingButton
-          loading={saveLoading}
-          onClick={handleSaveClick}
-          variant="contained"
-          style={{ marginLeft: "12px" }}
+    <>
+      {location.length !== 0 ? (
+        <div
+          style={{
+            width: "100vw",
+            height: "60vh",
+            color: "black",
+            marginTop: "80px",
+            paddingLeft: "24px",
+            paddingRight: "24px",
+          }}
         >
-          Save
-        </LoadingButton>
-      </div>
+          <Typography variant="h5" style={{ marginBottom: "12px" }}>
+            Qualifications
+          </Typography>
+          <DataGrid
+            rows={location}
+            columns={columns}
+            pageSize={10}
+            rowsPerPageOptions={[5]}
+          />
+          <div style={{ marginTop: "12px" }}>
+            <Button variant="contained" onClick={handleOpen}>
+              Add Qualification
+            </Button>
+            <LoadingButton
+              loading={saveLoading}
+              onClick={handleSaveClick}
+              variant="contained"
+              style={{ marginLeft: "12px" }}
+            >
+              Save
+            </LoadingButton>
+          </div>
+        </div>
+      ) : (
+        <div
+          style={{
+            marginTop: "0px",
+            width: "100vw",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <CircularProgress />
+        </div>
+      )}
       <Modal
         open={open}
         onClose={handleClose}
@@ -328,6 +343,6 @@ export default function AddQualification() {
           </Alert>
         </Snackbar>
       ) : null}
-    </div>
+    </>
   );
 }

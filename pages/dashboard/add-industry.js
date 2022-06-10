@@ -5,6 +5,7 @@ import {
   useUpdateIndustryMutation,
 } from "../../generated/graphql";
 import { Typography, Button, TextField } from "@mui/material";
+import CircularProgress from "@mui/material/CircularProgress";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { DataGrid, GridColDef, GridValueGetterParams } from "@mui/x-data-grid";
 import Box from "@mui/material/Box";
@@ -240,40 +241,55 @@ export default function Index() {
     }
   };
   return (
-    <div
-      style={{
-        width: "100vw",
-        height: "60vh",
-        color: "black",
-        marginTop: "80px",
-        paddingLeft: "24px",
-        paddingRight: "24px",
-      }}
-    >
-      <Typography variant="h5" style={{ marginBottom: "12px" }}>
-        Available Industries
-      </Typography>
-      {location !== [] && (
-        <DataGrid
-          rows={location}
-          columns={columns}
-          pageSize={10}
-          rowsPerPageOptions={[5]}
-        />
-      )}
-      <div style={{ marginTop: "12px" }}>
-        <Button variant="contained" onClick={handleOpen}>
-          Add Industry
-        </Button>
-        <LoadingButton
-          loading={saveLoading}
-          onClick={handleSaveClick}
-          variant="contained"
-          style={{ marginLeft: "12px" }}
+    <>
+      {location.length !== 0 ? (
+        <div
+          style={{
+            width: "100vw",
+            height: "60vh",
+            color: "black",
+            marginTop: "80px",
+            paddingLeft: "24px",
+            paddingRight: "24px",
+          }}
         >
-          Save
-        </LoadingButton>
-      </div>
+          <Typography variant="h5" style={{ marginBottom: "12px" }}>
+            Available Industries
+          </Typography>
+          <DataGrid
+            rows={location}
+            columns={columns}
+            pageSize={10}
+            rowsPerPageOptions={[5]}
+          />
+          <div style={{ marginTop: "12px" }}>
+            <Button variant="contained" onClick={handleOpen}>
+              Add Industry
+            </Button>
+            <LoadingButton
+              loading={saveLoading}
+              onClick={handleSaveClick}
+              variant="contained"
+              style={{ marginLeft: "12px" }}
+            >
+              Save
+            </LoadingButton>
+          </div>
+        </div>
+      ) : (
+        <div
+          style={{
+            marginTop: "0px",
+            width: "100vw",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <CircularProgress />
+        </div>
+      )}
+
       <Modal
         open={open}
         onClose={handleClose}
@@ -330,6 +346,6 @@ export default function Index() {
           </Alert>
         </Snackbar>
       ) : null}
-    </div>
+    </>
   );
 }
