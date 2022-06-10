@@ -767,6 +767,16 @@ export type GetAllEmployersQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type GetAllEmployersQuery = { __typename?: 'Query', getAllEmployers: Array<{ __typename?: 'Employer', _id: string, companyName?: string | null, employerVerified?: boolean | null, companyLetterHead?: string | null }> };
 
+export type GetInfoEmployeesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetInfoEmployeesQuery = { __typename?: 'Query', getAllEmployees: Array<{ __typename?: 'Employee', _id: string, shortDescription?: string | null, radius?: number | null, latitude?: number | null, longitude?: number | null, fresher?: boolean | null, currentPay?: number | null, expectedPay?: number | null, linkedIn?: string | null, resume?: string | null, gender?: EmployeeGenderEnum | null, currentAddress?: string | null, createdAt: any, updatedAt: any, dob?: any | null, user: { __typename?: 'User', firstName: string, lastName: string, email: string, number: string, isAccountVerified: boolean, isProfileCompleted: boolean, isSurveyCompleted: boolean }, location?: { __typename?: 'Location', location: string } | null, qualification?: { __typename?: 'Qualification', qualification: string } | null, industry?: { __typename?: 'Industry', industry: string } | null, domain?: { __typename?: 'Domain', domain: string } | null, skills: Array<{ __typename?: 'Skill', skill: string }>, subDomain: Array<{ __typename?: 'SubDomain', subDomain: string, domain: { __typename?: 'Domain', domain: string } }>, workExp: Array<{ __typename?: 'UserWorkExp', company: string, desc: string, designation: DesignationEnum, onNotice: boolean, start: any, end?: any | null, expectedJoinigDate?: any | null, lastDateAtCurrentEmployer?: any | null }>, totalExp?: { __typename?: 'UserExpInYearMonths', years: string, months: string } | null, relevantExp?: { __typename?: 'UserExpInYearMonths', years: string, months: string } | null }> };
+
+export type GetInfoEmployersQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetInfoEmployersQuery = { __typename?: 'Query', getAllEmployers: Array<{ __typename?: 'Employer', _id: string, companyName?: string | null, companyImage?: string | null, companyLetterHead?: string | null, employerVerified?: boolean | null, employerVerifyStatus?: EmployerVerifyStatusEnum | null, noOfHiring?: number | null, noOfLocations?: number | null, noOfEmployees?: number | null, registeredAddress?: string | null, currentAddress?: string | null, attritionRate?: number | null, createdAt: any, updatedAt: any, lastTurnover?: number | null, user: { __typename?: 'User', firstName: string, lastName: string, email: string, number: string, isAccountVerified: boolean, isProfileCompleted: boolean, isSurveyCompleted: boolean }, jobs?: Array<{ __typename?: 'EmployerJob', jobTitle?: string | null, jobDesc?: string | null, jobType?: EmployerJobTypeEnum | null, jobStatus?: EmployerJobStatusEnum | null, listingComplete?: boolean | null, radius?: number | null, latitude?: number | null, longitude?: number | null, minPay?: number | null, maxPay?: number | null, createdAt: any, updatedAt: any, location?: { __typename?: 'Location', location: string } | null, qualification?: { __typename?: 'Qualification', qualification: string } | null, industry?: { __typename?: 'Industry', industry: string } | null, domain?: { __typename?: 'Domain', domain: string } | null, skills: Array<{ __typename?: 'Skill', skill: string }>, subDomain: Array<{ __typename?: 'SubDomain', subDomain: string, domain: { __typename?: 'Domain', domain: string } }>, minRequiredExp?: { __typename?: 'UserExpInYearMonths', years: string, months: string } | null }> | null, benefits?: Array<{ __typename?: 'Benefit', benefit: string }> | null }> };
+
 export type AllIndustriesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -1021,6 +1031,202 @@ export function useGetAllEmployersLazyQuery(baseOptions?: Apollo.LazyQueryHookOp
 export type GetAllEmployersQueryHookResult = ReturnType<typeof useGetAllEmployersQuery>;
 export type GetAllEmployersLazyQueryHookResult = ReturnType<typeof useGetAllEmployersLazyQuery>;
 export type GetAllEmployersQueryResult = Apollo.QueryResult<GetAllEmployersQuery, GetAllEmployersQueryVariables>;
+export const GetInfoEmployeesDocument = gql`
+    query GetInfoEmployees {
+  getAllEmployees {
+    _id
+    user {
+      firstName
+      lastName
+      email
+      number
+      isAccountVerified
+      isProfileCompleted
+      isSurveyCompleted
+    }
+    shortDescription
+    radius
+    latitude
+    longitude
+    location {
+      location
+    }
+    qualification {
+      qualification
+    }
+    industry {
+      industry
+    }
+    domain {
+      domain
+    }
+    skills {
+      skill
+    }
+    subDomain {
+      domain {
+        domain
+      }
+      subDomain
+    }
+    fresher
+    workExp {
+      company
+      desc
+      designation
+      onNotice
+      start
+      end
+      expectedJoinigDate
+      lastDateAtCurrentEmployer
+    }
+    totalExp {
+      years
+      months
+    }
+    relevantExp {
+      years
+      months
+    }
+    currentPay
+    expectedPay
+    linkedIn
+    resume
+    gender
+    currentAddress
+    createdAt
+    updatedAt
+    dob
+  }
+}
+    `;
+
+/**
+ * __useGetInfoEmployeesQuery__
+ *
+ * To run a query within a React component, call `useGetInfoEmployeesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetInfoEmployeesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetInfoEmployeesQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetInfoEmployeesQuery(baseOptions?: Apollo.QueryHookOptions<GetInfoEmployeesQuery, GetInfoEmployeesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetInfoEmployeesQuery, GetInfoEmployeesQueryVariables>(GetInfoEmployeesDocument, options);
+      }
+export function useGetInfoEmployeesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetInfoEmployeesQuery, GetInfoEmployeesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetInfoEmployeesQuery, GetInfoEmployeesQueryVariables>(GetInfoEmployeesDocument, options);
+        }
+export type GetInfoEmployeesQueryHookResult = ReturnType<typeof useGetInfoEmployeesQuery>;
+export type GetInfoEmployeesLazyQueryHookResult = ReturnType<typeof useGetInfoEmployeesLazyQuery>;
+export type GetInfoEmployeesQueryResult = Apollo.QueryResult<GetInfoEmployeesQuery, GetInfoEmployeesQueryVariables>;
+export const GetInfoEmployersDocument = gql`
+    query GetInfoEmployers {
+  getAllEmployers {
+    _id
+    user {
+      firstName
+      lastName
+      email
+      number
+      isAccountVerified
+      isProfileCompleted
+      isSurveyCompleted
+    }
+    companyName
+    companyImage
+    companyLetterHead
+    employerVerified
+    employerVerifyStatus
+    noOfHiring
+    noOfLocations
+    noOfEmployees
+    jobs {
+      jobTitle
+      jobDesc
+      jobType
+      jobStatus
+      listingComplete
+      location {
+        location
+      }
+      qualification {
+        qualification
+      }
+      industry {
+        industry
+      }
+      domain {
+        domain
+      }
+      skills {
+        skill
+      }
+      subDomain {
+        domain {
+          domain
+        }
+        subDomain
+      }
+      radius
+      latitude
+      longitude
+      minPay
+      maxPay
+      minRequiredExp {
+        years
+        months
+      }
+      createdAt
+      updatedAt
+    }
+    benefits {
+      benefit
+    }
+    registeredAddress
+    currentAddress
+    noOfHiring
+    attritionRate
+    createdAt
+    updatedAt
+    lastTurnover
+  }
+}
+    `;
+
+/**
+ * __useGetInfoEmployersQuery__
+ *
+ * To run a query within a React component, call `useGetInfoEmployersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetInfoEmployersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetInfoEmployersQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetInfoEmployersQuery(baseOptions?: Apollo.QueryHookOptions<GetInfoEmployersQuery, GetInfoEmployersQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetInfoEmployersQuery, GetInfoEmployersQueryVariables>(GetInfoEmployersDocument, options);
+      }
+export function useGetInfoEmployersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetInfoEmployersQuery, GetInfoEmployersQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetInfoEmployersQuery, GetInfoEmployersQueryVariables>(GetInfoEmployersDocument, options);
+        }
+export type GetInfoEmployersQueryHookResult = ReturnType<typeof useGetInfoEmployersQuery>;
+export type GetInfoEmployersLazyQueryHookResult = ReturnType<typeof useGetInfoEmployersLazyQuery>;
+export type GetInfoEmployersQueryResult = Apollo.QueryResult<GetInfoEmployersQuery, GetInfoEmployersQueryVariables>;
 export const AllIndustriesDocument = gql`
     query AllIndustries {
   allIndustries {

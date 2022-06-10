@@ -23,6 +23,146 @@ query GetAllEmployers {
   }
 }
 
+query GetInfoEmployees {
+  getAllEmployees {
+    _id
+    user {
+      firstName
+      lastName
+      email
+      number
+      isAccountVerified
+      isProfileCompleted
+      isSurveyCompleted
+    }
+    shortDescription
+    radius
+    latitude
+    longitude
+    location {
+      location
+    }
+    qualification {
+      qualification
+    }
+    industry {
+      industry
+    }
+    domain {
+      domain
+    }
+    skills {
+      skill
+    }
+    subDomain {
+      domain {
+        domain
+      }
+      subDomain
+    }
+    fresher
+    workExp {
+      company
+      desc
+      designation
+      onNotice
+      start
+      end
+      expectedJoinigDate
+      lastDateAtCurrentEmployer
+    }
+    totalExp {
+      years
+      months
+    }
+    relevantExp {
+      years
+      months
+    }
+    currentPay
+    expectedPay
+    linkedIn
+    resume
+    gender
+    currentAddress
+    createdAt
+    updatedAt
+    dob
+  }
+}
+
+query GetInfoEmployers {
+  getAllEmployers {
+    _id
+    user {
+      firstName
+      lastName
+      email
+      number
+      isAccountVerified
+      isProfileCompleted
+      isSurveyCompleted
+    }
+    companyName
+    companyImage
+    companyLetterHead
+    employerVerified
+    employerVerifyStatus
+    noOfHiring
+    noOfLocations
+    noOfEmployees
+    jobs {
+      jobTitle
+      jobDesc
+      jobType
+      jobStatus
+      listingComplete
+      location {
+        location
+      }
+      qualification {
+        qualification
+      }
+      industry {
+        industry
+      }
+      domain {
+        domain
+      }
+      skills {
+        skill
+      }
+      subDomain {
+        domain {
+          domain
+        }
+        subDomain
+      }
+      radius
+      latitude
+      longitude
+      minPay
+      maxPay
+      minRequiredExp {
+        years
+        months
+      }
+      createdAt
+      updatedAt
+    }
+    benefits {
+      benefit
+    }
+    registeredAddress
+    currentAddress
+    noOfHiring
+    attritionRate
+    createdAt
+    updatedAt
+    lastTurnover
+  }
+}
+
 query AllIndustries {
   allIndustries {
     _id
