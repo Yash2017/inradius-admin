@@ -243,9 +243,14 @@ export default function DataTable() {
           subDomain3: obj.subDomain[2].subDomain,
           fresher: obj.fresher,
           totalExp:
-            Number(obj.totalExp.years) * 10 + Number(obj.totalExp.months),
+            obj.totalExp !== null
+              ? Number(obj.totalExp.years) * 10 + Number(obj.totalExp.months)
+              : 0,
           relevantExp:
-            Number(obj.relevantExp.years) * 10 + Number(obj.relevantExp.months),
+            obj.relevantExp !== null
+              ? Number(obj.relevantExp.years) * 10 +
+                Number(obj.relevantExp.months)
+              : 0,
           currentPay: obj.currentPay,
           expectedPay: obj.expectedPay,
           linkedIn: obj.linkedIn,

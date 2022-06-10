@@ -300,7 +300,6 @@ export default function DataTable() {
           lastTurnover: obj.lastTurnover,
           currentAddress: obj.currentAddress,
           benefit: obj.benefits,
-          jobs,
           createdAt: String(obj.createdAt).substring(
             0,
             String(obj.createdAt).indexOf("T")
