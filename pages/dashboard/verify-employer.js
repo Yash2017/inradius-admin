@@ -6,6 +6,7 @@ import {
 } from "../../generated/graphql";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
+import CircularProgress from "@mui/material/CircularProgress";
 import { LoadingButton } from "@mui/lab";
 import { Alert, Snackbar } from "@mui/material";
 import Image from "next/image";
@@ -27,6 +28,7 @@ export default function DataTable() {
   const [openModal, setOpenModal] = React.useState(false);
   const [letterHead, setLetterHead] = React.useState("");
   const [loading, setLoading] = React.useState(false);
+  const [pageLoading, setPageLoading] = React.useState(true);
   const [companyName, setCompanyName] = React.useState("");
   const handleClick = async (e, cell) => {
     setLoading(true);
@@ -92,7 +94,6 @@ export default function DataTable() {
               console.log(cellValues);
               setLetterHead(cellValues.formattedValue);
             }}
-            loading={loading}
           >
             View
           </LoadingButton>
@@ -102,6 +103,7 @@ export default function DataTable() {
   ];
   React.useEffect(() => {
     const getData = async () => {
+      setPageLoading(true);
       const response = await getAllEmployersQuery({
         fetchPolicy: "network-only",
       });
@@ -118,25 +120,40 @@ export default function DataTable() {
       console.log(newLocations);
     };
     getData();
+    setPageLoading(false);
   }, []);
   return (
-    <div
-      style={{
-        width: "100vw",
-        height: "80vh",
-        color: "black",
-        marginTop: "80px",
-        paddingLeft: "24px",
-        paddingRight: "24px",
-      }}
-    >
-      {data !== null && (
-        <DataGrid
-          rows={data}
-          columns={columns}
-          pageSize={10}
-          rowsPerPageOptions={[5]}
-        />
+    <>
+      {data !== null ? (
+        <div
+          style={{
+            width: "100vw",
+            height: "80vh",
+            color: "black",
+            marginTop: "80px",
+            paddingLeft: "24px",
+            paddingRight: "24px",
+          }}
+        >
+          <DataGrid
+            rows={data}
+            columns={columns}
+            pageSize={10}
+            rowsPerPageOptions={[5]}
+          />
+        </div>
+      ) : (
+        <div
+          style={{
+            marginTop: "0px",
+            width: "100vw",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <CircularProgress />
+        </div>
       )}
       {companyName !== "" ? (
         <Snackbar
@@ -172,6 +189,6 @@ export default function DataTable() {
           </Box>
         </Modal>
       )}
-    </div>
+    </>
   );
 }

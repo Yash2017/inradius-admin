@@ -230,7 +230,7 @@ export default function DataTable() {
   return loading === true ? (
     <div
       style={{
-        marginTop: "80px",
+        marginTop: "0px",
         width: "100vw",
         display: "flex",
         justifyContent: "center",
@@ -240,23 +240,37 @@ export default function DataTable() {
       <CircularProgress />
     </div>
   ) : (
-    <div
-      style={{
-        width: "100vw",
-        height: "80vh",
-        color: "black",
-        marginTop: "80px",
-        paddingLeft: "24px",
-        paddingRight: "24px",
-      }}
-    >
-      {data !== null && (
-        <DataGrid
-          rows={data}
-          columns={columns}
-          pageSize={10}
-          rowsPerPageOptions={[5]}
-        />
+    <>
+      {data !== null ? (
+        <div
+          style={{
+            width: "100vw",
+            height: "80vh",
+            color: "black",
+            marginTop: "80px",
+            paddingLeft: "24px",
+            paddingRight: "24px",
+          }}
+        >
+          <DataGrid
+            rows={data}
+            columns={columns}
+            pageSize={10}
+            rowsPerPageOptions={[5]}
+          />
+        </div>
+      ) : (
+        <div
+          style={{
+            marginTop: "0px",
+            width: "100vw",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <CircularProgress />
+        </div>
       )}
       {letterHead !== "" && (
         <Modal
@@ -292,6 +306,6 @@ export default function DataTable() {
           </Alert>
         </Snackbar>
       ) : null}
-    </div>
+    </>
   );
 }
