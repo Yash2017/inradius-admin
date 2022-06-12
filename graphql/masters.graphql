@@ -181,6 +181,15 @@ query AllDomains {
   }
 }
 
+query AllLoginContent {
+  allLoginContent {
+    loginContent
+    imageUrl
+    active
+    _id
+  }
+}
+
 query AllSubDomains {
   allSubDomains {
     _id
@@ -282,6 +291,24 @@ mutation AddSurvey($input: SurveyInput!) {
   addSurvey(input: $input) {
     question
     options
+    _id
+  }
+}
+
+mutation AddLoginContent($input: LoginContentInput!) {
+  addLoginContent(input: $input) {
+    loginContent
+    imageUrl
+    active
+    _id
+  }
+}
+
+mutation UpdateLoginContent($input: UpdateLoginContentInput!) {
+  updateLoginContent(input: $input) {
+    loginContent
+    imageUrl
+    active
     _id
   }
 }

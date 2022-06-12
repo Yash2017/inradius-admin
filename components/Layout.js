@@ -18,6 +18,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import WorkIcon from "@mui/icons-material/Work";
+import InsertPhotoIcon from "@mui/icons-material/InsertPhoto";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import CheckIcon from "@mui/icons-material/Check";
 import ExpandMore from "@mui/icons-material/ExpandMore";
@@ -175,6 +176,12 @@ export default function Layout({ children }) {
                   <RuleIcon />
                 </ListItemIcon>
                 <ListItemText primary="Rule Engine" />
+              </ListItemButton>
+              <ListItemButton onClick={() => router.push("/login-content")}>
+                <ListItemIcon>
+                  <InsertPhotoIcon />
+                </ListItemIcon>
+                <ListItemText primary="Login Content" />
               </ListItemButton>
               <ListItemButton
                 onClick={() => setSurveyListOpen(!openSurveyList)}

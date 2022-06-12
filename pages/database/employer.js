@@ -17,7 +17,8 @@ export default function DataTable() {
     top: "50%",
     left: "50%",
     transform: "translate(-50%, -50%)",
-    width: 1200,
+    width: "650px",
+    height: "650px",
     bgcolor: "background.paper",
     boxShadow: 24,
     p: 4,
@@ -335,7 +336,12 @@ export default function DataTable() {
             >
               {type}
             </Typography>
-            <Image src={letterHead} width={"1200px"} height={"600px"} />
+            <Image
+              src={letterHead}
+              layout={"responsive"}
+              width={"400px"}
+              height={"400px"}
+            />
           </Box>
         </Modal>
       )}

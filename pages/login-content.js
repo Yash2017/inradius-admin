@@ -1,0 +1,505 @@
+import React, { useEffect, useState } from "react";
+import {
+  useAllLoginContentLazyQuery,
+  useAddLoginContentMutation,
+  useUpdateLoginContentMutation,
+} from "../generated/graphql";
+import { DataGrid, GridColDef, GridValueGetterParams } from "@mui/x-data-grid";
+import {
+  Typography,
+  Button,
+  TextField,
+  Input,
+  Stack,
+  styled,
+} from "@mui/material";
+import LoadingButton from "@mui/lab/LoadingButton";
+import Box from "@mui/material/Box";
+import Switch from "@mui/material/Switch";
+import Modal from "@mui/material/Modal";
+import { Alert, AlertTitle, Snackbar } from "@mui/material";
+import { useRouter } from "next/router";
+import Image from "next/image";
+import CircularProgress from "@mui/material/CircularProgress";
+import Link from "next/link";
+function Index() {
+  const router = useRouter();
+  const style = {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: "650px",
+    height: "650px",
+    bgcolor: "background.paper",
+    boxShadow: 24,
+    p: 4,
+    margin: "12px",
+  };
+  const styleForAdding = {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: 400,
+    bgcolor: "background.paper",
+    boxShadow: 24,
+    p: 4,
+    margin: "12px",
+  };
+  const [location, setLocation] = useState([]);
+  const [locationName, setLocationName] = useState([]);
+  const [input, setInput] = useState("");
+  const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [firstLoading, setFirstLoading] = useState(true);
+  const [saveLoading, setSaveLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [openModal, setOpenModal] = useState(false);
+  const [success, setSuccess] = useState("");
+  const [updateLoginContent] = useUpdateLoginContentMutation();
+  const [letterHead, setLetterHead] = useState("");
+  const [fileName, setFileName] = useState("");
+  const [openSnackbar, setOpenSnackbar] = useState(true);
+  const [file, setFile] = useState();
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+  const [edited, setEdited] = useState([]);
+  const [editedId, setEditedId] = useState([]);
+  const [addLoginContent] = useAddLoginContentMutation();
+  const handleCloseSnackbar = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpenSnackbar(false);
+    setError("");
+    setSuccess("");
+  };
+  const columns = [
+    {
+      field: "loginContent",
+      headerName: "Login Content",
+      width: 400,
+      renderCell: (cellValues) => {
+        return (
+          <input
+            style={{
+              width: "100%",
+              border: "0px",
+              height: "100%",
+              padding: "10px",
+            }}
+            type={"text"}
+            value={cellValues.value}
+            onChange={(e) => {
+              const newL = [...location];
+              newL.forEach((ind) => {
+                if (ind.id === cellValues.row.id) {
+                  const old = ind.loginContent;
+                  ind.loginContent = String(e.target.value);
+                  if (edited.length !== 0) {
+                    const ret = edited.findIndex((indx) => indx.id === ind.id);
+                    console.log(editedId);
+                    console.log(edited);
+                    if (ret === -1) {
+                      setEdited([
+                        ...edited,
+                        {
+                          location: ind.loginContent,
+                          id: ind.id,
+                        },
+                      ]);
+                      setEditedId([...editedId, ind.id]);
+                    } else {
+                      const newEdited = [...edited];
+                      newEdited[ret]["loginContent"] = ind.loginContent;
+                      setEdited(newEdited);
+                    }
+                  } else {
+                    setEdited([
+                      {
+                        loginContent: ind.loginContent,
+                        id: ind.id,
+                      },
+                    ]);
+                    setEditedId([ind.id]);
+                  }
+                }
+              });
+              setLocation(newL);
+            }}
+          />
+        );
+      },
+    },
+    {
+      field: "imageUrl",
+      headerName: "Image",
+      width: 200,
+      renderCell: (cellValues) => {
+        return cellValues.formattedValue !== null ? (
+          <LoadingButton
+            variant="contained"
+            color="primary"
+            onClick={() => {
+              setOpenModal(true);
+              console.log(cellValues);
+              setLetterHead(cellValues.formattedValue);
+            }}
+          >
+            View
+          </LoadingButton>
+        ) : (
+          <LoadingButton
+            variant="contained"
+            color="primary"
+            onClick={() => {
+              setError("The user has not uploaded a company image yet!");
+            }}
+          >
+            View
+          </LoadingButton>
+        );
+      },
+    },
+    {
+      field: "active",
+      headerName: "Active Status",
+      width: 250,
+      renderCell: (cellValues) => {
+        return (
+          <Switch
+            checked={cellValues.row.active}
+            inputProps={{ "aria-label": "controlled" }}
+            onChange={() => {
+              const newL = [...location];
+              newL.forEach((ind) => {
+                if (ind.id === cellValues.row.id) {
+                  ind.active = !ind.active;
+                  if (edited.length !== 0) {
+                    const ret = edited.findIndex((indx) => indx.id === ind.id);
+                    console.log(editedId);
+                    console.log(edited);
+                    if (ret === -1) {
+                      setEdited([
+                        ...edited,
+                        {
+                          active: ind.active,
+                          id: ind.id,
+                        },
+                      ]);
+                      setEditedId([...editedId, ind.id]);
+                    } else {
+                      const newEdited = [...edited];
+                      newEdited[ret]["active"] = ind.active;
+                      setEdited(newEdited);
+                    }
+                  } else {
+                    setEdited([
+                      {
+                        active: ind.active,
+                        id: ind.id,
+                      },
+                    ]);
+                    setEditedId([ind.id]);
+                  }
+                }
+              });
+              setLocation(newL);
+            }}
+          />
+        );
+      },
+    },
+  ];
+  const [allLoginContentQuery] = useAllLoginContentLazyQuery();
+  const handleChange = async () => {
+    setLoading(true);
+    setSuccess("");
+    if (input === "") {
+      setError("Input Field Cannot Be Empty");
+      setLoading(false);
+    } else if (locationName.includes(input)) {
+      setError("Login Content already present");
+      setLoading(false);
+    } else if (file === undefined || fileName === "") {
+      setError("No Image Uploaded!");
+      setLoading(false);
+    } else {
+      setError("");
+      let uploadData;
+      if (file && fileName) {
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("upload_preset", "login-content-uploads");
+        formData.append(
+          "public_id",
+          fileName + "_" + Math.round(Date.now() / 1000)
+        );
+
+        uploadData = await fetch(
+          "https://api.cloudinary.com/v1_1/inradiuscloud/image/upload",
+          { method: "POST", body: formData }
+        ).then((r) => r.json());
+      }
+      const response = await addLoginContent({
+        variables: {
+          input: {
+            loginContent: input,
+            imageUrl: uploadData.secure_url,
+            active: true,
+          },
+        },
+      });
+      setLoading(false);
+      setLocation([
+        ...location,
+        {
+          id: response.data.addLoginContent._id,
+          loginContent: input,
+          imageUrl: uploadData.imageUrl,
+          active: true,
+        },
+      ]);
+      setLocationName((prev) => [...prev, input]);
+      setOpen(false);
+      console.log(response);
+      setSuccess("Location added successfully!");
+      setInput("");
+    }
+  };
+  useEffect(() => {
+    const loggedIn = localStorage.getItem("loggedIn");
+    if (loggedIn === undefined || loggedIn === "false" || loggedIn === null) {
+      router.push("/login");
+    }
+    const func = async () => {
+      const response = await allLoginContentQuery({
+        fetchPolicy: "network-only",
+      });
+      const locations = response.data.allLoginContent;
+      const newLocations = [];
+      locations.forEach((obj, i) =>
+        newLocations.push({
+          id: obj._id,
+          loginContent: obj.loginContent,
+          imageUrl: obj.imageUrl,
+          active: obj.active,
+        })
+      );
+      const nLocations = [];
+      locations.forEach((obj, i) => nLocations.push(obj.loginContent));
+      setLocation(newLocations);
+      setLocationName(nLocations);
+      console.log(response);
+    };
+    func();
+    setFirstLoading(false);
+  }, []);
+
+  const handleSaveClick = () => {
+    if (edited.length !== 0) {
+      setSaveLoading(true);
+      edited.forEach(async (each, id) => {
+        const response = await updateLoginContent({
+          variables: {
+            input: {
+              id: each.id,
+              loginContent: each.loginContent,
+              imageUrl: each.imageUrl,
+              active: each.active,
+            },
+          },
+        });
+        console.log(response);
+      });
+      setEdited([]);
+      setEditedId([]);
+      setSaveLoading(false);
+      handleClose();
+      setError("");
+      setSuccess("Changes Saved!");
+    } else {
+      setSuccess("");
+      setError("No changes made!");
+    }
+  };
+  const Input = styled("input")({
+    display: "none",
+  });
+  return firstLoading === false ? (
+    <>
+      {location.length !== 0 ? (
+        <div
+          style={{
+            width: "100vw",
+            height: "60vh",
+            color: "black",
+            marginTop: "80px",
+            paddingLeft: "24px",
+            paddingRight: "24px",
+          }}
+        >
+          <Typography variant="h5" style={{ marginBottom: "12px" }}>
+            Login Content
+          </Typography>
+          <DataGrid
+            rows={location}
+            columns={columns}
+            pageSize={10}
+            rowsPerPageOptions={[5]}
+          />
+          <div style={{ marginTop: "12px" }}>
+            <Button variant="contained" onClick={handleOpen}>
+              Add Login Content
+            </Button>
+            <LoadingButton
+              onClick={() => handleSaveClick()}
+              loading={saveLoading}
+              variant="contained"
+              style={{ marginLeft: "12px" }}
+            >
+              Save
+            </LoadingButton>
+          </div>
+        </div>
+      ) : (
+        <div
+          style={{
+            marginTop: "0px",
+            width: "100vw",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <CircularProgress />
+        </div>
+      )}
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={styleForAdding}>
+          <Stack spacing={2}>
+            <Typography
+              id="modal-modal-title"
+              variant="h6"
+              component="h2"
+              style={{ color: "black" }}
+            >
+              Enter The Login Content
+            </Typography>
+            <TextField
+              variant="outlined"
+              id="component-outlined"
+              value={input}
+              fullWidth
+              margin="dense"
+              onChange={(e) => setInput(e.target.value)}
+              label="Login Content"
+            />
+            <label htmlFor="contained-button-file">
+              <Input
+                accept="image/*"
+                id="contained-button-file"
+                type="file"
+                onChange={(e) => {
+                  console.log(e.target.files[0].name);
+                  setFileName(e.target.files[0].name);
+                  setFile(e.target.files[0]);
+                }}
+              />
+              <Stack direction={"row"} alignItems={"center"} spacing={2}>
+                <Button variant="contained" component="span">
+                  Upload
+                </Button>
+                <Typography noWrap={true}>
+                  {fileName !== "" && fileName}
+                </Typography>
+              </Stack>
+            </label>
+            <LoadingButton
+              variant="contained"
+              style={{ marginTop: "12px" }}
+              onClick={handleChange}
+              loading={loading}
+            >
+              Submit
+            </LoadingButton>
+          </Stack>
+        </Box>
+      </Modal>
+      {error !== "" ? (
+        <Snackbar
+          anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+          open={error === "" ? false : true}
+          autoHideDuration={6000}
+          onClose={handleCloseSnackbar}
+        >
+          <Alert onClose={handleCloseSnackbar} severity="error">
+            {error}
+          </Alert>
+        </Snackbar>
+      ) : null}
+      {success !== "" ? (
+        <Snackbar
+          anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+          open={success === "" ? false : true}
+          autoHideDuration={6000}
+          onClose={handleCloseSnackbar}
+        >
+          <Alert onClose={handleCloseSnackbar} severity="success">
+            {success}
+          </Alert>
+        </Snackbar>
+      ) : null}
+      {letterHead !== "" && (
+        <Modal
+          open={openModal}
+          onClose={() => {
+            setOpenModal(false);
+            setLetterHead("");
+          }}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <Box sx={style}>
+            <Typography
+              id="modal-modal-title"
+              variant="h6"
+              component="h2"
+              style={{ marginBottom: "8px", color: "black" }}
+            >
+              Image
+            </Typography>
+            <div style={{ marginBottom: "12px" }}>
+              <Image
+                src={letterHead}
+                layout="responsive"
+                width={"400px"}
+                height={"400px"}
+              />
+            </div>
+          </Box>
+        </Modal>
+      )}
+    </>
+  ) : (
+    <div
+      style={{
+        marginTop: "0px",
+        width: "100vw",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      <CircularProgress />
+    </div>
+  );
+}
+
+export default Index;

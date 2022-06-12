@@ -272,6 +272,22 @@ export type LocationInput = {
   location: Scalars['String'];
 };
 
+export type LoginContent = {
+  __typename?: 'LoginContent';
+  _id: Scalars['ID'];
+  active: Scalars['Boolean'];
+  createdAt: Scalars['DateTime'];
+  imageUrl: Scalars['String'];
+  loginContent: Scalars['String'];
+  updatedAt: Scalars['DateTime'];
+};
+
+export type LoginContentInput = {
+  active: Scalars['Boolean'];
+  imageUrl: Scalars['String'];
+  loginContent: Scalars['String'];
+};
+
 export type LoginInput = {
   email: Scalars['String'];
   password: Scalars['String'];
@@ -284,6 +300,7 @@ export type Mutation = {
   addEmployerJob: Scalars['String'];
   addIndustry: Industry;
   addLocation: Location;
+  addLoginContent: LoginContent;
   addQualification: Qualification;
   addSkill: Skill;
   addSkills: Scalars['Boolean'];
@@ -299,6 +316,7 @@ export type Mutation = {
   updateEmployerJob: EmployerJob;
   updateIndustry: Industry;
   updateLocation: Location;
+  updateLoginContent: LoginContent;
   updateQualification: Qualification;
   updateSkill: Skill;
   updateSubDomain: SubDomain;
@@ -323,6 +341,11 @@ export type MutationAddIndustryArgs = {
 
 export type MutationAddLocationArgs = {
   input: LocationInput;
+};
+
+
+export type MutationAddLoginContentArgs = {
+  input: LoginContentInput;
 };
 
 
@@ -404,6 +427,11 @@ export type MutationUpdateLocationArgs = {
 };
 
 
+export type MutationUpdateLoginContentArgs = {
+  input: UpdateLoginContentInput;
+};
+
+
 export type MutationUpdateQualificationArgs = {
   input: UpdateQualificationInput;
 };
@@ -445,6 +473,7 @@ export type Query = {
   allDomains: Array<Domain>;
   allIndustries: Array<Industry>;
   allLocations: Array<Location>;
+  allLoginContent: Array<LoginContent>;
   allQualifications: Array<Qualification>;
   allSkills: Array<Skill>;
   allSubDomains: Array<SubDomain>;
@@ -670,6 +699,13 @@ export type UpdateLocationInput = {
   location?: InputMaybe<Scalars['String']>;
 };
 
+export type UpdateLoginContentInput = {
+  active?: InputMaybe<Scalars['Boolean']>;
+  id: Scalars['ID'];
+  imageUrl?: InputMaybe<Scalars['String']>;
+  loginContent?: InputMaybe<Scalars['String']>;
+};
+
 export type UpdateQualificationInput = {
   active?: InputMaybe<Scalars['Boolean']>;
   id: Scalars['ID'];
@@ -799,6 +835,11 @@ export type AllDomainsQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type AllDomainsQuery = { __typename?: 'Query', allDomains: Array<{ __typename?: 'Domain', _id: string, domain: string, active: boolean }> };
 
+export type AllLoginContentQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type AllLoginContentQuery = { __typename?: 'Query', allLoginContent: Array<{ __typename?: 'LoginContent', loginContent: string, imageUrl: string, active: boolean, _id: string }> };
+
 export type AllSubDomainsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -883,6 +924,20 @@ export type AddSurveyMutationVariables = Exact<{
 
 
 export type AddSurveyMutation = { __typename?: 'Mutation', addSurvey: { __typename?: 'Survey', question: string, options: Array<string>, _id: string } };
+
+export type AddLoginContentMutationVariables = Exact<{
+  input: LoginContentInput;
+}>;
+
+
+export type AddLoginContentMutation = { __typename?: 'Mutation', addLoginContent: { __typename?: 'LoginContent', loginContent: string, imageUrl: string, active: boolean, _id: string } };
+
+export type UpdateLoginContentMutationVariables = Exact<{
+  input: UpdateLoginContentInput;
+}>;
+
+
+export type UpdateLoginContentMutation = { __typename?: 'Mutation', updateLoginContent: { __typename?: 'LoginContent', loginContent: string, imageUrl: string, active: boolean, _id: string } };
 
 export type AddSubDomainMutationVariables = Exact<{
   input: SubDomainInput;
@@ -1327,6 +1382,43 @@ export function useAllDomainsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions
 export type AllDomainsQueryHookResult = ReturnType<typeof useAllDomainsQuery>;
 export type AllDomainsLazyQueryHookResult = ReturnType<typeof useAllDomainsLazyQuery>;
 export type AllDomainsQueryResult = Apollo.QueryResult<AllDomainsQuery, AllDomainsQueryVariables>;
+export const AllLoginContentDocument = gql`
+    query AllLoginContent {
+  allLoginContent {
+    loginContent
+    imageUrl
+    active
+    _id
+  }
+}
+    `;
+
+/**
+ * __useAllLoginContentQuery__
+ *
+ * To run a query within a React component, call `useAllLoginContentQuery` and pass it any options that fit your needs.
+ * When your component renders, `useAllLoginContentQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useAllLoginContentQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useAllLoginContentQuery(baseOptions?: Apollo.QueryHookOptions<AllLoginContentQuery, AllLoginContentQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<AllLoginContentQuery, AllLoginContentQueryVariables>(AllLoginContentDocument, options);
+      }
+export function useAllLoginContentLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<AllLoginContentQuery, AllLoginContentQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<AllLoginContentQuery, AllLoginContentQueryVariables>(AllLoginContentDocument, options);
+        }
+export type AllLoginContentQueryHookResult = ReturnType<typeof useAllLoginContentQuery>;
+export type AllLoginContentLazyQueryHookResult = ReturnType<typeof useAllLoginContentLazyQuery>;
+export type AllLoginContentQueryResult = Apollo.QueryResult<AllLoginContentQuery, AllLoginContentQueryVariables>;
 export const AllSubDomainsDocument = gql`
     query AllSubDomains {
   allSubDomains {
@@ -1785,6 +1877,78 @@ export function useAddSurveyMutation(baseOptions?: Apollo.MutationHookOptions<Ad
 export type AddSurveyMutationHookResult = ReturnType<typeof useAddSurveyMutation>;
 export type AddSurveyMutationResult = Apollo.MutationResult<AddSurveyMutation>;
 export type AddSurveyMutationOptions = Apollo.BaseMutationOptions<AddSurveyMutation, AddSurveyMutationVariables>;
+export const AddLoginContentDocument = gql`
+    mutation AddLoginContent($input: LoginContentInput!) {
+  addLoginContent(input: $input) {
+    loginContent
+    imageUrl
+    active
+    _id
+  }
+}
+    `;
+export type AddLoginContentMutationFn = Apollo.MutationFunction<AddLoginContentMutation, AddLoginContentMutationVariables>;
+
+/**
+ * __useAddLoginContentMutation__
+ *
+ * To run a mutation, you first call `useAddLoginContentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddLoginContentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addLoginContentMutation, { data, loading, error }] = useAddLoginContentMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useAddLoginContentMutation(baseOptions?: Apollo.MutationHookOptions<AddLoginContentMutation, AddLoginContentMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AddLoginContentMutation, AddLoginContentMutationVariables>(AddLoginContentDocument, options);
+      }
+export type AddLoginContentMutationHookResult = ReturnType<typeof useAddLoginContentMutation>;
+export type AddLoginContentMutationResult = Apollo.MutationResult<AddLoginContentMutation>;
+export type AddLoginContentMutationOptions = Apollo.BaseMutationOptions<AddLoginContentMutation, AddLoginContentMutationVariables>;
+export const UpdateLoginContentDocument = gql`
+    mutation UpdateLoginContent($input: UpdateLoginContentInput!) {
+  updateLoginContent(input: $input) {
+    loginContent
+    imageUrl
+    active
+    _id
+  }
+}
+    `;
+export type UpdateLoginContentMutationFn = Apollo.MutationFunction<UpdateLoginContentMutation, UpdateLoginContentMutationVariables>;
+
+/**
+ * __useUpdateLoginContentMutation__
+ *
+ * To run a mutation, you first call `useUpdateLoginContentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateLoginContentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateLoginContentMutation, { data, loading, error }] = useUpdateLoginContentMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateLoginContentMutation(baseOptions?: Apollo.MutationHookOptions<UpdateLoginContentMutation, UpdateLoginContentMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateLoginContentMutation, UpdateLoginContentMutationVariables>(UpdateLoginContentDocument, options);
+      }
+export type UpdateLoginContentMutationHookResult = ReturnType<typeof useUpdateLoginContentMutation>;
+export type UpdateLoginContentMutationResult = Apollo.MutationResult<UpdateLoginContentMutation>;
+export type UpdateLoginContentMutationOptions = Apollo.BaseMutationOptions<UpdateLoginContentMutation, UpdateLoginContentMutationVariables>;
 export const AddSubDomainDocument = gql`
     mutation AddSubDomain($input: SubDomainInput!) {
   addSubDomain(input: $input) {
