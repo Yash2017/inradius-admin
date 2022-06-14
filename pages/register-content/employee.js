@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import {
-  useAllLoginContentLazyQuery,
-  useAddLoginContentMutation,
-  useUpdateLoginContentMutation,
-} from "../generated/graphql";
+  useAllRegisterContentLazyQuery,
+  useAddRegisterContentMutation,
+  useUpdateRegisterContentMutation,
+} from "../../generated/graphql";
 import { DataGrid } from "@mui/x-data-grid";
 import {
   Typography,
@@ -56,7 +56,7 @@ function Index() {
   const [error, setError] = useState("");
   const [openModal, setOpenModal] = useState(false);
   const [success, setSuccess] = useState("");
-  const [updateLoginContent] = useUpdateLoginContentMutation();
+  const [updateRegisterContent] = useUpdateRegisterContentMutation();
   const [letterHead, setLetterHead] = useState("");
   const [fileName, setFileName] = useState("");
   const [openSnackbar, setOpenSnackbar] = useState(true);
@@ -67,7 +67,7 @@ function Index() {
   const [edited, setEdited] = useState([]);
   const [fileEdited, setFileEdited] = useState([]);
   const [editedId, setEditedId] = useState([]);
-  const [addLoginContent] = useAddLoginContentMutation();
+  const [addRegisterContent] = useAddRegisterContentMutation();
   const handleCloseSnackbar = (event, reason) => {
     if (reason === "clickaway") {
       return;
@@ -78,8 +78,8 @@ function Index() {
   };
   const columns = [
     {
-      field: "loginContent",
-      headerName: "Login Content",
+      field: "registerContent",
+      headerName: "Register Content",
       width: 400,
       renderCell: (cellValues) => {
         return (
@@ -96,8 +96,8 @@ function Index() {
               const newL = [...location];
               newL.forEach((ind) => {
                 if (ind.id === cellValues.row.id) {
-                  const old = ind.loginContent;
-                  ind.loginContent = String(e.target.value);
+                  const old = ind.registerContent;
+                  ind.registerContent = String(e.target.value);
                   if (edited.length !== 0) {
                     const ret = edited.findIndex((indx) => indx.id === ind.id);
                     console.log(editedId);
@@ -106,20 +106,20 @@ function Index() {
                       setEdited([
                         ...edited,
                         {
-                          loginContent: ind.loginContent,
+                          registerContent: ind.registerContent,
                           id: ind.id,
                         },
                       ]);
                       setEditedId([...editedId, ind.id]);
                     } else {
                       const newEdited = [...edited];
-                      newEdited[ret]["loginContent"] = ind.loginContent;
+                      newEdited[ret]["registerContent"] = ind.registerContent;
                       setEdited(newEdited);
                     }
                   } else {
                     setEdited([
                       {
-                        loginContent: ind.loginContent,
+                        registerContent: ind.registerContent,
                         id: ind.id,
                       },
                     ]);
@@ -243,7 +243,7 @@ function Index() {
       },
     },
   ];
-  const [allLoginContentQuery] = useAllLoginContentLazyQuery();
+  const [allRegisterContentQuery] = useAllRegisterContentLazyQuery();
   const handleChange = async () => {
     setLoading(true);
     setSuccess("");
@@ -251,7 +251,7 @@ function Index() {
       setError("Input Field Cannot Be Empty");
       setLoading(false);
     } else if (locationName.includes(input)) {
-      setError("Login Content already present");
+      setError("Register Content already present");
       setLoading(false);
     } else if (file === undefined || fileName === "") {
       setError("No Image Uploaded!");
@@ -262,7 +262,7 @@ function Index() {
       if (file && fileName) {
         const formData = new FormData();
         formData.append("file", file);
-        formData.append("upload_preset", "login-content-uploads");
+        formData.append("upload_preset", "register-content-uploads");
         formData.append(
           "public_id",
           fileName + "_" + Math.round(Date.now() / 1000)
@@ -273,11 +273,12 @@ function Index() {
           { method: "POST", body: formData }
         ).then((r) => r.json());
       }
-      const response = await addLoginContent({
+      const response = await addRegisterContent({
         variables: {
           input: {
-            loginContent: input,
+            registerContent: input,
             imageUrl: uploadData.secure_url,
+            type: "employee",
             active: true,
           },
         },
@@ -286,8 +287,8 @@ function Index() {
       setLocation([
         ...location,
         {
-          id: response.data.addLoginContent._id,
-          loginContent: input,
+          id: response.data.addRegisterContent._id,
+          registerContent: input,
           imageUrl: uploadData.secure_url,
           active: true,
         },
@@ -295,7 +296,7 @@ function Index() {
       setLocationName((prev) => [...prev, input]);
       setOpen(false);
       console.log(response);
-      setSuccess("Login Content added successfully!");
+      setSuccess("Register Content added successfully!");
       setInput("");
     }
   };
@@ -305,21 +306,23 @@ function Index() {
       router.push("/login");
     }
     const func = async () => {
-      const response = await allLoginContentQuery({
+      const response = await allRegisterContentQuery({
         fetchPolicy: "network-only",
       });
-      const locations = response.data.allLoginContent;
+      const locations = response.data.allRegisterContent;
       const newLocations = [];
-      locations.forEach((obj, i) =>
-        newLocations.push({
-          id: obj._id,
-          loginContent: obj.loginContent,
-          imageUrl: obj.imageUrl,
-          active: obj.active,
-        })
-      );
+      locations.forEach((obj, i) => {
+        if (obj.type === "employee") {
+          newLocations.push({
+            id: obj._id,
+            registerContent: obj.registerContent,
+            imageUrl: obj.imageUrl,
+            active: obj.active,
+          });
+        }
+      });
       const nLocations = [];
-      locations.forEach((obj, i) => nLocations.push(obj.loginContent));
+      locations.forEach((obj, i) => nLocations.push(obj.registerContent));
       setLocation(newLocations);
       setLocationName(nLocations);
       console.log(response);
@@ -333,11 +336,11 @@ function Index() {
     if (edited.length !== 0) {
       setSaveLoading(true);
       edited.forEach(async (each, id) => {
-        const response = await updateLoginContent({
+        const response = await updateRegisterContent({
           variables: {
             input: {
               id: each.id,
-              loginContent: each.loginContent,
+              registerContent: each.registerContent,
               imageUrl: each.imageUrl,
               active: each.active,
             },
@@ -375,8 +378,9 @@ function Index() {
         { method: "POST", body: formData }
       ).then((r) => r.json());
       const newL = [...location];
+
       edited.length !== 0 &&
-        updateLoginContent({
+        updateRegisterContent({
           variables: {
             input: {
               id: editedId,
@@ -414,7 +418,7 @@ function Index() {
           }}
         >
           <Typography variant="h5" style={{ marginBottom: "12px" }}>
-            Login Content
+            Employee Register Content
           </Typography>
           <DataGrid
             rows={location}
@@ -424,7 +428,7 @@ function Index() {
           />
           <div style={{ marginTop: "12px" }}>
             <Button variant="contained" onClick={handleOpen}>
-              Add Login Content
+              Add Register Content
             </Button>
             <LoadingButton
               onClick={() => handleSaveClick()}
@@ -463,7 +467,7 @@ function Index() {
               component="h2"
               style={{ color: "black" }}
             >
-              Enter The Login Content
+              Enter The Register Content
             </Typography>
             <TextField
               variant="outlined"
@@ -472,7 +476,7 @@ function Index() {
               fullWidth
               margin="dense"
               onChange={(e) => setInput(e.target.value)}
-              label="Login Content"
+              label="Register Content"
             />
             <label htmlFor="contained-button-file">
               <Input

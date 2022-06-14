@@ -302,6 +302,7 @@ export type Mutation = {
   addLocation: Location;
   addLoginContent: LoginContent;
   addQualification: Qualification;
+  addRegisterContent: RegisterContent;
   addSkill: Skill;
   addSkills: Scalars['Boolean'];
   addSubDomain: SubDomain;
@@ -318,6 +319,7 @@ export type Mutation = {
   updateLocation: Location;
   updateLoginContent: LoginContent;
   updateQualification: Qualification;
+  updateRegisterContent: RegisterContent;
   updateSkill: Skill;
   updateSubDomain: SubDomain;
   updateSurveyQuestion: Survey;
@@ -351,6 +353,11 @@ export type MutationAddLoginContentArgs = {
 
 export type MutationAddQualificationArgs = {
   input: QualificationInput;
+};
+
+
+export type MutationAddRegisterContentArgs = {
+  input: RegisterContentInput;
 };
 
 
@@ -437,6 +444,11 @@ export type MutationUpdateQualificationArgs = {
 };
 
 
+export type MutationUpdateRegisterContentArgs = {
+  input: UpdateRegisterContentInput;
+};
+
+
 export type MutationUpdateSkillArgs = {
   input: UpdateSkillInput;
 };
@@ -475,6 +487,7 @@ export type Query = {
   allLocations: Array<Location>;
   allLoginContent: Array<LoginContent>;
   allQualifications: Array<Qualification>;
+  allRegisterContent: Array<RegisterContent>;
   allSkills: Array<Skill>;
   allSubDomains: Array<SubDomain>;
   allSurveyQuestion: Array<Survey>;
@@ -503,6 +516,11 @@ export type Query = {
 
 export type QueryAdminLoginArgs = {
   input: AdminLoginInput;
+};
+
+
+export type QueryAllRegisterContentArgs = {
+  type?: InputMaybe<RegisterContentType>;
 };
 
 
@@ -559,6 +577,30 @@ export type QueryVerifyEmailArgs = {
 export type QueryVerifyEmployerArgs = {
   input: UpdateEmployerVerifyInput;
 };
+
+export type RegisterContent = {
+  __typename?: 'RegisterContent';
+  _id: Scalars['ID'];
+  active: Scalars['Boolean'];
+  createdAt: Scalars['DateTime'];
+  imageUrl: Scalars['String'];
+  registerContent: Scalars['String'];
+  type: RegisterContentType;
+  updatedAt: Scalars['DateTime'];
+};
+
+export type RegisterContentInput = {
+  active: Scalars['Boolean'];
+  imageUrl: Scalars['String'];
+  registerContent: Scalars['String'];
+  type: RegisterContentType;
+};
+
+/** Enum For Type of Register Content i.e. Employer & Employee */
+export enum RegisterContentType {
+  Employee = 'employee',
+  Employer = 'employer'
+}
 
 export type RegisterInput = {
   email: Scalars['String'];
@@ -710,6 +752,13 @@ export type UpdateQualificationInput = {
   active?: InputMaybe<Scalars['Boolean']>;
   id: Scalars['ID'];
   qualification?: InputMaybe<Scalars['String']>;
+};
+
+export type UpdateRegisterContentInput = {
+  active?: InputMaybe<Scalars['Boolean']>;
+  id: Scalars['ID'];
+  imageUrl?: InputMaybe<Scalars['String']>;
+  registerContent?: InputMaybe<Scalars['String']>;
 };
 
 export type UpdateSkillInput = {
@@ -938,6 +987,25 @@ export type UpdateLoginContentMutationVariables = Exact<{
 
 
 export type UpdateLoginContentMutation = { __typename?: 'Mutation', updateLoginContent: { __typename?: 'LoginContent', loginContent: string, imageUrl: string, active: boolean, _id: string } };
+
+export type AllRegisterContentQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type AllRegisterContentQuery = { __typename?: 'Query', allRegisterContent: Array<{ __typename?: 'RegisterContent', registerContent: string, imageUrl: string, active: boolean, type: RegisterContentType, _id: string }> };
+
+export type AddRegisterContentMutationVariables = Exact<{
+  input: RegisterContentInput;
+}>;
+
+
+export type AddRegisterContentMutation = { __typename?: 'Mutation', addRegisterContent: { __typename?: 'RegisterContent', registerContent: string, imageUrl: string, active: boolean, type: RegisterContentType, _id: string } };
+
+export type UpdateRegisterContentMutationVariables = Exact<{
+  input: UpdateRegisterContentInput;
+}>;
+
+
+export type UpdateRegisterContentMutation = { __typename?: 'Mutation', updateRegisterContent: { __typename?: 'RegisterContent', registerContent: string } };
 
 export type AddSubDomainMutationVariables = Exact<{
   input: SubDomainInput;
@@ -1949,6 +2017,114 @@ export function useUpdateLoginContentMutation(baseOptions?: Apollo.MutationHookO
 export type UpdateLoginContentMutationHookResult = ReturnType<typeof useUpdateLoginContentMutation>;
 export type UpdateLoginContentMutationResult = Apollo.MutationResult<UpdateLoginContentMutation>;
 export type UpdateLoginContentMutationOptions = Apollo.BaseMutationOptions<UpdateLoginContentMutation, UpdateLoginContentMutationVariables>;
+export const AllRegisterContentDocument = gql`
+    query AllRegisterContent {
+  allRegisterContent {
+    registerContent
+    imageUrl
+    active
+    type
+    _id
+  }
+}
+    `;
+
+/**
+ * __useAllRegisterContentQuery__
+ *
+ * To run a query within a React component, call `useAllRegisterContentQuery` and pass it any options that fit your needs.
+ * When your component renders, `useAllRegisterContentQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useAllRegisterContentQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useAllRegisterContentQuery(baseOptions?: Apollo.QueryHookOptions<AllRegisterContentQuery, AllRegisterContentQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<AllRegisterContentQuery, AllRegisterContentQueryVariables>(AllRegisterContentDocument, options);
+      }
+export function useAllRegisterContentLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<AllRegisterContentQuery, AllRegisterContentQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<AllRegisterContentQuery, AllRegisterContentQueryVariables>(AllRegisterContentDocument, options);
+        }
+export type AllRegisterContentQueryHookResult = ReturnType<typeof useAllRegisterContentQuery>;
+export type AllRegisterContentLazyQueryHookResult = ReturnType<typeof useAllRegisterContentLazyQuery>;
+export type AllRegisterContentQueryResult = Apollo.QueryResult<AllRegisterContentQuery, AllRegisterContentQueryVariables>;
+export const AddRegisterContentDocument = gql`
+    mutation AddRegisterContent($input: RegisterContentInput!) {
+  addRegisterContent(input: $input) {
+    registerContent
+    imageUrl
+    active
+    type
+    _id
+  }
+}
+    `;
+export type AddRegisterContentMutationFn = Apollo.MutationFunction<AddRegisterContentMutation, AddRegisterContentMutationVariables>;
+
+/**
+ * __useAddRegisterContentMutation__
+ *
+ * To run a mutation, you first call `useAddRegisterContentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddRegisterContentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addRegisterContentMutation, { data, loading, error }] = useAddRegisterContentMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useAddRegisterContentMutation(baseOptions?: Apollo.MutationHookOptions<AddRegisterContentMutation, AddRegisterContentMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AddRegisterContentMutation, AddRegisterContentMutationVariables>(AddRegisterContentDocument, options);
+      }
+export type AddRegisterContentMutationHookResult = ReturnType<typeof useAddRegisterContentMutation>;
+export type AddRegisterContentMutationResult = Apollo.MutationResult<AddRegisterContentMutation>;
+export type AddRegisterContentMutationOptions = Apollo.BaseMutationOptions<AddRegisterContentMutation, AddRegisterContentMutationVariables>;
+export const UpdateRegisterContentDocument = gql`
+    mutation UpdateRegisterContent($input: UpdateRegisterContentInput!) {
+  updateRegisterContent(input: $input) {
+    registerContent
+  }
+}
+    `;
+export type UpdateRegisterContentMutationFn = Apollo.MutationFunction<UpdateRegisterContentMutation, UpdateRegisterContentMutationVariables>;
+
+/**
+ * __useUpdateRegisterContentMutation__
+ *
+ * To run a mutation, you first call `useUpdateRegisterContentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateRegisterContentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateRegisterContentMutation, { data, loading, error }] = useUpdateRegisterContentMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateRegisterContentMutation(baseOptions?: Apollo.MutationHookOptions<UpdateRegisterContentMutation, UpdateRegisterContentMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateRegisterContentMutation, UpdateRegisterContentMutationVariables>(UpdateRegisterContentDocument, options);
+      }
+export type UpdateRegisterContentMutationHookResult = ReturnType<typeof useUpdateRegisterContentMutation>;
+export type UpdateRegisterContentMutationResult = Apollo.MutationResult<UpdateRegisterContentMutation>;
+export type UpdateRegisterContentMutationOptions = Apollo.BaseMutationOptions<UpdateRegisterContentMutation, UpdateRegisterContentMutationVariables>;
 export const AddSubDomainDocument = gql`
     mutation AddSubDomain($input: SubDomainInput!) {
   addSubDomain(input: $input) {

@@ -14,6 +14,12 @@ import { Typography, Button, TextField } from "@mui/material";
 import Link from "next/link";
 
 export default function DataTable() {
+  const handleCloseSnackbar = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setError("");
+  };
   const style = {
     position: "absolute",
     top: "50%",
@@ -26,6 +32,7 @@ export default function DataTable() {
     p: 4,
   };
   const [data, setData] = React.useState(null);
+  const [error, setError] = React.useState("");
   const [verifyEmployerQuery] = useVerifyEmployerLazyQuery();
   const [openModal, setOpenModal] = React.useState(false);
   const [letterHead, setLetterHead] = React.useState("");
@@ -87,7 +94,7 @@ export default function DataTable() {
       headerName: "Company Letter Head",
       width: 200,
       renderCell: (cellValues) => {
-        return cellValues.formattedValue !== undefined ? (
+        return cellValues.formattedValue !== null ? (
           <Link href={cellValues.formattedValue} passHref>
             <a target="_blank" rel="noopener noreferrer">
               <Button variant="contained">Click Here </Button>
@@ -205,6 +212,18 @@ export default function DataTable() {
           </Box>
         </Modal>
       )}
+      {error !== "" ? (
+        <Snackbar
+          anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+          open={error === "" ? false : true}
+          autoHideDuration={6000}
+          onClose={handleCloseSnackbar}
+        >
+          <Alert onClose={handleCloseSnackbar} severity="error">
+            {error}
+          </Alert>
+        </Snackbar>
+      ) : null}
     </>
   );
 }

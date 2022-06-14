@@ -126,7 +126,7 @@ export default function DataTable() {
       headerName: "Company Letter Head",
       width: 200,
       renderCell: (cellValues) => {
-        return cellValues.formattedValue !== undefined ? (
+        return cellValues.formattedValue !== null ? (
           <Link href={cellValues.formattedValue} passHref>
             <a target="_blank" rel="noopener noreferrer">
               <Button variant="contained">Click Here </Button>
@@ -338,9 +338,10 @@ export default function DataTable() {
             </Typography>
             <Image
               src={letterHead}
-              layout={"responsive"}
+              layout="responsive"
+              objectFit="contain"
               width={"400px"}
-              height={"400px"}
+              height={"330px"}
             />
           </Box>
         </Modal>

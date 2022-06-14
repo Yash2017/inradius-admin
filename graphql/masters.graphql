@@ -313,6 +313,32 @@ mutation UpdateLoginContent($input: UpdateLoginContentInput!) {
   }
 }
 
+query AllRegisterContent {
+  allRegisterContent {
+    registerContent
+    imageUrl
+    active
+    type
+    _id
+  }
+}
+
+mutation AddRegisterContent($input: RegisterContentInput!) {
+  addRegisterContent(input: $input) {
+    registerContent
+    imageUrl
+    active
+    type
+    _id
+  }
+}
+
+mutation UpdateRegisterContent($input: UpdateRegisterContentInput!) {
+  updateRegisterContent(input: $input) {
+    registerContent
+  }
+}
+
 mutation AddSubDomain($input: SubDomainInput!) {
   addSubDomain(input: $input) {
     subDomain
