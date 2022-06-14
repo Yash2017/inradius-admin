@@ -4,7 +4,7 @@ import {
   useAddLoginContentMutation,
   useUpdateLoginContentMutation,
 } from "../generated/graphql";
-import { DataGrid, GridColDef, GridValueGetterParams } from "@mui/x-data-grid";
+import { DataGrid } from "@mui/x-data-grid";
 import {
   Typography,
   Button,
@@ -17,11 +17,10 @@ import LoadingButton from "@mui/lab/LoadingButton";
 import Box from "@mui/material/Box";
 import Switch from "@mui/material/Switch";
 import Modal from "@mui/material/Modal";
-import { Alert, AlertTitle, Snackbar } from "@mui/material";
+import { Alert, Snackbar } from "@mui/material";
 import { useRouter } from "next/router";
 import Image from "next/image";
 import CircularProgress from "@mui/material/CircularProgress";
-import Link from "next/link";
 function Index() {
   const router = useRouter();
   const style = {
@@ -62,9 +61,11 @@ function Index() {
   const [fileName, setFileName] = useState("");
   const [openSnackbar, setOpenSnackbar] = useState(true);
   const [file, setFile] = useState();
+  const [fileUrl, setFileUrl] = useState("");
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const [edited, setEdited] = useState([]);
+  const [fileEdited, setFileEdited] = useState([]);
   const [editedId, setEditedId] = useState([]);
   const [addLoginContent] = useAddLoginContentMutation();
   const handleCloseSnackbar = (event, reason) => {
@@ -105,7 +106,7 @@ function Index() {
                       setEdited([
                         ...edited,
                         {
-                          location: ind.loginContent,
+                          loginContent: ind.loginContent,
                           id: ind.id,
                         },
                       ]);
@@ -159,6 +160,36 @@ function Index() {
           >
             View
           </LoadingButton>
+        );
+      },
+    },
+    {
+      field: "updateImage",
+      headerName: "Update Image",
+      width: 200,
+      renderCell: (cellValues) => {
+        return (
+          <label htmlFor="contained-button-file">
+            <Input
+              accept="image/*"
+              id="contained-button-file"
+              type="file"
+              onChange={(e) => {
+                setFile(e.target.files[0]);
+                setFileName(e.target.files[0].name);
+                setFileUrl(URL.createObjectURL(e.target.files[0]));
+                console.log("This is", cellValues.row.id);
+                setOpenModal(true);
+              }}
+            />
+            <Button
+              variant="contained"
+              component="span"
+              onClick={() => setEditedId(cellValues.row.id)}
+            >
+              Upload
+            </Button>
+          </label>
         );
       },
     },
@@ -264,7 +295,7 @@ function Index() {
       setLocationName((prev) => [...prev, input]);
       setOpen(false);
       console.log(response);
-      setSuccess("Location added successfully!");
+      setSuccess("Login Content added successfully!");
       setInput("");
     }
   };
@@ -298,6 +329,7 @@ function Index() {
   }, []);
 
   const handleSaveClick = () => {
+    console.log(edited);
     if (edited.length !== 0) {
       setSaveLoading(true);
       edited.forEach(async (each, id) => {
@@ -327,6 +359,40 @@ function Index() {
   const Input = styled("input")({
     display: "none",
   });
+
+  const handleUpdateImageSave = async () => {
+    setLoading(true);
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", "login-content-uploads");
+    formData.append(
+      "public_id",
+      fileName + "_" + Math.round(Date.now() / 1000)
+    );
+    const uploadData = await fetch(
+      "https://api.cloudinary.com/v1_1/inradiuscloud/image/upload",
+      { method: "POST", body: formData }
+    ).then((r) => r.json());
+    const newL = [...location];
+    updateLoginContent({
+      variables: {
+        input: {
+          id: editedId,
+          imageUrl: uploadData.secure_url,
+        },
+      },
+    });
+    newL.forEach((ind) => {
+      if (ind.id === editedId) {
+        ind.imageUrl = uploadData.secure_url;
+      }
+    });
+    setLocation(newL);
+    setLoading(false);
+    setOpenModal(false);
+    setSuccess("Image Updated and Saved Successfully");
+    setEditedId("");
+  };
   return firstLoading === false ? (
     <>
       {location.length !== 0 ? (
@@ -456,33 +522,47 @@ function Index() {
           </Alert>
         </Snackbar>
       ) : null}
-      {letterHead !== "" && (
+      {(letterHead !== "" || fileUrl !== "") && (
         <Modal
           open={openModal}
           onClose={() => {
             setOpenModal(false);
             setLetterHead("");
+            setFileUrl("");
           }}
           aria-labelledby="modal-modal-title"
           aria-describedby="modal-modal-description"
         >
           <Box sx={style}>
-            <Typography
-              id="modal-modal-title"
-              variant="h6"
-              component="h2"
-              style={{ marginBottom: "8px", color: "black" }}
-            >
-              Image
-            </Typography>
-            <div style={{ marginBottom: "12px" }}>
-              <Image
-                src={letterHead}
-                layout="responsive"
-                width={"400px"}
-                height={"400px"}
-              />
-            </div>
+            <Stack>
+              <Typography
+                id="modal-modal-title"
+                variant="h6"
+                component="h2"
+                style={{ marginBottom: "8px", color: "black" }}
+              >
+                {letterHead !== "" ? "Image" : "Uploaded Image"}
+              </Typography>
+              <div style={{ marginBottom: "12px" }}>
+                <Image
+                  src={letterHead !== "" ? letterHead : fileUrl}
+                  layout="responsive"
+                  objectFit="contain"
+                  width={"400px"}
+                  height={"330px"}
+                />
+              </div>
+              {fileUrl !== "" && (
+                <LoadingButton
+                  variant="contained"
+                  style={{ marginTop: "12px" }}
+                  onClick={handleUpdateImageSave}
+                  loading={loading}
+                >
+                  Submit
+                </LoadingButton>
+              )}
+            </Stack>
           </Box>
         </Modal>
       )}
