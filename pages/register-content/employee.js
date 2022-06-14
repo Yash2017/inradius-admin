@@ -379,7 +379,7 @@ function Index() {
       ).then((r) => r.json());
       const newL = [...location];
 
-      edited.length !== 0 &&
+      editedId.length !== 0 &&
         updateRegisterContent({
           variables: {
             input: {
@@ -397,6 +397,7 @@ function Index() {
       setLoading(false);
       setOpenModal(false);
       setSuccess("Image Updated and Saved Successfully");
+      setFileUrl("");
       setEditedId("");
     } else {
       setLoading(false);

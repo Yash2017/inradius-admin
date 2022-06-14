@@ -396,7 +396,8 @@ function Index() {
       setLoading(false);
       setOpenModal(false);
       setSuccess("Image Updated and Saved Successfully");
-      setEditedId("");
+      setFileUrl("");
+      setEditedId([]);
     } else {
       setLoading(false);
       setOpenModal(false);
@@ -562,7 +563,7 @@ function Index() {
                   height={"330px"}
                 />
               </div>
-              {fileUrl !== "" && (
+              {fileUrl !== "" ? (
                 <LoadingButton
                   variant="contained"
                   style={{ marginTop: "12px" }}
@@ -571,7 +572,7 @@ function Index() {
                 >
                   Submit
                 </LoadingButton>
-              )}
+              ) : null}
             </Stack>
           </Box>
         </Modal>

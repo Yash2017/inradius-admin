@@ -361,6 +361,7 @@ function Index() {
   });
 
   const handleUpdateImageSave = async () => {
+    console.log(editedId.length);
     if (editedId.length !== 0) {
       setLoading(true);
       const formData = new FormData();
@@ -375,7 +376,7 @@ function Index() {
         { method: "POST", body: formData }
       ).then((r) => r.json());
       const newL = [...location];
-      edited.length !== 0 &&
+      editedId.length !== 0 &&
         updateLoginContent({
           variables: {
             input: {
@@ -393,6 +394,7 @@ function Index() {
       setLoading(false);
       setOpenModal(false);
       setSuccess("Image Updated and Saved Successfully");
+      setFileUrl("");
       setEditedId("");
     } else {
       setLoading(false);

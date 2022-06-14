@@ -188,7 +188,7 @@ export default function DataTable() {
         return cellValues.formattedValue !== null ? (
           <Link href={cellValues.formattedValue} passHref>
             <a target="_blank" rel="noopener noreferrer">
-              <Button variant="contained">View </Button>
+              <Button variant="contained">View</Button>
             </a>
           </Link>
         ) : (
