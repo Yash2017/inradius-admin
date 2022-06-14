@@ -4,7 +4,7 @@ import {
   useAddQualificationMutation,
   useUpdateQualificationMutation,
 } from "../../generated/graphql";
-import { Typography, Button, TextField } from "@mui/material";
+import { Typography, Button, TextField, Stack } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { DataGrid, GridColDef, GridValueGetterParams } from "@mui/x-data-grid";
 import Box from "@mui/material/Box";
@@ -275,7 +275,7 @@ export default function AddQualification() {
               variant="contained"
               style={{ marginLeft: "12px" }}
             >
-              Save
+              Push Updates
             </LoadingButton>
           </div>
         </div>
@@ -299,31 +299,26 @@ export default function AddQualification() {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <Typography
-            id="modal-modal-title"
-            variant="h6"
-            component="h2"
-            style={{ marginBottom: "7px", color: "black" }}
-          >
-            Enter The Qualification
-          </Typography>
-          <TextField
-            variant="outlined"
-            id="component-outlined"
-            value={input}
-            fullWidth
-            margin="dense"
-            onChange={(e) => setInput(e.target.value)}
-            label="Qualification"
-          />
-          <LoadingButton
-            variant="contained"
-            style={{ marginTop: "12px" }}
-            onClick={handleChange}
-            loading={loading}
-          >
-            Submit
-          </LoadingButton>
+          <Stack spacing={2}>
+            <Typography id="modal-modal-title" variant="h6" component="h2">
+              Enter The Qualification
+            </Typography>
+            <TextField
+              variant="outlined"
+              id="component-outlined"
+              value={input}
+              fullWidth
+              onChange={(e) => setInput(e.target.value)}
+              label="Qualification"
+            />
+            <LoadingButton
+              variant="contained"
+              onClick={handleChange}
+              loading={loading}
+            >
+              Submit
+            </LoadingButton>
+          </Stack>
         </Box>
       </Modal>
       {error !== "" ? (
