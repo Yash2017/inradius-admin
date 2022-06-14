@@ -17,11 +17,13 @@ export default function DataTable() {
     top: "50%",
     left: "50%",
     transform: "translate(-50%, -50%)",
-    width: 1200,
+    width: "650px",
+    height: "650px",
     bgcolor: "background.paper",
     boxShadow: 24,
     p: 4,
   };
+
   const handleCloseSnackbar = (event, reason) => {
     if (reason === "clickaway") {
       return;
@@ -186,7 +188,7 @@ export default function DataTable() {
         return cellValues.formattedValue !== null ? (
           <Link href={cellValues.formattedValue} passHref>
             <a target="_blank" rel="noopener noreferrer">
-              <Button variant="contained">Click Here </Button>
+              <Button variant="contained">View </Button>
             </a>
           </Link>
         ) : (
@@ -198,8 +200,38 @@ export default function DataTable() {
                 : null;
             }}
           >
-            Click Here{" "}
+            View{" "}
           </Button>
+        );
+      },
+    },
+    {
+      field: "image",
+      headerName: "User Image",
+      width: 200,
+      renderCell: (cellValues) => {
+        return cellValues.formattedValue !== null ? (
+          <LoadingButton
+            variant="contained"
+            color="primary"
+            onClick={() => {
+              setOpenModal(true);
+              console.log(cellValues);
+              setLetterHead(cellValues.formattedValue);
+            }}
+          >
+            View
+          </LoadingButton>
+        ) : (
+          <LoadingButton
+            variant="contained"
+            color="primary"
+            onClick={() => {
+              setError("The user has not uploaded a company image yet!");
+            }}
+          >
+            View
+          </LoadingButton>
         );
       },
     },
@@ -211,7 +243,7 @@ export default function DataTable() {
         return cellValues.formattedValue !== null ? (
           <Link href={cellValues.formattedValue} passHref>
             <a target="_blank" rel="noopener noreferrer">
-              <Button variant="contained">Click Here </Button>
+              <Button variant="contained">View </Button>
             </a>
           </Link>
         ) : (
@@ -221,7 +253,7 @@ export default function DataTable() {
               setError("The user has not added a linkedin link yet!")
             }
           >
-            Click Here{" "}
+            View{" "}
           </Button>
         );
       },
@@ -258,6 +290,7 @@ export default function DataTable() {
             isAccountVerified: obj.user.isAccountVerified,
             isProfileCompleted: obj.user.isProfileCompleted,
             isSurveyCompleted: obj.user.isSurveyCompleted,
+            image: obj.user.image !== null ? obj.user.image : "",
             shortDescription:
               obj.shortDescription !== null ? obj.shortDescription : "",
             radius: obj.radius !== null ? obj.radius : "",
@@ -362,6 +395,18 @@ export default function DataTable() {
           <CircularProgress />
         </div>
       )}
+      {error !== "" ? (
+        <Snackbar
+          anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+          open={error === "" ? false : true}
+          autoHideDuration={6000}
+          onClose={handleCloseSnackbar}
+        >
+          <Alert onClose={handleCloseSnackbar} severity="error">
+            {error}
+          </Alert>
+        </Snackbar>
+      ) : null}
       {letterHead !== "" && (
         <Modal
           open={openModal}
@@ -379,24 +424,18 @@ export default function DataTable() {
               component="h2"
               style={{ marginBottom: "7px", color: "black" }}
             >
-              Resume
+              User Image
             </Typography>
-            <Image src={letterHead} width={"1200px"} height={"600px"} />
+            <Image
+              src={letterHead}
+              layout="responsive"
+              objectFit="contain"
+              width={"400px"}
+              height={"355px"}
+            />
           </Box>
         </Modal>
       )}
-      {error !== "" ? (
-        <Snackbar
-          anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-          open={error === "" ? false : true}
-          autoHideDuration={6000}
-          onClose={handleCloseSnackbar}
-        >
-          <Alert onClose={handleCloseSnackbar} severity="error">
-            {error}
-          </Alert>
-        </Snackbar>
-      ) : null}
     </>
   );
 }

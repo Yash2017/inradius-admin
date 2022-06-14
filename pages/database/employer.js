@@ -129,7 +129,7 @@ export default function DataTable() {
         return cellValues.formattedValue !== null ? (
           <Link href={cellValues.formattedValue} passHref>
             <a target="_blank" rel="noopener noreferrer">
-              <Button variant="contained">Click Here </Button>
+              <Button variant="contained">View </Button>
             </a>
           </Link>
         ) : (
@@ -143,7 +143,7 @@ export default function DataTable() {
                 : null;
             }}
           >
-            Click Here{" "}
+            View{" "}
           </Button>
         );
       },
@@ -156,7 +156,7 @@ export default function DataTable() {
         return cellValues.formattedValue !== null ? (
           <Link href={cellValues.formattedValue} passHref>
             <a target="_blank" rel="noopener noreferrer">
-              <Button variant="contained">Click Here </Button>
+              <Button variant="contained">View </Button>
             </a>
           </Link>
         ) : (
@@ -168,7 +168,7 @@ export default function DataTable() {
                 : null;
             }}
           >
-            Click Here{" "}
+            View{" "}
           </Button>
         );
       },

@@ -31,6 +31,7 @@ query GetInfoEmployees {
       lastName
       email
       number
+      image
       isAccountVerified
       isProfileCompleted
       isSurveyCompleted
