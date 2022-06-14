@@ -8,7 +8,7 @@ import {
 import { LoadingButton } from "@mui/lab";
 import React, { useState, useEffect } from "react";
 import { useAdminLoginLazyQuery } from "../generated/graphql";
-import { Alert, AlertTitle, Snackbar } from "@mui/material";
+import { Alert } from "@mui/material";
 import { useRouter } from "next/router";
 function Login() {
   const router = useRouter();

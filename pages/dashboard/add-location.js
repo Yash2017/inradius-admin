@@ -269,6 +269,7 @@ function Index() {
               Add Location
             </Button>
             <LoadingButton
+              color="primary"
               onClick={() => handleSaveClick()}
               loading={saveLoading}
               variant="contained"

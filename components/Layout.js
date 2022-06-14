@@ -250,37 +250,12 @@ export default function Layout({ children }) {
                   </ListItemButton>
                 </List>
               </Collapse>
-              <ListItemButton
-                onClick={() => setSurveyListOpen(!openSurveyList)}
-              >
+              <ListItemButton onClick={() => router.push("/survey/employee")}>
                 <ListItemIcon>
                   <AddIcon />
                 </ListItemIcon>
                 <ListItemText primary="Survey" />
-                {openSurveyList ? <ExpandLess /> : <ExpandMore />}
               </ListItemButton>
-              <Collapse in={openSurveyList} timeout="auto" unmountOnExit>
-                <List component="div" disablePadding>
-                  <ListItemButton
-                    sx={{ pl: 4 }}
-                    onClick={() => router.push("/survey/employee")}
-                  >
-                    <ListItemIcon>
-                      <BadgeIcon />
-                    </ListItemIcon>
-                    <ListItemText primary="Employee" />
-                  </ListItemButton>
-                  <ListItemButton
-                    sx={{ pl: 4 }}
-                    onClick={() => router.push("/survey/employer")}
-                  >
-                    <ListItemIcon>
-                      <BadgeIcon />
-                    </ListItemIcon>
-                    <ListItemText primary="Employer" />
-                  </ListItemButton>
-                </List>
-              </Collapse>
               <ListItemButton
                 onClick={() => setDatabaseList(!openDatabaseList)}
               >

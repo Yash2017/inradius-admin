@@ -4,7 +4,7 @@ import {
   useAddSurveyMutation,
   useUpdateSurveyMutation,
 } from "../../generated/graphql";
-import { Typography, Button, TextField } from "@mui/material";
+import { Typography, Button, TextField, Tab, Tabs } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
 import Switch from "@mui/material/Switch";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
@@ -577,6 +577,8 @@ function Index() {
       setError("No data changed to save!");
     }
   };
+  const [value, setValue] = React.useState(0);
+
   return location.length !== 0 ? (
     <div
       style={{
@@ -587,10 +589,6 @@ function Index() {
         paddingLeft: "24px",
       }}
     >
-      <Typography variant="h5" style={{ marginBottom: "7px", color: "black" }}>
-        Employee Survey Questions
-      </Typography>
-
       <Modal
         open={addOpen}
         onClose={() => {
@@ -666,12 +664,21 @@ function Index() {
         </Box>
       </Modal>
       {location !== [] && (
-        <DataGrid
-          rows={location}
-          columns={columns}
-          pageSize={10}
-          rowsPerPageOptions={[5]}
-        />
+        <>
+          <Tabs value={value} onChange={(e, num) => setValue(num)} centered>
+            <Tab label="Employee" />
+            <Tab
+              label="Employer"
+              onClick={() => router.push("/survey/employer")}
+            />
+          </Tabs>
+          <DataGrid
+            rows={location}
+            columns={columns}
+            pageSize={10}
+            rowsPerPageOptions={[5]}
+          />
+        </>
       )}
       <div style={{ marginTop: "12px" }}>
         <Button variant="contained" onClick={() => setAddOpen(true)}>
@@ -683,7 +690,7 @@ function Index() {
           variant="contained"
           style={{ marginLeft: "12px" }}
         >
-          Save
+          Push Changes
         </LoadingButton>
       </div>
       {error !== "" ? (
