@@ -6,7 +6,7 @@ import Box from "@mui/material/Box";
 import { LoadingButton } from "@mui/lab";
 import CircularProgress from "@mui/material/CircularProgress";
 import Image from "next/image";
-import { Typography, Button, TextField } from "@mui/material";
+import { Typography, Button, TextField, Tab, Tabs } from "@mui/material";
 import { useRouter } from "next/router";
 import { Alert, AlertTitle, Snackbar } from "@mui/material";
 import Link from "next/link";
@@ -350,6 +350,8 @@ export default function DataTable() {
     getData();
     setLoading(false);
   }, []);
+
+  const [value, setValue] = React.useState(0);
   return loading === true ? (
     <div
       style={{
@@ -375,6 +377,14 @@ export default function DataTable() {
             paddingRight: "24px",
           }}
         >
+          {" "}
+          <Tabs value={value} onChange={(e, num) => setValue(num)} centered>
+            <Tab label="Employee" />
+            <Tab
+              label="Employer"
+              onClick={() => router.push("/database/employer")}
+            />
+          </Tabs>
           <DataGrid
             rows={data}
             columns={columns}
