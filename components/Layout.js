@@ -86,6 +86,7 @@ export default function Layout({ children }) {
   const [open, setOpen] = React.useState(true);
   const [openList, setListOpen] = React.useState(false);
   const [openSurveyList, setSurveyListOpen] = React.useState(false);
+  const [openUAMList, setUAMListOpen] = React.useState(false);
   const [openRegisterContentList, setRegisterContentList] =
     React.useState(false);
   const [openDatabaseList, setDatabaseList] = React.useState(false);
@@ -185,6 +186,35 @@ export default function Layout({ children }) {
                 </ListItemIcon>
                 <ListItemText primary="Login Content" />
               </ListItemButton>
+              <ListItemButton onClick={() => setUAMListOpen(!openUAMList)}>
+                <ListItemIcon>
+                  <InsertPhotoIcon />
+                </ListItemIcon>
+                <ListItemText primary="UAM" />
+                {openUAMList ? <ExpandLess /> : <ExpandMore />}
+              </ListItemButton>
+              <Collapse in={openUAMList} timeout="auto" unmountOnExit>
+                <List component="div" disablePadding>
+                  <ListItemButton
+                    sx={{ pl: 4 }}
+                    onClick={() => router.push("/uam/employee")}
+                  >
+                    <ListItemIcon>
+                      <BadgeIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Employee" />
+                  </ListItemButton>
+                  <ListItemButton
+                    sx={{ pl: 4 }}
+                    onClick={() => router.push("/uam/employer")}
+                  >
+                    <ListItemIcon>
+                      <BadgeIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Employer" />
+                  </ListItemButton>
+                </List>
+              </Collapse>
               <ListItemButton
                 onClick={() => setRegisterContentList(!openRegisterContentList)}
               >

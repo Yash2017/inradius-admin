@@ -435,7 +435,7 @@ function Index() {
               variant="contained"
               style={{ marginLeft: "12px" }}
             >
-              Save
+              Push Changes
             </LoadingButton>
           </div>
         </div>
