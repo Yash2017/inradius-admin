@@ -54,6 +54,7 @@ export default function DataTable() {
         newLocations.push({
           id: obj.id,
           companyName: obj.companyName,
+          companyLetterHead: obj.companyLetterHead,
           employerVerified: true,
         });
         setCompanyName(obj.companyName);
@@ -94,7 +95,8 @@ export default function DataTable() {
       headerName: "Company Letter Head",
       width: 200,
       renderCell: (cellValues) => {
-        return cellValues.formattedValue !== null ? (
+        return cellValues.formattedValue !== null ||
+          cellValues.formattedValue !== undefined ? (
           <Link href={cellValues.formattedValue} passHref>
             <a target="_blank" rel="noopener noreferrer">
               <Button variant="contained">Click Here </Button>
@@ -125,6 +127,7 @@ export default function DataTable() {
       });
       const newLocations = [];
       response.data.getAllEmployers.forEach((obj, i) => {
+        console.log(obj.employerVerifyStatus);
         if (obj.employerVerifyStatus === "DocumentsUploaded") {
           newLocations.push({
             id: obj._id,

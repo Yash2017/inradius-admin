@@ -561,7 +561,7 @@ function Index() {
                   height={"330px"}
                 />
               </div>
-              {fileUrl !== "" && (
+              {letterHead === "" && (
                 <LoadingButton
                   variant="contained"
                   style={{ marginTop: "12px" }}

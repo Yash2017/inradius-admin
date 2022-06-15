@@ -368,6 +368,8 @@ function Index() {
   const handleUpdateImageSave = async () => {
     setLoading(true);
     if (editedId.length !== 0) {
+      setFileUrl("");
+      console.log(fileUrl);
       const formData = new FormData();
       formData.append("file", file);
       formData.append("upload_preset", "login-content-uploads");
@@ -398,7 +400,6 @@ function Index() {
       setLoading(false);
       setOpenModal(false);
       setSuccess("Image Updated and Saved Successfully");
-      setFileUrl("");
       setEditedId([]);
     } else {
       setLoading(false);
@@ -572,7 +573,7 @@ function Index() {
                   height={"330px"}
                 />
               </div>
-              {fileUrl !== "" ? (
+              {letterHead === "" ? (
                 <LoadingButton
                   variant="contained"
                   style={{ marginTop: "12px" }}
