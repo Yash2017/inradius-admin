@@ -1,12 +1,22 @@
 import * as React from "react";
 import { DataGrid, GridColDef, GridValueGetterParams } from "@mui/x-data-grid";
-import { useGetInfoEmployersLazyQuery } from "../../generated/graphql";
+import {
+  useGetInfoEmployersLazyQuery,
+  useUpdateUserStatusLazyQuery,
+} from "../../generated/graphql";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import { LoadingButton } from "@mui/lab";
 import CircularProgress from "@mui/material/CircularProgress";
 import Image from "next/image";
-import { Typography, Button, TextField, Tab, Tabs } from "@mui/material";
+import {
+  Typography,
+  Button,
+  TextField,
+  Tab,
+  Tabs,
+  Switch,
+} from "@mui/material";
 import { useRouter } from "next/router";
 import { Alert, AlertTitle, Snackbar } from "@mui/material";
 import Link from "next/link";
@@ -36,8 +46,53 @@ export default function DataTable() {
   const [letterHead, setLetterHead] = React.useState("");
   const [type, setType] = React.useState("");
   const [loading, setLoading] = React.useState(false);
+  const [success, setSuccess] = React.useState("");
   const [getInfoEmployersQuery] = useGetInfoEmployersLazyQuery();
+  const [updateUserStatus] = useUpdateUserStatusLazyQuery();
   const columns = [
+    {
+      field: "userStatus",
+      headerName: "Active Status",
+      width: 120,
+      renderCell: (cellValues) => {
+        return (
+          <Switch
+            checked={cellValues.row.userStatus}
+            inputProps={{ "aria-label": "controlled" }}
+            onChange={async (e) => {
+              if (cellValues.row.userStatus) {
+                const response = await updateUserStatus({
+                  variables: {
+                    input: {
+                      id: cellValues.row.userId,
+                      userStatus: "blockedByAdmin",
+                    },
+                  },
+                });
+                setSuccess("User Deactivated Successfully");
+              } else {
+                const response = await updateUserStatus({
+                  variables: {
+                    input: {
+                      id: cellValues.row.userId,
+                      userStatus: "active",
+                    },
+                  },
+                });
+                setSuccess("User Activated Successfully");
+              }
+              const newData = [...data];
+              const idx = newData.findIndex(
+                (ind, i) => ind.id === cellValues.row.id
+              );
+              console.log(newData);
+              newData[idx].userStatus = !newData[idx].userStatus;
+              setData(newData);
+            }}
+          />
+        );
+      },
+    },
     { field: "companyName", headerName: "Company Name", width: 270 },
     { field: "firstName", headerName: "First Name", width: 270 },
     { field: "lastName", headerName: "Last Name", width: 270 },
@@ -226,6 +281,7 @@ export default function DataTable() {
       response.data.getAllEmployers.forEach((obj, i) => {
         let temp = {};
         (temp["id"] = obj._id),
+          (temp["userId"] = obj.user._id),
           (temp["firstName"] = obj.user.firstName),
           (temp["lastName"] = obj.user.lastName),
           (temp["email"] = obj.user.email),
@@ -256,6 +312,7 @@ export default function DataTable() {
           (temp["landline"] = obj.landline !== null ? obj.landline : null),
           (temp["benefit"] = obj.benefits),
           (temp["noOfJobs"] = obj.jobs.length),
+          (temp["userStatus"] = obj.user.userStatus),
           (temp["createdAt"] = String(obj.createdAt).substring(
             0,
             String(obj.createdAt).indexOf("T")
@@ -365,6 +422,18 @@ export default function DataTable() {
         >
           <Alert onClose={handleCloseSnackbar} severity="error">
             {error}
+          </Alert>
+        </Snackbar>
+      ) : null}
+      {success !== "" ? (
+        <Snackbar
+          open={success === "" ? false : true}
+          anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+          autoHideDuration={6000}
+          onClose={() => setSuccess("")}
+        >
+          <Alert onClose={() => setSuccess("")} severity="success">
+            {success}
           </Alert>
         </Snackbar>
       ) : null}

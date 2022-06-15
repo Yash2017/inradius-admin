@@ -196,7 +196,7 @@ export default function Layout({ children }) {
                 </ListItemIcon>
                 <ListItemText primary="Register Content" />
               </ListItemButton>
-              <ListItemButton onClick={() => router.push("/uam/employer")}>
+              <ListItemButton onClick={() => router.push("/uam/employee")}>
                 <ListItemIcon>
                   <AccountCircleIcon />
                 </ListItemIcon>

@@ -127,7 +127,6 @@ export default function DataTable() {
       });
       const newLocations = [];
       response.data.getAllEmployers.forEach((obj, i) => {
-        console.log(obj.employerVerifyStatus);
         if (obj.employerVerifyStatus === "DocumentsUploaded") {
           newLocations.push({
             id: obj._id,

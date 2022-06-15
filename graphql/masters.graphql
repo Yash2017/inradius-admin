@@ -28,6 +28,7 @@ query GetInfoEmployees {
   getAllEmployees {
     _id
     user {
+      _id
       firstName
       lastName
       email
@@ -36,6 +37,7 @@ query GetInfoEmployees {
       isAccountVerified
       isProfileCompleted
       isSurveyCompleted
+      userStatus
     }
     shortDescription
     radius
@@ -93,10 +95,15 @@ query GetInfoEmployees {
   }
 }
 
+query UpdateUserStatus($input: UpdateUserStatusInput!) {
+  updateUserStatus(status: $input)
+}
+
 query GetInfoEmployers {
   getAllEmployers {
     _id
     user {
+      _id
       firstName
       lastName
       email
@@ -104,6 +111,7 @@ query GetInfoEmployers {
       isAccountVerified
       isProfileCompleted
       isSurveyCompleted
+      userStatus
     }
     companyName
     companyImage

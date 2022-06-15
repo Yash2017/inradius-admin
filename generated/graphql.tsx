@@ -508,6 +508,7 @@ export type Query = {
   updateProfileStatus: Scalars['Boolean'];
   updateSurveyStatus: Scalars['Boolean'];
   updateUserImage: Scalars['Boolean'];
+  updateUserStatus: Scalars['Boolean'];
   user: User;
   verifyEmail: Scalars['Boolean'];
   verifyEmployer: Scalars['Boolean'];
@@ -566,6 +567,11 @@ export type QueryResendVerifyEmailArgs = {
 
 export type QueryUpdateUserImageArgs = {
   image: Scalars['String'];
+};
+
+
+export type QueryUpdateUserStatusArgs = {
+  status: UpdateUserStatusInput;
 };
 
 
@@ -780,6 +786,11 @@ export type UpdateSurveyInput = {
   question?: InputMaybe<Scalars['String']>;
 };
 
+export type UpdateUserStatusInput = {
+  id: Scalars['String'];
+  userStatus: UserStatus;
+};
+
 export type User = {
   __typename?: 'User';
   _id: Scalars['ID'];
@@ -790,10 +801,13 @@ export type User = {
   isAccountVerified: Scalars['Boolean'];
   isProfileCompleted: Scalars['Boolean'];
   isSurveyCompleted: Scalars['Boolean'];
+  lastLoggedIn?: Maybe<Scalars['DateTime']>;
+  lastLoggedOut?: Maybe<Scalars['DateTime']>;
   lastName: Scalars['String'];
   number: Scalars['String'];
   type: UserRole;
   updatedAt: Scalars['DateTime'];
+  userStatus: UserStatus;
 };
 
 export type UserExpInYearMonths = {
@@ -811,6 +825,17 @@ export type UserExpInYearMonthsInput = {
 export enum UserRole {
   Employee = 'employee',
   Employer = 'employer'
+}
+
+/** Enum For Type of User Status */
+export enum UserStatus {
+  Active = 'active',
+  BlockedByAdmin = 'blockedByAdmin',
+  Hired = 'hired',
+  Inactive = 'inactive',
+  PaymentPending = 'paymentPending',
+  PenaltyPending = 'penaltyPending',
+  Pending = 'pending'
 }
 
 export type UserSurvey = {
@@ -841,7 +866,7 @@ export type UserWorkExpInput = {
   company: Scalars['String'];
   current: Scalars['Boolean'];
   desc: Scalars['String'];
-  designation: DesignationEnum;
+  designation?: InputMaybe<DesignationEnum>;
   end?: InputMaybe<Scalars['DateTime']>;
   expectedJoinigDate?: InputMaybe<Scalars['DateTime']>;
   lastDateAtCurrentEmployer?: InputMaybe<Scalars['DateTime']>;
@@ -867,12 +892,19 @@ export type GetAllEmployersQuery = { __typename?: 'Query', getAllEmployers: Arra
 export type GetInfoEmployeesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetInfoEmployeesQuery = { __typename?: 'Query', getAllEmployees: Array<{ __typename?: 'Employee', _id: string, shortDescription?: string | null, radius?: number | null, latitude?: number | null, longitude?: number | null, fresher?: boolean | null, currentPay?: number | null, expectedPay?: number | null, linkedIn?: string | null, resume?: string | null, gender?: EmployeeGenderEnum | null, currentAddress?: string | null, createdAt: any, updatedAt: any, dob?: any | null, user: { __typename?: 'User', firstName: string, lastName: string, email: string, number: string, image?: string | null, isAccountVerified: boolean, isProfileCompleted: boolean, isSurveyCompleted: boolean }, location?: { __typename?: 'Location', location: string } | null, qualification?: { __typename?: 'Qualification', qualification: string } | null, industry?: { __typename?: 'Industry', industry: string } | null, domain?: { __typename?: 'Domain', domain: string } | null, skills: Array<{ __typename?: 'Skill', skill: string }>, subDomain: Array<{ __typename?: 'SubDomain', subDomain: string, domain: { __typename?: 'Domain', domain: string } }>, workExp: Array<{ __typename?: 'UserWorkExp', company: string, desc: string, designation: DesignationEnum, onNotice: boolean, start: any, end?: any | null, expectedJoinigDate?: any | null, lastDateAtCurrentEmployer?: any | null }>, totalExp?: { __typename?: 'UserExpInYearMonths', years: string, months: string } | null, relevantExp?: { __typename?: 'UserExpInYearMonths', years: string, months: string } | null }> };
+export type GetInfoEmployeesQuery = { __typename?: 'Query', getAllEmployees: Array<{ __typename?: 'Employee', _id: string, shortDescription?: string | null, radius?: number | null, latitude?: number | null, longitude?: number | null, fresher?: boolean | null, currentPay?: number | null, expectedPay?: number | null, linkedIn?: string | null, resume?: string | null, gender?: EmployeeGenderEnum | null, currentAddress?: string | null, createdAt: any, updatedAt: any, dob?: any | null, user: { __typename?: 'User', _id: string, firstName: string, lastName: string, email: string, number: string, image?: string | null, isAccountVerified: boolean, isProfileCompleted: boolean, isSurveyCompleted: boolean, userStatus: UserStatus }, location?: { __typename?: 'Location', location: string } | null, qualification?: { __typename?: 'Qualification', qualification: string } | null, industry?: { __typename?: 'Industry', industry: string } | null, domain?: { __typename?: 'Domain', domain: string } | null, skills: Array<{ __typename?: 'Skill', skill: string }>, subDomain: Array<{ __typename?: 'SubDomain', subDomain: string, domain: { __typename?: 'Domain', domain: string } }>, workExp: Array<{ __typename?: 'UserWorkExp', company: string, desc: string, designation: DesignationEnum, onNotice: boolean, start: any, end?: any | null, expectedJoinigDate?: any | null, lastDateAtCurrentEmployer?: any | null }>, totalExp?: { __typename?: 'UserExpInYearMonths', years: string, months: string } | null, relevantExp?: { __typename?: 'UserExpInYearMonths', years: string, months: string } | null }> };
+
+export type UpdateUserStatusQueryVariables = Exact<{
+  input: UpdateUserStatusInput;
+}>;
+
+
+export type UpdateUserStatusQuery = { __typename?: 'Query', updateUserStatus: boolean };
 
 export type GetInfoEmployersQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetInfoEmployersQuery = { __typename?: 'Query', getAllEmployers: Array<{ __typename?: 'Employer', _id: string, companyName?: string | null, companyImage?: string | null, companyLetterHead?: string | null, employerVerified?: boolean | null, employerVerifyStatus?: EmployerVerifyStatusEnum | null, noOfHiring?: number | null, noOfLocations?: number | null, noOfEmployees?: number | null, landline?: number | null, registeredAddress?: string | null, linkedIn?: string | null, currentAddress?: string | null, attritionRate?: number | null, createdAt: any, updatedAt: any, lastTurnover?: number | null, user: { __typename?: 'User', firstName: string, lastName: string, email: string, number: string, isAccountVerified: boolean, isProfileCompleted: boolean, isSurveyCompleted: boolean }, jobs?: Array<{ __typename?: 'EmployerJob', jobTitle?: string | null, jobDesc?: string | null, jobType?: EmployerJobTypeEnum | null, jobStatus?: EmployerJobStatusEnum | null, listingComplete?: boolean | null, radius?: number | null, latitude?: number | null, longitude?: number | null, minPay?: number | null, maxPay?: number | null, createdAt: any, updatedAt: any, location?: { __typename?: 'Location', location: string } | null, qualification?: { __typename?: 'Qualification', qualification: string } | null, industry?: { __typename?: 'Industry', industry: string } | null, domain?: { __typename?: 'Domain', domain: string } | null, skills: Array<{ __typename?: 'Skill', skill: string }>, subDomain: Array<{ __typename?: 'SubDomain', subDomain: string, domain: { __typename?: 'Domain', domain: string } }>, minRequiredExp?: { __typename?: 'UserExpInYearMonths', years: string, months: string } | null }> | null, benefits?: Array<{ __typename?: 'Benefit', benefit: string }> | null }> };
+export type GetInfoEmployersQuery = { __typename?: 'Query', getAllEmployers: Array<{ __typename?: 'Employer', _id: string, companyName?: string | null, companyImage?: string | null, companyLetterHead?: string | null, employerVerified?: boolean | null, employerVerifyStatus?: EmployerVerifyStatusEnum | null, noOfHiring?: number | null, noOfLocations?: number | null, noOfEmployees?: number | null, landline?: number | null, registeredAddress?: string | null, linkedIn?: string | null, currentAddress?: string | null, attritionRate?: number | null, createdAt: any, updatedAt: any, lastTurnover?: number | null, user: { __typename?: 'User', _id: string, firstName: string, lastName: string, email: string, number: string, isAccountVerified: boolean, isProfileCompleted: boolean, isSurveyCompleted: boolean, userStatus: UserStatus }, jobs?: Array<{ __typename?: 'EmployerJob', jobTitle?: string | null, jobDesc?: string | null, jobType?: EmployerJobTypeEnum | null, jobStatus?: EmployerJobStatusEnum | null, listingComplete?: boolean | null, radius?: number | null, latitude?: number | null, longitude?: number | null, minPay?: number | null, maxPay?: number | null, createdAt: any, updatedAt: any, location?: { __typename?: 'Location', location: string } | null, qualification?: { __typename?: 'Qualification', qualification: string } | null, industry?: { __typename?: 'Industry', industry: string } | null, domain?: { __typename?: 'Domain', domain: string } | null, skills: Array<{ __typename?: 'Skill', skill: string }>, subDomain: Array<{ __typename?: 'SubDomain', subDomain: string, domain: { __typename?: 'Domain', domain: string } }>, minRequiredExp?: { __typename?: 'UserExpInYearMonths', years: string, months: string } | null }> | null, benefits?: Array<{ __typename?: 'Benefit', benefit: string }> | null }> };
 
 export type AllIndustriesQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -1186,6 +1218,7 @@ export const GetInfoEmployeesDocument = gql`
   getAllEmployees {
     _id
     user {
+      _id
       firstName
       lastName
       email
@@ -1194,6 +1227,7 @@ export const GetInfoEmployeesDocument = gql`
       isAccountVerified
       isProfileCompleted
       isSurveyCompleted
+      userStatus
     }
     shortDescription
     radius
@@ -1278,11 +1312,45 @@ export function useGetInfoEmployeesLazyQuery(baseOptions?: Apollo.LazyQueryHookO
 export type GetInfoEmployeesQueryHookResult = ReturnType<typeof useGetInfoEmployeesQuery>;
 export type GetInfoEmployeesLazyQueryHookResult = ReturnType<typeof useGetInfoEmployeesLazyQuery>;
 export type GetInfoEmployeesQueryResult = Apollo.QueryResult<GetInfoEmployeesQuery, GetInfoEmployeesQueryVariables>;
+export const UpdateUserStatusDocument = gql`
+    query UpdateUserStatus($input: UpdateUserStatusInput!) {
+  updateUserStatus(status: $input)
+}
+    `;
+
+/**
+ * __useUpdateUserStatusQuery__
+ *
+ * To run a query within a React component, call `useUpdateUserStatusQuery` and pass it any options that fit your needs.
+ * When your component renders, `useUpdateUserStatusQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useUpdateUserStatusQuery({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateUserStatusQuery(baseOptions: Apollo.QueryHookOptions<UpdateUserStatusQuery, UpdateUserStatusQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<UpdateUserStatusQuery, UpdateUserStatusQueryVariables>(UpdateUserStatusDocument, options);
+      }
+export function useUpdateUserStatusLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<UpdateUserStatusQuery, UpdateUserStatusQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<UpdateUserStatusQuery, UpdateUserStatusQueryVariables>(UpdateUserStatusDocument, options);
+        }
+export type UpdateUserStatusQueryHookResult = ReturnType<typeof useUpdateUserStatusQuery>;
+export type UpdateUserStatusLazyQueryHookResult = ReturnType<typeof useUpdateUserStatusLazyQuery>;
+export type UpdateUserStatusQueryResult = Apollo.QueryResult<UpdateUserStatusQuery, UpdateUserStatusQueryVariables>;
 export const GetInfoEmployersDocument = gql`
     query GetInfoEmployers {
   getAllEmployers {
     _id
     user {
+      _id
       firstName
       lastName
       email
@@ -1290,6 +1358,7 @@ export const GetInfoEmployersDocument = gql`
       isAccountVerified
       isProfileCompleted
       isSurveyCompleted
+      userStatus
     }
     companyName
     companyImage

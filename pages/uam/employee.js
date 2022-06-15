@@ -1,14 +1,24 @@
 import * as React from "react";
 import { DataGrid, GridColDef, GridValueGetterParams } from "@mui/x-data-grid";
-import { useGetInfoEmployeesLazyQuery } from "../../generated/graphql";
+import {
+  useGetInfoEmployeesLazyQuery,
+  useUpdateUserStatusLazyQuery,
+} from "../../generated/graphql";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import { LoadingButton } from "@mui/lab";
 import CircularProgress from "@mui/material/CircularProgress";
 import Image from "next/image";
-import { Typography, Button, TextField, Tab, Tabs } from "@mui/material";
+import {
+  Typography,
+  Button,
+  TextField,
+  Tab,
+  Tabs,
+  Switch,
+} from "@mui/material";
 import { useRouter } from "next/router";
-import { Alert, AlertTitle, Snackbar } from "@mui/material";
+import { Alert, Snackbar } from "@mui/material";
 import Link from "next/link";
 
 export default function DataTable() {
@@ -28,8 +38,9 @@ export default function DataTable() {
     if (reason === "clickaway") {
       return;
     }
-    setError("");
+    setSuccess("");
   };
+  const [success, setSuccess] = React.useState("");
   const [error, setError] = React.useState("");
   const [data, setData] = React.useState(null);
   const router = useRouter();
@@ -37,7 +48,52 @@ export default function DataTable() {
   const [letterHead, setLetterHead] = React.useState("");
   const [loading, setLoading] = React.useState(true);
   const [getInfoEmployeesQuery] = useGetInfoEmployeesLazyQuery();
+  const [updateUserStatus] = useUpdateUserStatusLazyQuery();
+
   const columns = [
+    {
+      field: "userStatus",
+      headerName: "Active Status",
+      width: 120,
+      renderCell: (cellValues) => {
+        return (
+          <Switch
+            checked={cellValues.row.userStatus}
+            inputProps={{ "aria-label": "controlled" }}
+            onChange={async (e) => {
+              if (cellValues.row.userStatus) {
+                const response = await updateUserStatus({
+                  variables: {
+                    input: {
+                      id: cellValues.row.userId,
+                      userStatus: "blockedByAdmin",
+                    },
+                  },
+                });
+                setSuccess("User Deactivated Successfully");
+              } else {
+                const response = await updateUserStatus({
+                  variables: {
+                    input: {
+                      id: cellValues.row.userId,
+                      userStatus: "active",
+                    },
+                  },
+                });
+                setSuccess("User Activated Successfully");
+              }
+              const newData = [...data];
+              const idx = newData.findIndex(
+                (ind, i) => ind.id === cellValues.row.id
+              );
+              console.log(newData);
+              newData[idx].userStatus = !newData[idx].userStatus;
+              setData(newData);
+            }}
+          />
+        );
+      },
+    },
     { field: "firstName", headerName: "First Name", width: 270 },
     { field: "lastName", headerName: "Last Name", width: 270 },
     {
@@ -282,6 +338,7 @@ export default function DataTable() {
         response.data.getAllEmployees.forEach((obj, i) =>
           newLocations.push({
             id: obj._id,
+            userId: obj.user._id,
             firstName: obj.user.firstName,
             lastName: obj.user.lastName,
             email: obj.user.email,
@@ -324,6 +381,7 @@ export default function DataTable() {
             currentPay: obj.currentPay !== null ? obj.currentPay : "",
             expectedPay: obj.expectedPay !== null ? obj.expectedPay : "",
             linkedIn: obj.linkedIn !== null ? obj.linkedIn : null,
+            userStatus: obj.user.userStatus !== "blockedByAdmin" ? true : false,
             resume: obj.resume !== null ? obj.resume : null,
             currentAddress:
               obj.currentAddress !== null ? obj.currentAddress : "",
@@ -446,6 +504,18 @@ export default function DataTable() {
           </Box>
         </Modal>
       )}
+      {success !== "" ? (
+        <Snackbar
+          open={success === "" ? false : true}
+          anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+          autoHideDuration={6000}
+          onClose={() => setSuccess("")}
+        >
+          <Alert onClose={() => setSuccess("")} severity="success">
+            {success}
+          </Alert>
+        </Snackbar>
+      ) : null}
     </>
   );
 }
