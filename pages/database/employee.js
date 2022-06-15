@@ -151,11 +151,6 @@ export default function DataTable() {
       width: 250,
     },
     {
-      field: "subDomain4",
-      headerName: "Sub-Domain 4",
-      width: 250,
-    },
-    {
       field: "fresher",
       headerName: "Fresher",
       width: 250,

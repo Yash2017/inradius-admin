@@ -419,14 +419,14 @@ function Index() {
             paddingRight: "24px",
           }}
         >
-          <Tabs value={0} centered>
+          <Tabs value={1} centered>
             <Tab
               label="Employee"
-              onClick={() => router.push("/database/employee")}
+              onClick={() => router.push("/register-content/employee")}
             />
             <Tab
               label="Employer"
-              onClick={() => router.push("/database/employer")}
+              onClick={() => router.push("/register-content/employer")}
             />
           </Tabs>
           <DataGrid

@@ -124,15 +124,17 @@ export default function DataTable() {
         fetchPolicy: "network-only",
       });
       const newLocations = [];
-      response.data.getAllEmployers.forEach((obj, i) =>
-        newLocations.push({
-          id: obj._id,
-          companyName: obj.companyName,
-          employerVerified: obj.employerVerified,
-          companyLetterHead:
-            obj.companyLetterHead !== null ? obj.companyLetterHead : null,
-        })
-      );
+      response.data.getAllEmployers.forEach((obj, i) => {
+        if (obj.employerVerifyStatus === "DocumentsUploaded") {
+          newLocations.push({
+            id: obj._id,
+            companyName: obj.companyName,
+            employerVerified: obj.employerVerified,
+            companyLetterHead:
+              obj.companyLetterHead !== null ? obj.companyLetterHead : null,
+          });
+        }
+      });
       setData(newLocations);
       console.log(newLocations);
     };
