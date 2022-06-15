@@ -61,36 +61,7 @@ export default function DataTable() {
           <Switch
             checked={cellValues.row.userStatus}
             inputProps={{ "aria-label": "controlled" }}
-            onChange={async (e) => {
-              if (cellValues.row.userStatus) {
-                const response = await updateUserStatus({
-                  variables: {
-                    input: {
-                      id: cellValues.row.userId,
-                      userStatus: "blockedByAdmin",
-                    },
-                  },
-                });
-                setSuccess("User Deactivated Successfully");
-              } else {
-                const response = await updateUserStatus({
-                  variables: {
-                    input: {
-                      id: cellValues.row.userId,
-                      userStatus: "active",
-                    },
-                  },
-                });
-                setSuccess("User Activated Successfully");
-              }
-              const newData = [...data];
-              const idx = newData.findIndex(
-                (ind, i) => ind.id === cellValues.row.id
-              );
-              console.log(newData);
-              newData[idx].userStatus = !newData[idx].userStatus;
-              setData(newData);
-            }}
+            onChange={async (e) => {}}
           />
         );
       },
