@@ -99,6 +99,54 @@ query UpdateUserStatus($input: UpdateUserStatusInput!) {
   updateUserStatus(status: $input)
 }
 
+query GetInfoJobs {
+  allJobs {
+    _id
+    user {
+      firstName
+      lastName
+      email
+      number
+      _id
+      userStatus
+    }
+    jobTitle
+    jobDesc
+    jobType
+    jobStatus
+    listingComplete
+    radius
+    latitude
+    longitude
+    location {
+      location
+    }
+    qualification {
+      qualification
+    }
+    industry {
+      industry
+    }
+    domain {
+      domain
+    }
+    subDomain {
+      subDomain
+    }
+    skills {
+      skill
+    }
+    minRequiredExp {
+      months
+      years
+    }
+    minPay
+    maxPay
+    createdAt
+    updatedAt
+  }
+}
+
 query GetInfoEmployers {
   getAllEmployers {
     _id
@@ -123,42 +171,6 @@ query GetInfoEmployers {
     noOfEmployees
     jobs {
       jobTitle
-      jobDesc
-      jobType
-      jobStatus
-      listingComplete
-      location {
-        location
-      }
-      qualification {
-        qualification
-      }
-      industry {
-        industry
-      }
-      domain {
-        domain
-      }
-      skills {
-        skill
-      }
-      subDomain {
-        domain {
-          domain
-        }
-        subDomain
-      }
-      radius
-      latitude
-      longitude
-      minPay
-      maxPay
-      minRequiredExp {
-        years
-        months
-      }
-      createdAt
-      updatedAt
     }
     benefits {
       benefit

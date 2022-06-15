@@ -214,6 +214,12 @@ export default function Layout({ children }) {
                 </ListItemIcon>
                 <ListItemText primary="Database" />
               </ListItemButton>
+              <ListItemButton onClick={() => router.push("/jobs")}>
+                <ListItemIcon>
+                  <StorageIcon />
+                </ListItemIcon>
+                <ListItemText primary="Jobs" />
+              </ListItemButton>
               <ListItemButton onClick={handleClick}>
                 <ListItemIcon>
                   <WorkIcon />

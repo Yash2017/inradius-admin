@@ -484,6 +484,7 @@ export type Query = {
   allBenefits: Array<Benefit>;
   allDomains: Array<Domain>;
   allIndustries: Array<Industry>;
+  allJobs: Array<EmployerJob>;
   allLocations: Array<Location>;
   allLoginContent: Array<LoginContent>;
   allQualifications: Array<Qualification>;
@@ -901,10 +902,15 @@ export type UpdateUserStatusQueryVariables = Exact<{
 
 export type UpdateUserStatusQuery = { __typename?: 'Query', updateUserStatus: boolean };
 
+export type GetInfoJobsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetInfoJobsQuery = { __typename?: 'Query', allJobs: Array<{ __typename?: 'EmployerJob', _id: string, jobTitle?: string | null, jobDesc?: string | null, jobType?: EmployerJobTypeEnum | null, jobStatus?: EmployerJobStatusEnum | null, listingComplete?: boolean | null, radius?: number | null, latitude?: number | null, longitude?: number | null, minPay?: number | null, maxPay?: number | null, createdAt: any, updatedAt: any, user: { __typename?: 'User', firstName: string, lastName: string, email: string, number: string, _id: string, userStatus: UserStatus }, location?: { __typename?: 'Location', location: string } | null, qualification?: { __typename?: 'Qualification', qualification: string } | null, industry?: { __typename?: 'Industry', industry: string } | null, domain?: { __typename?: 'Domain', domain: string } | null, subDomain: Array<{ __typename?: 'SubDomain', subDomain: string }>, skills: Array<{ __typename?: 'Skill', skill: string }>, minRequiredExp?: { __typename?: 'UserExpInYearMonths', months: string, years: string } | null }> };
+
 export type GetInfoEmployersQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetInfoEmployersQuery = { __typename?: 'Query', getAllEmployers: Array<{ __typename?: 'Employer', _id: string, companyName?: string | null, companyImage?: string | null, companyLetterHead?: string | null, employerVerified?: boolean | null, employerVerifyStatus?: EmployerVerifyStatusEnum | null, noOfHiring?: number | null, noOfLocations?: number | null, noOfEmployees?: number | null, landline?: number | null, registeredAddress?: string | null, linkedIn?: string | null, currentAddress?: string | null, attritionRate?: number | null, createdAt: any, updatedAt: any, lastTurnover?: number | null, user: { __typename?: 'User', _id: string, firstName: string, lastName: string, email: string, number: string, isAccountVerified: boolean, isProfileCompleted: boolean, isSurveyCompleted: boolean, userStatus: UserStatus }, jobs?: Array<{ __typename?: 'EmployerJob', jobTitle?: string | null, jobDesc?: string | null, jobType?: EmployerJobTypeEnum | null, jobStatus?: EmployerJobStatusEnum | null, listingComplete?: boolean | null, radius?: number | null, latitude?: number | null, longitude?: number | null, minPay?: number | null, maxPay?: number | null, createdAt: any, updatedAt: any, location?: { __typename?: 'Location', location: string } | null, qualification?: { __typename?: 'Qualification', qualification: string } | null, industry?: { __typename?: 'Industry', industry: string } | null, domain?: { __typename?: 'Domain', domain: string } | null, skills: Array<{ __typename?: 'Skill', skill: string }>, subDomain: Array<{ __typename?: 'SubDomain', subDomain: string, domain: { __typename?: 'Domain', domain: string } }>, minRequiredExp?: { __typename?: 'UserExpInYearMonths', years: string, months: string } | null }> | null, benefits?: Array<{ __typename?: 'Benefit', benefit: string }> | null }> };
+export type GetInfoEmployersQuery = { __typename?: 'Query', getAllEmployers: Array<{ __typename?: 'Employer', _id: string, companyName?: string | null, companyImage?: string | null, companyLetterHead?: string | null, employerVerified?: boolean | null, employerVerifyStatus?: EmployerVerifyStatusEnum | null, noOfHiring?: number | null, noOfLocations?: number | null, noOfEmployees?: number | null, landline?: number | null, registeredAddress?: string | null, linkedIn?: string | null, currentAddress?: string | null, attritionRate?: number | null, createdAt: any, updatedAt: any, lastTurnover?: number | null, user: { __typename?: 'User', _id: string, firstName: string, lastName: string, email: string, number: string, isAccountVerified: boolean, isProfileCompleted: boolean, isSurveyCompleted: boolean, userStatus: UserStatus }, jobs?: Array<{ __typename?: 'EmployerJob', jobTitle?: string | null }> | null, benefits?: Array<{ __typename?: 'Benefit', benefit: string }> | null }> };
 
 export type AllIndustriesQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -1345,6 +1351,82 @@ export function useUpdateUserStatusLazyQuery(baseOptions?: Apollo.LazyQueryHookO
 export type UpdateUserStatusQueryHookResult = ReturnType<typeof useUpdateUserStatusQuery>;
 export type UpdateUserStatusLazyQueryHookResult = ReturnType<typeof useUpdateUserStatusLazyQuery>;
 export type UpdateUserStatusQueryResult = Apollo.QueryResult<UpdateUserStatusQuery, UpdateUserStatusQueryVariables>;
+export const GetInfoJobsDocument = gql`
+    query GetInfoJobs {
+  allJobs {
+    _id
+    user {
+      firstName
+      lastName
+      email
+      number
+      _id
+      userStatus
+    }
+    jobTitle
+    jobDesc
+    jobType
+    jobStatus
+    listingComplete
+    radius
+    latitude
+    longitude
+    location {
+      location
+    }
+    qualification {
+      qualification
+    }
+    industry {
+      industry
+    }
+    domain {
+      domain
+    }
+    subDomain {
+      subDomain
+    }
+    skills {
+      skill
+    }
+    minRequiredExp {
+      months
+      years
+    }
+    minPay
+    maxPay
+    createdAt
+    updatedAt
+  }
+}
+    `;
+
+/**
+ * __useGetInfoJobsQuery__
+ *
+ * To run a query within a React component, call `useGetInfoJobsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetInfoJobsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetInfoJobsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetInfoJobsQuery(baseOptions?: Apollo.QueryHookOptions<GetInfoJobsQuery, GetInfoJobsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetInfoJobsQuery, GetInfoJobsQueryVariables>(GetInfoJobsDocument, options);
+      }
+export function useGetInfoJobsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetInfoJobsQuery, GetInfoJobsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetInfoJobsQuery, GetInfoJobsQueryVariables>(GetInfoJobsDocument, options);
+        }
+export type GetInfoJobsQueryHookResult = ReturnType<typeof useGetInfoJobsQuery>;
+export type GetInfoJobsLazyQueryHookResult = ReturnType<typeof useGetInfoJobsLazyQuery>;
+export type GetInfoJobsQueryResult = Apollo.QueryResult<GetInfoJobsQuery, GetInfoJobsQueryVariables>;
 export const GetInfoEmployersDocument = gql`
     query GetInfoEmployers {
   getAllEmployers {
@@ -1370,42 +1452,6 @@ export const GetInfoEmployersDocument = gql`
     noOfEmployees
     jobs {
       jobTitle
-      jobDesc
-      jobType
-      jobStatus
-      listingComplete
-      location {
-        location
-      }
-      qualification {
-        qualification
-      }
-      industry {
-        industry
-      }
-      domain {
-        domain
-      }
-      skills {
-        skill
-      }
-      subDomain {
-        domain {
-          domain
-        }
-        subDomain
-      }
-      radius
-      latitude
-      longitude
-      minPay
-      maxPay
-      minRequiredExp {
-        years
-        months
-      }
-      createdAt
-      updatedAt
     }
     benefits {
       benefit
