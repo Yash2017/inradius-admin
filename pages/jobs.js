@@ -312,16 +312,6 @@ export default function DataTable() {
             paddingRight: "24px",
           }}
         >
-          <Tabs value={0} centered>
-            <Tab
-              label="Employee"
-              onClick={() => router.push("/uam/employee")}
-            />
-            <Tab
-              label="Employer"
-              onClick={() => router.push("/uam/employer")}
-            />
-          </Tabs>
           <DataGrid
             rows={data}
             columns={columns}
