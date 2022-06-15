@@ -12,6 +12,8 @@ import {
   Input,
   Stack,
   styled,
+  Tab,
+  Tabs,
 } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
 import Box from "@mui/material/Box";
@@ -417,9 +419,16 @@ function Index() {
             paddingRight: "24px",
           }}
         >
-          <Typography variant="h5" style={{ marginBottom: "12px" }}>
-            Employer Register Content
-          </Typography>
+          <Tabs value={0} centered>
+            <Tab
+              label="Employee"
+              onClick={() => router.push("/database/employee")}
+            />
+            <Tab
+              label="Employer"
+              onClick={() => router.push("/database/employer")}
+            />
+          </Tabs>
           <DataGrid
             rows={location}
             columns={columns}

@@ -6,7 +6,7 @@ import Box from "@mui/material/Box";
 import { LoadingButton } from "@mui/lab";
 import CircularProgress from "@mui/material/CircularProgress";
 import Image from "next/image";
-import { Typography, Button, TextField } from "@mui/material";
+import { Typography, Button, TextField, Tab, Tabs } from "@mui/material";
 import { useRouter } from "next/router";
 import { Alert, AlertTitle, Snackbar } from "@mui/material";
 import Link from "next/link";
@@ -375,6 +375,16 @@ export default function DataTable() {
             paddingRight: "24px",
           }}
         >
+          <Tabs value={0} centered>
+            <Tab
+              label="Employee"
+              onClick={() => router.push("/uam/employee")}
+            />
+            <Tab
+              label="Employer"
+              onClick={() => router.push("/uam/employer")}
+            />
+          </Tabs>
           <DataGrid
             rows={data}
             columns={columns}

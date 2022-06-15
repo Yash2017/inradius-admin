@@ -32,6 +32,7 @@ import {
 } from "@mui/material";
 import Collapse from "@mui/material/Collapse";
 import AddIcon from "@mui/icons-material/Add";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 
 import { useRouter } from "next/router";
 const drawerWidth = 300;
@@ -186,70 +187,21 @@ export default function Layout({ children }) {
                 </ListItemIcon>
                 <ListItemText primary="Login Content" />
               </ListItemButton>
-              <ListItemButton onClick={() => setUAMListOpen(!openUAMList)}>
-                <ListItemIcon>
-                  <InsertPhotoIcon />
-                </ListItemIcon>
-                <ListItemText primary="UAM" />
-                {openUAMList ? <ExpandLess /> : <ExpandMore />}
-              </ListItemButton>
-              <Collapse in={openUAMList} timeout="auto" unmountOnExit>
-                <List component="div" disablePadding>
-                  <ListItemButton
-                    sx={{ pl: 4 }}
-                    onClick={() => router.push("/uam/employee")}
-                  >
-                    <ListItemIcon>
-                      <BadgeIcon />
-                    </ListItemIcon>
-                    <ListItemText primary="Employee" />
-                  </ListItemButton>
-                  <ListItemButton
-                    sx={{ pl: 4 }}
-                    onClick={() => router.push("/uam/employer")}
-                  >
-                    <ListItemIcon>
-                      <BadgeIcon />
-                    </ListItemIcon>
-                    <ListItemText primary="Employer" />
-                  </ListItemButton>
-                </List>
-              </Collapse>
+
               <ListItemButton
-                onClick={() => setRegisterContentList(!openRegisterContentList)}
+                onClick={() => router.push("/register-content/employee")}
               >
                 <ListItemIcon>
                   <InsertPhotoIcon />
                 </ListItemIcon>
                 <ListItemText primary="Register Content" />
-                {openRegisterContentList ? <ExpandLess /> : <ExpandMore />}
               </ListItemButton>
-              <Collapse
-                in={openRegisterContentList}
-                timeout="auto"
-                unmountOnExit
-              >
-                <List component="div" disablePadding>
-                  <ListItemButton
-                    sx={{ pl: 4 }}
-                    onClick={() => router.push("/register-content/employee")}
-                  >
-                    <ListItemIcon>
-                      <BadgeIcon />
-                    </ListItemIcon>
-                    <ListItemText primary="Employee" />
-                  </ListItemButton>
-                  <ListItemButton
-                    sx={{ pl: 4 }}
-                    onClick={() => router.push("/register-content/employer")}
-                  >
-                    <ListItemIcon>
-                      <BadgeIcon />
-                    </ListItemIcon>
-                    <ListItemText primary="Employer" />
-                  </ListItemButton>
-                </List>
-              </Collapse>
+              <ListItemButton onClick={() => router.push("/uam/employer")}>
+                <ListItemIcon>
+                  <AccountCircleIcon />
+                </ListItemIcon>
+                <ListItemText primary="UAM" />
+              </ListItemButton>
               <ListItemButton onClick={() => router.push("/survey/employee")}>
                 <ListItemIcon>
                   <AddIcon />
