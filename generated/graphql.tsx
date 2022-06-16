@@ -907,6 +907,13 @@ export type GetInfoJobsQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type GetInfoJobsQuery = { __typename?: 'Query', allJobs: Array<{ __typename?: 'EmployerJob', _id: string, jobTitle?: string | null, jobDesc?: string | null, jobType?: EmployerJobTypeEnum | null, jobStatus?: EmployerJobStatusEnum | null, listingComplete?: boolean | null, radius?: number | null, latitude?: number | null, longitude?: number | null, minPay?: number | null, maxPay?: number | null, createdAt: any, updatedAt: any, user: { __typename?: 'User', firstName: string, lastName: string, email: string, number: string, _id: string, userStatus: UserStatus }, location?: { __typename?: 'Location', location: string } | null, qualification?: { __typename?: 'Qualification', qualification: string } | null, industry?: { __typename?: 'Industry', industry: string } | null, domain?: { __typename?: 'Domain', domain: string } | null, subDomain: Array<{ __typename?: 'SubDomain', subDomain: string }>, skills: Array<{ __typename?: 'Skill', skill: string }>, minRequiredExp?: { __typename?: 'UserExpInYearMonths', months: string, years: string } | null }> };
 
+export type UpdateEmployerJobMutationVariables = Exact<{
+  input: EmployerJobInput;
+}>;
+
+
+export type UpdateEmployerJobMutation = { __typename?: 'Mutation', updateEmployerJob: { __typename?: 'EmployerJob', jobStatus?: EmployerJobStatusEnum | null } };
+
 export type GetInfoEmployersQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -1427,6 +1434,39 @@ export function useGetInfoJobsLazyQuery(baseOptions?: Apollo.LazyQueryHookOption
 export type GetInfoJobsQueryHookResult = ReturnType<typeof useGetInfoJobsQuery>;
 export type GetInfoJobsLazyQueryHookResult = ReturnType<typeof useGetInfoJobsLazyQuery>;
 export type GetInfoJobsQueryResult = Apollo.QueryResult<GetInfoJobsQuery, GetInfoJobsQueryVariables>;
+export const UpdateEmployerJobDocument = gql`
+    mutation UpdateEmployerJob($input: EmployerJobInput!) {
+  updateEmployerJob(input: $input) {
+    jobStatus
+  }
+}
+    `;
+export type UpdateEmployerJobMutationFn = Apollo.MutationFunction<UpdateEmployerJobMutation, UpdateEmployerJobMutationVariables>;
+
+/**
+ * __useUpdateEmployerJobMutation__
+ *
+ * To run a mutation, you first call `useUpdateEmployerJobMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateEmployerJobMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateEmployerJobMutation, { data, loading, error }] = useUpdateEmployerJobMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateEmployerJobMutation(baseOptions?: Apollo.MutationHookOptions<UpdateEmployerJobMutation, UpdateEmployerJobMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateEmployerJobMutation, UpdateEmployerJobMutationVariables>(UpdateEmployerJobDocument, options);
+      }
+export type UpdateEmployerJobMutationHookResult = ReturnType<typeof useUpdateEmployerJobMutation>;
+export type UpdateEmployerJobMutationResult = Apollo.MutationResult<UpdateEmployerJobMutation>;
+export type UpdateEmployerJobMutationOptions = Apollo.BaseMutationOptions<UpdateEmployerJobMutation, UpdateEmployerJobMutationVariables>;
 export const GetInfoEmployersDocument = gql`
     query GetInfoEmployers {
   getAllEmployers {

@@ -147,6 +147,12 @@ query GetInfoJobs {
   }
 }
 
+mutation UpdateEmployerJob($input: EmployerJobInput!) {
+  updateEmployerJob(input: $input) {
+    jobStatus
+  }
+}
+
 query GetInfoEmployers {
   getAllEmployers {
     _id

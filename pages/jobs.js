@@ -1,26 +1,17 @@
 import * as React from "react";
 import { DataGrid, GridColDef, GridValueGetterParams } from "@mui/x-data-grid";
 import {
-  useGetInfoEmployeesLazyQuery,
   useGetInfoJobsLazyQuery,
-  useUpdateUserStatusLazyQuery,
+  useUpdateEmployerJobMutation,
 } from "../generated/graphql";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import { LoadingButton } from "@mui/lab";
 import CircularProgress from "@mui/material/CircularProgress";
 import Image from "next/image";
-import {
-  Typography,
-  Button,
-  TextField,
-  Tab,
-  Tabs,
-  Switch,
-} from "@mui/material";
+import { Typography, Switch } from "@mui/material";
 import { useRouter } from "next/router";
 import { Alert, Snackbar } from "@mui/material";
-import Link from "next/link";
 
 export default function DataTable() {
   const style = {
@@ -34,6 +25,7 @@ export default function DataTable() {
     boxShadow: 24,
     p: 4,
   };
+  const [updateEmployerJob] = useUpdateEmployerJobMutation();
 
   const handleCloseSnackbar = (event, reason) => {
     if (reason === "clickaway") {
@@ -49,19 +41,48 @@ export default function DataTable() {
   const [letterHead, setLetterHead] = React.useState("");
   const [loading, setLoading] = React.useState(true);
   const [getInfoJobsQuery] = useGetInfoJobsLazyQuery();
-  const [updateUserStatus] = useUpdateUserStatusLazyQuery();
+  const [updateUserStatus] = useUpdateEmployerJobMutation();
 
   const columns = [
     {
-      field: "userStatus",
-      headerName: "Active Status",
+      field: "jobStatus",
+      headerName: "Job Status",
       width: 120,
       renderCell: (cellValues) => {
         return (
           <Switch
-            checked={cellValues.row.userStatus}
+            checked={cellValues.row.jobStatus}
             inputProps={{ "aria-label": "controlled" }}
-            onChange={async (e) => {}}
+            onChange={async (e) => {
+              if (cellValues.row.jobStatus) {
+                const response = await updateEmployerJob({
+                  variables: {
+                    input: {
+                      _id: cellValues.row.id,
+                      jobStatus: "Closed",
+                    },
+                  },
+                });
+                setSuccess("Job Deactivated Successfully");
+              } else {
+                const response = await updateEmployerJob({
+                  variables: {
+                    input: {
+                      _id: cellValues.row.id,
+                      jobStatus: "Open",
+                    },
+                  },
+                });
+                setSuccess("Job Activated Successfully");
+              }
+              const newData = [...data];
+              const idx = newData.findIndex(
+                (ind, i) => ind.id === cellValues.row.id
+              );
+              console.log(newData);
+              newData[idx].jobStatus = !newData[idx].jobStatus;
+              setData(newData);
+            }}
           />
         );
       },
@@ -74,11 +95,6 @@ export default function DataTable() {
     {
       field: "jobDesc",
       headerName: "Job Description",
-      width: 250,
-    },
-    {
-      field: "jobStatus",
-      headerName: "Job Status",
       width: 250,
     },
     { field: "firstName", headerName: "First Name", width: 270 },
@@ -210,7 +226,7 @@ export default function DataTable() {
             listingComplete: obj.listingComplete,
             jobTitle: obj.jobTitle !== null ? obj.jobTitle : "",
             jobType: obj.jobType !== null ? obj.jobType : "",
-            jobStatus: obj.jobStatus !== null ? obj.jobStatus : "",
+            jobStatus: obj.jobStatus === "Open" ? true : false,
             jobDesc: obj.jobDesc !== null ? obj.jobDesc : "",
             radius: obj.radius !== null ? obj.radius : "",
             latitude: obj.latitude !== null ? obj.latitude : "",
