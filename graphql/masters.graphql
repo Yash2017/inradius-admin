@@ -153,6 +153,23 @@ mutation UpdateEmployerJob($input: EmployerJobInput!) {
   }
 }
 
+query AllRules {
+  allRule {
+    type
+    weightage
+    matchType
+    _id
+    active
+  }
+}
+
+mutation UpdateRule($input: UpdateRuleInput!) {
+  updateRule(input: $input) {
+    active
+    weightage
+  }
+}
+
 query GetInfoEmployers {
   getAllEmployers {
     _id

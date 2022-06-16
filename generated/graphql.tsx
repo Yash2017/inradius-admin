@@ -293,6 +293,12 @@ export type LoginInput = {
   password: Scalars['String'];
 };
 
+/** Enum For Type of Matches i.e. Hard Match for parameters that should be definately matched and soft match for those parameters that would make up the score. */
+export enum MatchType {
+  HardMatch = 'hardMatch',
+  SoftMatch = 'softMatch'
+}
+
 export type Mutation = {
   __typename?: 'Mutation';
   addBenefit: Benefit;
@@ -303,6 +309,7 @@ export type Mutation = {
   addLoginContent: LoginContent;
   addQualification: Qualification;
   addRegisterContent: RegisterContent;
+  addRule: Rule;
   addSkill: Skill;
   addSkills: Scalars['Boolean'];
   addSubDomain: SubDomain;
@@ -320,6 +327,7 @@ export type Mutation = {
   updateLoginContent: LoginContent;
   updateQualification: Qualification;
   updateRegisterContent: RegisterContent;
+  updateRule: Rule;
   updateSkill: Skill;
   updateSubDomain: SubDomain;
   updateSurveyQuestion: Survey;
@@ -358,6 +366,11 @@ export type MutationAddQualificationArgs = {
 
 export type MutationAddRegisterContentArgs = {
   input: RegisterContentInput;
+};
+
+
+export type MutationAddRuleArgs = {
+  input: RuleInput;
 };
 
 
@@ -449,6 +462,11 @@ export type MutationUpdateRegisterContentArgs = {
 };
 
 
+export type MutationUpdateRuleArgs = {
+  input: UpdateRuleInput;
+};
+
+
 export type MutationUpdateSkillArgs = {
   input: UpdateSkillInput;
 };
@@ -489,6 +507,7 @@ export type Query = {
   allLoginContent: Array<LoginContent>;
   allQualifications: Array<Qualification>;
   allRegisterContent: Array<RegisterContent>;
+  allRule: Array<Rule>;
   allSkills: Array<Skill>;
   allSubDomains: Array<SubDomain>;
   allSurveyQuestion: Array<Survey>;
@@ -618,6 +637,24 @@ export type RegisterInput = {
   type: UserRole;
 };
 
+export type Rule = {
+  __typename?: 'Rule';
+  _id: Scalars['ID'];
+  active: Scalars['Boolean'];
+  createdAt: Scalars['DateTime'];
+  matchType: MatchType;
+  type: TypeCriterion;
+  updatedAt: Scalars['DateTime'];
+  weightage: Scalars['Float'];
+};
+
+export type RuleInput = {
+  active: Scalars['Boolean'];
+  matchType: MatchType;
+  type: TypeCriterion;
+  weightage: Scalars['Float'];
+};
+
 export type Skill = {
   __typename?: 'Skill';
   _id: Scalars['ID'];
@@ -670,6 +707,18 @@ export type SurveyInput = {
 export enum SurveyType {
   Employee = 'employee',
   Employer = 'employer'
+}
+
+/** Enum For Type of Criteria for matching algorithm */
+export enum TypeCriterion {
+  DomainMatch = 'domainMatch',
+  ExpRangeMatch = 'expRangeMatch',
+  IndustryMatch = 'industryMatch',
+  LocationMatch = 'locationMatch',
+  RadiusMatch = 'radiusMatch',
+  SalaryRangeMatch = 'salaryRangeMatch',
+  SkillMatch = 'skillMatch',
+  SubDomainMatch = 'subDomainMatch'
 }
 
 export type UpdateBenefitInput = {
@@ -766,6 +815,14 @@ export type UpdateRegisterContentInput = {
   id: Scalars['ID'];
   imageUrl?: InputMaybe<Scalars['String']>;
   registerContent?: InputMaybe<Scalars['String']>;
+};
+
+export type UpdateRuleInput = {
+  active?: InputMaybe<Scalars['Boolean']>;
+  id: Scalars['ID'];
+  matchType?: InputMaybe<MatchType>;
+  type?: InputMaybe<TypeCriterion>;
+  weightage?: InputMaybe<Scalars['Float']>;
 };
 
 export type UpdateSkillInput = {
@@ -913,6 +970,18 @@ export type UpdateEmployerJobMutationVariables = Exact<{
 
 
 export type UpdateEmployerJobMutation = { __typename?: 'Mutation', updateEmployerJob: { __typename?: 'EmployerJob', jobStatus?: EmployerJobStatusEnum | null } };
+
+export type AllRulesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type AllRulesQuery = { __typename?: 'Query', allRule: Array<{ __typename?: 'Rule', type: TypeCriterion, weightage: number, matchType: MatchType, _id: string, active: boolean }> };
+
+export type UpdateRuleMutationVariables = Exact<{
+  input: UpdateRuleInput;
+}>;
+
+
+export type UpdateRuleMutation = { __typename?: 'Mutation', updateRule: { __typename?: 'Rule', active: boolean, weightage: number } };
 
 export type GetInfoEmployersQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -1467,6 +1536,78 @@ export function useUpdateEmployerJobMutation(baseOptions?: Apollo.MutationHookOp
 export type UpdateEmployerJobMutationHookResult = ReturnType<typeof useUpdateEmployerJobMutation>;
 export type UpdateEmployerJobMutationResult = Apollo.MutationResult<UpdateEmployerJobMutation>;
 export type UpdateEmployerJobMutationOptions = Apollo.BaseMutationOptions<UpdateEmployerJobMutation, UpdateEmployerJobMutationVariables>;
+export const AllRulesDocument = gql`
+    query AllRules {
+  allRule {
+    type
+    weightage
+    matchType
+    _id
+    active
+  }
+}
+    `;
+
+/**
+ * __useAllRulesQuery__
+ *
+ * To run a query within a React component, call `useAllRulesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useAllRulesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useAllRulesQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useAllRulesQuery(baseOptions?: Apollo.QueryHookOptions<AllRulesQuery, AllRulesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<AllRulesQuery, AllRulesQueryVariables>(AllRulesDocument, options);
+      }
+export function useAllRulesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<AllRulesQuery, AllRulesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<AllRulesQuery, AllRulesQueryVariables>(AllRulesDocument, options);
+        }
+export type AllRulesQueryHookResult = ReturnType<typeof useAllRulesQuery>;
+export type AllRulesLazyQueryHookResult = ReturnType<typeof useAllRulesLazyQuery>;
+export type AllRulesQueryResult = Apollo.QueryResult<AllRulesQuery, AllRulesQueryVariables>;
+export const UpdateRuleDocument = gql`
+    mutation UpdateRule($input: UpdateRuleInput!) {
+  updateRule(input: $input) {
+    active
+    weightage
+  }
+}
+    `;
+export type UpdateRuleMutationFn = Apollo.MutationFunction<UpdateRuleMutation, UpdateRuleMutationVariables>;
+
+/**
+ * __useUpdateRuleMutation__
+ *
+ * To run a mutation, you first call `useUpdateRuleMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateRuleMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateRuleMutation, { data, loading, error }] = useUpdateRuleMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateRuleMutation(baseOptions?: Apollo.MutationHookOptions<UpdateRuleMutation, UpdateRuleMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateRuleMutation, UpdateRuleMutationVariables>(UpdateRuleDocument, options);
+      }
+export type UpdateRuleMutationHookResult = ReturnType<typeof useUpdateRuleMutation>;
+export type UpdateRuleMutationResult = Apollo.MutationResult<UpdateRuleMutation>;
+export type UpdateRuleMutationOptions = Apollo.BaseMutationOptions<UpdateRuleMutation, UpdateRuleMutationVariables>;
 export const GetInfoEmployersDocument = gql`
     query GetInfoEmployers {
   getAllEmployers {

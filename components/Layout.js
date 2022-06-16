@@ -174,7 +174,7 @@ export default function Layout({ children }) {
                 <ListItemText primary="Verify Employer" />
               </ListItemButton>
               <ListItemButton
-                onClick={() => router.push("/dashboard/rule-engine")}
+                onClick={() => router.push("/rule-engine/default")}
               >
                 <ListItemIcon>
                   <RuleIcon />
