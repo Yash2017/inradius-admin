@@ -62,104 +62,108 @@ function Index() {
       headerName: "Active Status",
       width: 120,
       renderCell: (cellValues) => {
-        return (
-          <Switch
-            checked={cellValues.row.active}
-            inputProps={{ "aria-label": "controlled" }}
-            onChange={(e) => {
-              const newL = [...location];
-              console.log(newL);
-              newL.forEach((ind) => {
-                if (ind.id === cellValues.row.id) {
-                  ind.active = !ind.active;
-                  if (ind.matchType === "softMatch") {
-                    ind.weightage = 0;
-                  }
-                  if (edited.length !== 0) {
-                    const ret = edited.findIndex((indx) => indx.id === ind.id);
-                    console.log(ret);
-                    console.log(edited);
-                    if (ret === -1) {
-                      if (ind.matchType === "softMatch" && !ind.active) {
-                        setEdited([
-                          ...edited,
-                          {
-                            weightage: 0,
-                            active: ind.active,
-                            id: ind.id,
-                          },
-                        ]);
-                      } else if (ind.matchType === "hardMatch") {
-                        setEdited([
-                          ...edited,
-                          {
-                            active: ind.active,
-                            id: ind.id,
-                          },
-                        ]);
-                      } else {
-                        setEdited([
-                          ...edited,
-                          {
-                            weightage: 0,
-                            active: ind.active,
-                            id: ind.id,
-                          },
-                        ]);
-                      }
+        if (cellValues.row.type !== "Total") {
+          return (
+            <Switch
+              checked={cellValues.row.active}
+              inputProps={{ "aria-label": "controlled" }}
+              onChange={(e) => {
+                const newL = [...location];
+                console.log(newL);
+                newL.forEach((ind) => {
+                  if (ind.id === cellValues.row.id) {
+                    ind.active = !ind.active;
+                    if (ind.matchType === "softMatch") {
+                      ind.weightage = 0;
+                    }
+                    if (edited.length !== 0) {
+                      const ret = edited.findIndex(
+                        (indx) => indx.id === ind.id
+                      );
+                      console.log(ret);
                       console.log(edited);
+                      if (ret === -1) {
+                        if (ind.matchType === "softMatch" && !ind.active) {
+                          setEdited([
+                            ...edited,
+                            {
+                              weightage: 0,
+                              active: ind.active,
+                              id: ind.id,
+                            },
+                          ]);
+                        } else if (ind.matchType === "hardMatch") {
+                          setEdited([
+                            ...edited,
+                            {
+                              active: ind.active,
+                              id: ind.id,
+                            },
+                          ]);
+                        } else {
+                          setEdited([
+                            ...edited,
+                            {
+                              weightage: 0,
+                              active: ind.active,
+                              id: ind.id,
+                            },
+                          ]);
+                        }
+                        console.log(edited);
+                      } else {
+                        if (ind.matchType === "softMatch" && !ind.active) {
+                          const newEdited = [...edited];
+                          newEdited[ret]["weightage"] = 0;
+                          newEdited[ret]["active"] = ind.active;
+                          setEdited(newEdited);
+                        } else if (ind.matchType === "hardMatch") {
+                          const newEdited = [...edited];
+                          newEdited[ret]["active"] = ind.active;
+                          setEdited(newEdited);
+                        } else {
+                          const newEdited = [...edited];
+                          newEdited[ret]["active"] = ind.active;
+                          newEdited[ret]["weightage"] = 0;
+                          setEdited(newEdited);
+                        }
+                      }
                     } else {
                       if (ind.matchType === "softMatch" && !ind.active) {
-                        const newEdited = [...edited];
-                        newEdited[ret]["weightage"] = 0;
-                        newEdited[ret]["active"] = ind.active;
-                        setEdited(newEdited);
+                        console.log(ind.active);
+                        setEdited([
+                          {
+                            weightage: 0,
+                            active: ind.active,
+                            id: ind.id,
+                          },
+                        ]);
+                        console.log("First");
                       } else if (ind.matchType === "hardMatch") {
-                        const newEdited = [...edited];
-                        newEdited[ret]["active"] = ind.active;
-                        setEdited(newEdited);
+                        setEdited([
+                          {
+                            active: ind.active,
+                            id: ind.id,
+                          },
+                        ]);
+                        console.log("First");
                       } else {
-                        const newEdited = [...edited];
-                        newEdited[ret]["active"] = ind.active;
-                        newEdited[ret]["weightage"] = 0;
-                        setEdited(newEdited);
+                        setEdited([
+                          {
+                            weightage: 0,
+                            active: ind.active,
+                            id: ind.id,
+                          },
+                        ]);
                       }
                     }
-                  } else {
-                    if (ind.matchType === "softMatch" && !ind.active) {
-                      console.log(ind.active);
-                      setEdited([
-                        {
-                          weightage: 0,
-                          active: ind.active,
-                          id: ind.id,
-                        },
-                      ]);
-                      console.log("First");
-                    } else if (ind.matchType === "hardMatch") {
-                      setEdited([
-                        {
-                          active: ind.active,
-                          id: ind.id,
-                        },
-                      ]);
-                      console.log("First");
-                    } else {
-                      setEdited([
-                        {
-                          weightage: 0,
-                          active: ind.active,
-                          id: ind.id,
-                        },
-                      ]);
-                    }
                   }
-                }
-              });
-              setLocation(newL);
-            }}
-          />
-        );
+                });
+                setLocation(newL);
+              }}
+            />
+          );
+        }
       },
     },
     {
@@ -188,9 +192,10 @@ function Index() {
               height: "100%",
               padding: "10px",
             }}
-            type={"text"}
+            type={"number"}
             value={
-              cellValues.row.matchType === "softMatch"
+              cellValues.row.matchType === "softMatch" ||
+              cellValues.row.type === "Total"
                 ? cellValues.row.weightage
                 : 0
             }
@@ -203,6 +208,7 @@ function Index() {
               e.preventDefault();
               const newL = [...location];
               console.log(newL);
+              let total = 0;
               newL.forEach((ind) => {
                 if (ind.id === cellValues.row.id) {
                   // const old = ind.weightage;
@@ -226,6 +232,12 @@ function Index() {
                     setEdited([{ weightage: ind.weightage, id: ind.id }]);
                     console.log("First");
                   }
+                }
+                if (ind.matchType === "softMatch") {
+                  total += Number(ind.weightage);
+                }
+                if (ind.id === 0) {
+                  ind.weightage = total;
                 }
               });
               setLocation(newL);
@@ -255,6 +267,11 @@ function Index() {
           active: ind.active,
         });
       });
+      newQues.push({
+        id: 0,
+        type: "Total",
+        weightage: 100.0,
+      });
       console.log("This is new Questions", newQues);
       setLocation(newQues);
       console.log(response);
@@ -264,23 +281,28 @@ function Index() {
   const handleSaveClick = () => {
     setSaveLoading(true);
     if (edited.length !== 0) {
-      console.log(edited);
-      edited.forEach(async (ind, i) => {
-        console.log(ind.active);
-        const response = await updateRule({
-          variables: {
-            input: {
-              id: ind.id,
-              weightage: ind.weightage !== 0 ? ind.weightage / 100 : 0,
-              active: ind.active,
+      if (location[location.length - 1].weightage === 100) {
+        console.log(edited);
+        edited.forEach(async (ind, i) => {
+          console.log(ind.active);
+          const response = await updateRule({
+            variables: {
+              input: {
+                id: ind.id,
+                weightage: ind.weightage !== 0 ? ind.weightage / 100 : 0,
+                active: ind.active,
+              },
             },
-          },
+          });
+          console.log(response);
         });
-        console.log(response);
-      });
-      setEdited([]);
-      setSaveLoading(false);
-      setSuccess("Data updated successfully!");
+        setEdited([]);
+        setSaveLoading(false);
+        setSuccess("Data updated successfully!");
+      } else {
+        setSaveLoading(false);
+        setError("The total is not equal to 100");
+      }
 
       //   setSaveLoading(true);
       //   edited.forEach(async (each, id) => {
@@ -311,10 +333,11 @@ function Index() {
     <div
       style={{
         width: "100vw",
-        height: "60vh",
+        height: "70vh",
         color: "black",
         marginTop: "80px",
         paddingLeft: "24px",
+        paddingRight: "24px",
       }}
     >
       {location !== [] && (
