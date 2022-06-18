@@ -459,13 +459,14 @@ function Index() {
     //console.log(bracketOpen, bracketClose, curlyBraceOpen, curlyBraceClose);
     if (
       bracketOpen.length === bracketClose.length &&
+      bracketOpen.length === curlyBraceOpen.length &&
       curlyBraceOpen.length === curlyBraceClose.length &&
       bracketOpen.length !== 0 &&
       bracketClose.length !== 0 &&
       curlyBraceOpen.length !== 0 &&
       curlyBraceClose.length !== 0
     ) {
-      for (var i = bracketOpen.length - 1; i >= 0; i -= 2) {
+      for (var i = bracketOpen.length - 1; i >= 0; i -= 1) {
         const bracketOpenIndex = bracketOpen[i];
         const bracketCloseIndex = bracketClose[i];
         const curlyBraceOpenIndex = curlyBraceOpen[i];
@@ -562,19 +563,31 @@ function Index() {
               id="modal-modal-title"
               variant="h6"
               component="h2"
-              style={{ color: "black" }}
+              style={{ color: "black", fontWeight: "bold" }}
             >
               Enter The Register Content
             </Typography>
-            {input !== 0 && (
-              <Typography
-                id="modal-modal-title"
-                variant="h6"
-                component="h3"
-                style={{ color: "black" }}
-              >
-                {parse(input)}
-              </Typography>
+            <Typography
+              id="modal-modal-title"
+              variant="h7"
+              style={{ color: "black" }}
+            >
+              Enclose the words in `` for bold, in ~ for underlining it, in ()
+              for adding color to it with {} enclosing the specific color
+            </Typography>
+            {input.length !== 0 && (
+              <>
+                <Typography id="modal-modal-title" variant="h7">
+                  Preview
+                </Typography>
+                <Typography
+                  id="modal-modal-title"
+                  variant="h7"
+                  style={{ color: "black" }}
+                >
+                  {parse(input)}
+                </Typography>
+              </>
             )}
             <TextField
               variant="outlined"
