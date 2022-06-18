@@ -280,7 +280,7 @@ function Index() {
       const response = await addRegisterContent({
         variables: {
           input: {
-            registerContent: input,
+            registerContent: inputWithChars,
             imageUrl: uploadData.secure_url,
             type: "employee",
             active: true,
@@ -409,91 +409,130 @@ function Index() {
       setSuccess("Image Uploaded Successfully");
     }
   };
+  function plain_text(text) {
+    return (
+      text
+        // bold
+        .replace(/(?:\*)(?:(?!\s))((?:(?!\*|\n).)+)(?:\*)/g, "")
+        // italics
+        .replace(/(?:_)(?:(?!\s))((?:(?!\n|_).)+)(?:_)/g, "")
+        // strikethrough
+        .replace(/(?:~)(?:(?!\s))((?:(?!\n|~).)+)(?:~)/g, "")
+        // underline
+        .replace(/(?:--)(?:(?!\s))((?:(?!\n|--).)+)(?:--)/g, "")
+        // monospace
+        .replace(/(?:```)(?:(?!\s))((?:(?!\n|```).)+)(?:```)/g, "")
+        // primary color
+        .replace(/(?:!)(?:(?!\s))((?:(?!\n|!).)+)(?:!)/g, "")
+    );
+  }
   const handleInputChange = (e) => {
+    // let newInput = e.target.value;
+    // const tick = [];
+    // const tilde = [];
+    // const bracketOpen = [];
+    // const bracketClose = [];
+    // const curlyBraceOpen = [];
+    // const curlyBraceClose = [];
+    // for (var i = 0; i < newInput.length; i++) {
+    //   if (newInput[i] === "`") tick.push(i);
+    // }
+    // const bracketLastIndex = newInput.lastIndexOf(")");
+    // const bracketFirstIndex = newInput.lastIndexOf("(");
+    // if (tick.length !== 0 && tick.length % 2 === 0) {
+    //   for (var i = tick.length - 1; i > 0; i -= 2) {
+    //     const ticksFirstIndex = tick[i - 1];
+    //     const ticksLastIndex = tick[i];
+    //     const subMain = newInput.substring(ticksFirstIndex + 1, ticksLastIndex);
+    //     const before = newInput.substring(0, ticksFirstIndex);
+    //     const after = newInput.substring(ticksLastIndex + 1);
+    //     const newWord = before + `<b>${subMain}</b>` + after;
+    //     newInput = newWord;
+    //   }
+    // }
+    // for (var i = 0; i < newInput.length; i++) {
+    //   if (newInput[i] === `~`) tilde.push(i);
+    // }
+    // if (tilde.length !== 0 && tilde.length % 2 === 0) {
+    //   for (var i = tilde.length - 1; i > 0; i -= 2) {
+    //     const tildeFirstIndex = tilde[i - 1];
+    //     const tildeLastIndex = tilde[i];
+    //     const subMain = newInput.substring(tildeFirstIndex + 1, tildeLastIndex);
+    //     console.log(tildeLastIndex);
+    //     console.log(subMain);
+    //     const before = newInput.substring(0, tildeFirstIndex);
+    //     const after = newInput.substring(tildeLastIndex + 1);
+    //     const newWord = before + `<u>${subMain}</u>` + after;
+    //     newInput = newWord;
+    //   }
+    // }
+    // for (var i = 0; i < newInput.length; i++) {
+    //   if (newInput[i] === `(`) bracketOpen.push(i);
+    //   else if (newInput[i] === `)`) bracketClose.push(i);
+    //   else if (newInput[i] === `{`) curlyBraceOpen.push(i);
+    //   else if (newInput[i] === `}`) curlyBraceClose.push(i);
+    // }
+    // //console.log(bracketOpen, bracketClose, curlyBraceOpen, curlyBraceClose);
+    // if (
+    //   bracketOpen.length === bracketClose.length &&
+    //   bracketOpen.length === curlyBraceOpen.length &&
+    //   curlyBraceOpen.length === curlyBraceClose.length &&
+    //   bracketOpen.length !== 0 &&
+    //   bracketClose.length !== 0 &&
+    //   curlyBraceOpen.length !== 0 &&
+    //   curlyBraceClose.length !== 0
+    // ) {
+    //   for (var i = bracketOpen.length - 1; i >= 0; i -= 1) {
+    //     const bracketOpenIndex = bracketOpen[i];
+    //     const bracketCloseIndex = bracketClose[i];
+    //     const curlyBraceOpenIndex = curlyBraceOpen[i];
+    //     const curlyBraceCloseIndex = curlyBraceClose[i];
+    //     const subMain = newInput.substring(
+    //       bracketOpenIndex + 1,
+    //       bracketCloseIndex
+    //     );
+    //     const colorCode = newInput.substring(
+    //       curlyBraceOpenIndex + 1,
+    //       curlyBraceCloseIndex
+    //     );
+    //     console.log(subMain);
+    //     const before = newInput.substring(0, bracketOpenIndex);
+    //     const after = newInput.substring(curlyBraceCloseIndex + 1);
+    //     const newWord =
+    //       before +
+    //       `<span style="background-color:${colorCode};">${subMain}</span>` +
+    //       after;
+    //     newInput = newWord;
+    //   }
+    // }
+    // if (newInput === e.target.value) {
+    //   setInput(e.target.value);
+    // } else {
+    //   setInput(newInput);
+    // }
+    function format_text(text) {
+      return (
+        text
+          // bold
+          .replace(/(?:\*)(?:(?!\s))((?:(?!\*|\n).)+)(?:\*)/g, "<b>$1</b>")
+          // italics
+          .replace(/(?:_)(?:(?!\s))((?:(?!\n|_).)+)(?:_)/g, "<i>$1</i>")
+          // strikethrough
+          .replace(/(?:~)(?:(?!\s))((?:(?!\n|~).)+)(?:~)/g, "<s>$1</s>")
+          // underline
+          .replace(/(?:--)(?:(?!\s))((?:(?!\n|--).)+)(?:--)/g, "<u>$1</u>")
+          // monospace
+          .replace(/(?:```)(?:(?!\s))((?:(?!\n|```).)+)(?:```)/g, "<tt>$1</tt>")
+          // primary color
+          .replace(
+            /(?:!)(?:(?!\s))((?:(?!\n|!).)+)(?:!)/g,
+            "<span style='color: #ff4100;'>$1</span>"
+          )
+      );
+    }
+
+    setInput(format_text(e.target.value));
     setInputWithChars(e.target.value);
-    let newInput = e.target.value;
-    const tick = [];
-    const tilde = [];
-    const bracketOpen = [];
-    const bracketClose = [];
-    const curlyBraceOpen = [];
-    const curlyBraceClose = [];
-    for (var i = 0; i < newInput.length; i++) {
-      if (newInput[i] === "`") tick.push(i);
-    }
-    const bracketLastIndex = newInput.lastIndexOf(")");
-    const bracketFirstIndex = newInput.lastIndexOf("(");
-    if (tick.length !== 0 && tick.length % 2 === 0) {
-      for (var i = tick.length - 1; i > 0; i -= 2) {
-        const ticksFirstIndex = tick[i - 1];
-        const ticksLastIndex = tick[i];
-        const subMain = newInput.substring(ticksFirstIndex + 1, ticksLastIndex);
-        const before = newInput.substring(0, ticksFirstIndex);
-        const after = newInput.substring(ticksLastIndex + 1);
-        const newWord = before + `<b>${subMain}</b>` + after;
-        newInput = newWord;
-      }
-    }
-    for (var i = 0; i < newInput.length; i++) {
-      if (newInput[i] === `~`) tilde.push(i);
-    }
-    if (tilde.length !== 0 && tilde.length % 2 === 0) {
-      for (var i = tilde.length - 1; i > 0; i -= 2) {
-        const tildeFirstIndex = tilde[i - 1];
-        const tildeLastIndex = tilde[i];
-        const subMain = newInput.substring(tildeFirstIndex + 1, tildeLastIndex);
-        console.log(tildeLastIndex);
-        console.log(subMain);
-        const before = newInput.substring(0, tildeFirstIndex);
-        const after = newInput.substring(tildeLastIndex + 1);
-        const newWord = before + `<u>${subMain}</u>` + after;
-        newInput = newWord;
-      }
-    }
-    for (var i = 0; i < newInput.length; i++) {
-      if (newInput[i] === `(`) bracketOpen.push(i);
-      else if (newInput[i] === `)`) bracketClose.push(i);
-      else if (newInput[i] === `{`) curlyBraceOpen.push(i);
-      else if (newInput[i] === `}`) curlyBraceClose.push(i);
-    }
-    //console.log(bracketOpen, bracketClose, curlyBraceOpen, curlyBraceClose);
-    if (
-      bracketOpen.length === bracketClose.length &&
-      bracketOpen.length === curlyBraceOpen.length &&
-      curlyBraceOpen.length === curlyBraceClose.length &&
-      bracketOpen.length !== 0 &&
-      bracketClose.length !== 0 &&
-      curlyBraceOpen.length !== 0 &&
-      curlyBraceClose.length !== 0
-    ) {
-      for (var i = bracketOpen.length - 1; i >= 0; i -= 1) {
-        const bracketOpenIndex = bracketOpen[i];
-        const bracketCloseIndex = bracketClose[i];
-        const curlyBraceOpenIndex = curlyBraceOpen[i];
-        const curlyBraceCloseIndex = curlyBraceClose[i];
-        const subMain = newInput.substring(
-          bracketOpenIndex + 1,
-          bracketCloseIndex
-        );
-        const colorCode = newInput.substring(
-          curlyBraceOpenIndex + 1,
-          curlyBraceCloseIndex
-        );
-        console.log(subMain);
-        const before = newInput.substring(0, bracketOpenIndex);
-        const after = newInput.substring(curlyBraceCloseIndex + 1);
-        const newWord =
-          before +
-          `<span style="background-color:${colorCode};">${subMain}</span>` +
-          after;
-        newInput = newWord;
-      }
-    }
-    if (newInput === e.target.value) {
-      setInput(e.target.value);
-    } else {
-      setInput(newInput);
-    }
   };
   return firstLoading === false ? (
     <>
@@ -567,14 +606,14 @@ function Index() {
             >
               Enter The Register Content
             </Typography>
-            <Typography
+            {/* <Typography
               id="modal-modal-title"
               variant="h7"
               style={{ color: "black" }}
             >
               {`Enclose the words in ${"``"} for bold, in ~ for underlining it, in ()
               for adding color to it with {} enclosing the specific color`}
-            </Typography>
+            </Typography> */}
             {input.length !== 0 && (
               <>
                 <Typography id="modal-modal-title" variant="h7">
