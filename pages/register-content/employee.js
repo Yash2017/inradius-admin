@@ -572,8 +572,8 @@ function Index() {
               variant="h7"
               style={{ color: "black" }}
             >
-              Enclose the words in `` for bold, in ~ for underlining it, in ()
-              for adding color to it with {} enclosing the specific color
+              {`Enclose the words in ${"``"} for bold, in ~ for underlining it, in ()
+              for adding color to it with {} enclosing the specific color`}
             </Typography>
             {input.length !== 0 && (
               <>
@@ -674,13 +674,13 @@ function Index() {
               >
                 {letterHead !== "" ? "Image" : "Uploaded Image"}
               </Typography>
-              <div style={{ marginBottom: "12px" }}>
+              <div>
                 <Image
                   src={letterHead !== "" ? letterHead : fileUrl}
                   layout="responsive"
                   objectFit="contain"
                   width={"400px"}
-                  height={"330px"}
+                  height={"350px"}
                 />
               </div>
               {letterHead === "" && (

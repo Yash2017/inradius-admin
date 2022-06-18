@@ -570,7 +570,7 @@ function Index() {
                   layout="responsive"
                   objectFit="contain"
                   width={"400px"}
-                  height={"330px"}
+                  height={"350px"}
                 />
               </div>
               {letterHead === "" ? (
