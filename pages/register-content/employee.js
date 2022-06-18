@@ -5,11 +5,11 @@ import {
   useUpdateRegisterContentMutation,
 } from "../../generated/graphql";
 import { DataGrid } from "@mui/x-data-grid";
+import parse from "html-react-parser";
 import {
   Typography,
   Button,
   TextField,
-  Input,
   Stack,
   styled,
   Tab,
@@ -51,8 +51,10 @@ function Index() {
   const [location, setLocation] = useState([]);
   const [locationName, setLocationName] = useState([]);
   const [input, setInput] = useState("");
+  const [inputWithChars, setInputWithChars] = useState("");
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [content, setContent] = useState("");
   const [firstLoading, setFirstLoading] = useState(true);
   const [saveLoading, setSaveLoading] = useState(false);
   const [error, setError] = useState("");
@@ -407,6 +409,91 @@ function Index() {
       setSuccess("Image Uploaded Successfully");
     }
   };
+  const handleInputChange = (e) => {
+    setInputWithChars(e.target.value);
+    let newInput = e.target.value;
+    const tick = [];
+    const tilde = [];
+    const bracketOpen = [];
+    const bracketClose = [];
+    const curlyBraceOpen = [];
+    const curlyBraceClose = [];
+    for (var i = 0; i < newInput.length; i++) {
+      if (newInput[i] === "`") tick.push(i);
+    }
+    const bracketLastIndex = newInput.lastIndexOf(")");
+    const bracketFirstIndex = newInput.lastIndexOf("(");
+    if (tick.length !== 0 && tick.length % 2 === 0) {
+      for (var i = tick.length - 1; i > 0; i -= 2) {
+        const ticksFirstIndex = tick[i - 1];
+        const ticksLastIndex = tick[i];
+        const subMain = newInput.substring(ticksFirstIndex + 1, ticksLastIndex);
+        const before = newInput.substring(0, ticksFirstIndex);
+        const after = newInput.substring(ticksLastIndex + 1);
+        const newWord = before + `<b>${subMain}</b>` + after;
+        newInput = newWord;
+      }
+    }
+    for (var i = 0; i < newInput.length; i++) {
+      if (newInput[i] === `~`) tilde.push(i);
+    }
+    if (tilde.length !== 0 && tilde.length % 2 === 0) {
+      for (var i = tilde.length - 1; i > 0; i -= 2) {
+        const tildeFirstIndex = tilde[i - 1];
+        const tildeLastIndex = tilde[i];
+        const subMain = newInput.substring(tildeFirstIndex + 1, tildeLastIndex);
+        console.log(tildeLastIndex);
+        console.log(subMain);
+        const before = newInput.substring(0, tildeFirstIndex);
+        const after = newInput.substring(tildeLastIndex + 1);
+        const newWord = before + `<u>${subMain}</u>` + after;
+        newInput = newWord;
+      }
+    }
+    for (var i = 0; i < newInput.length; i++) {
+      if (newInput[i] === `(`) bracketOpen.push(i);
+      else if (newInput[i] === `)`) bracketClose.push(i);
+      else if (newInput[i] === `{`) curlyBraceOpen.push(i);
+      else if (newInput[i] === `}`) curlyBraceClose.push(i);
+    }
+    //console.log(bracketOpen, bracketClose, curlyBraceOpen, curlyBraceClose);
+    if (
+      bracketOpen.length === bracketClose.length &&
+      curlyBraceOpen.length === curlyBraceClose.length &&
+      bracketOpen.length !== 0 &&
+      bracketClose.length !== 0 &&
+      curlyBraceOpen.length !== 0 &&
+      curlyBraceClose.length !== 0
+    ) {
+      for (var i = bracketOpen.length - 1; i >= 0; i -= 2) {
+        const bracketOpenIndex = bracketOpen[i];
+        const bracketCloseIndex = bracketClose[i];
+        const curlyBraceOpenIndex = curlyBraceOpen[i];
+        const curlyBraceCloseIndex = curlyBraceClose[i];
+        const subMain = newInput.substring(
+          bracketOpenIndex + 1,
+          bracketCloseIndex
+        );
+        const colorCode = newInput.substring(
+          curlyBraceOpenIndex + 1,
+          curlyBraceCloseIndex
+        );
+        console.log(subMain);
+        const before = newInput.substring(0, bracketOpenIndex);
+        const after = newInput.substring(curlyBraceCloseIndex + 1);
+        const newWord =
+          before +
+          `<span style="background-color:${colorCode};">${subMain}</span>` +
+          after;
+        newInput = newWord;
+      }
+    }
+    if (newInput === e.target.value) {
+      setInput(e.target.value);
+    } else {
+      setInput(newInput);
+    }
+  };
   return firstLoading === false ? (
     <>
       {location.length !== 0 ? (
@@ -479,13 +566,23 @@ function Index() {
             >
               Enter The Register Content
             </Typography>
+            {input !== 0 && (
+              <Typography
+                id="modal-modal-title"
+                variant="h6"
+                component="h3"
+                style={{ color: "black" }}
+              >
+                {parse(input)}
+              </Typography>
+            )}
             <TextField
               variant="outlined"
               id="component-outlined"
-              value={input}
+              value={inputWithChars}
               fullWidth
               margin="dense"
-              onChange={(e) => setInput(e.target.value)}
+              onChange={(e) => handleInputChange(e)}
               label="Register Content"
             />
             <label htmlFor="contained-button-file">
